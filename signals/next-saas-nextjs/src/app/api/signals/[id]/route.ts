@@ -11,7 +11,38 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Invalid signal ID' }, { status: 400 });
     }
 
-    const { data, error } = await getSupabaseAdmin().from('signals').select('*').eq('id', signalId).single();
+    // Check if Supabase is configured
+    const supabase = getSupabaseAdmin();
+    if (!supabase) {
+      // Return mock data for demo purposes
+      const mockSignal = {
+        id: signalId,
+        title: `Signal ${signalId} - Demo Mode`,
+        content: 'This is demo content. Configure Supabase to enable real data.',
+        pair: 'EUR/USD',
+        action: 'BUY',
+        entry: 1.0850,
+        stop_loss: 1.0800,
+        take_profit: 1.0950,
+        current_price: 1.0875,
+        confidence: 85,
+        market: 'Forex',
+        status: 'ACTIVE',
+        pips: 25,
+        priority: 'HIGH',
+        author: 'Demo Analyst',
+        author_image: null,
+        chart_image: null,
+        key_levels: { resistance: [1.0900, 1.0950], support: [1.0820, 1.0800] },
+        analyst_stats: { successRate: 78, totalSignals: 150, totalPips: 1250 },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        published_date: new Date().toISOString()
+      };
+      return NextResponse.json({ signal: mockSignal });
+    }
+
+    const { data, error } = await supabase.from('signals').select('*').eq('id', signalId).single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -47,6 +78,12 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Invalid signal ID' }, { status: 400 });
     }
 
+    // Check if Supabase is configured
+    const supabase = getSupabaseAdmin();
+    if (!supabase) {
+      return NextResponse.json({ error: 'Database not configured - demo mode active' }, { status: 503 });
+    }
+
     // Build update object with only provided fields
     const updateData: Record<string, unknown> = {};
 
@@ -62,7 +99,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     if (body.analyst_stats !== undefined) updateData.analyst_stats = body.analyst_stats;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await getSupabaseAdmin().from('signals').update(updateData as any).eq('id', signalId).select().single();
+    const { data, error } = await supabase.from('signals').update(updateData as any).eq('id', signalId).select().single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -89,7 +126,13 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       return NextResponse.json({ error: 'Invalid signal ID' }, { status: 400 });
     }
 
-    const { error } = await getSupabaseAdmin().from('signals').delete().eq('id', signalId);
+    // Check if Supabase is configured
+    const supabase = getSupabaseAdmin();
+    if (!supabase) {
+      return NextResponse.json({ error: 'Database not configured - demo mode active' }, { status: 503 });
+    }
+
+    const { error } = await supabase.from('signals').delete().eq('id', signalId);
 
     if (error) {
       console.error('Error deleting signal:', error);

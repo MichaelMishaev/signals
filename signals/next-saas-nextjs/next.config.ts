@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import path from 'path';
 
 const nextConfig: NextConfig = {
   turbopack: {
@@ -15,6 +16,10 @@ const nextConfig: NextConfig = {
     // Temporarily ignore ESLint build errors for deployment
     ignoreDuringBuilds: true,
   },
+  // Configure output file tracing for monorepo support
+  outputFileTracingRoot: path.join(__dirname, '../../'),
+  // Optimize for production deployment
+  output: 'standalone',
 };
 
 export default nextConfig;

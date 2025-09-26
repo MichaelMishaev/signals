@@ -10,15 +10,18 @@ function initSupabaseClients() {
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl) {
-    throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL environment variable');
+    console.warn('Missing NEXT_PUBLIC_SUPABASE_URL environment variable - using demo mode');
+    return null;
   }
 
   if (!supabaseAnonKey) {
-    throw new Error('Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable');
+    console.warn('Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable - using demo mode');
+    return null;
   }
 
   if (!supabaseServiceKey) {
-    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY environment variable');
+    console.warn('Missing SUPABASE_SERVICE_ROLE_KEY environment variable - using demo mode');
+    return null;
   }
 
   return {
@@ -27,18 +30,20 @@ function initSupabaseClients() {
   };
 }
 
-export function getSupabase(): ReturnType<typeof createClient> {
+export function getSupabase(): ReturnType<typeof createClient> | null {
   if (!supabaseClient) {
-    const { client } = initSupabaseClients();
-    supabaseClient = client;
+    const result = initSupabaseClients();
+    if (!result) return null;
+    supabaseClient = result.client;
   }
   return supabaseClient;
 }
 
-export function getSupabaseAdmin(): ReturnType<typeof createClient> {
+export function getSupabaseAdmin(): ReturnType<typeof createClient> | null {
   if (!supabaseAdminClient) {
-    const { adminClient } = initSupabaseClients();
-    supabaseAdminClient = adminClient;
+    const result = initSupabaseClients();
+    if (!result) return null;
+    supabaseAdminClient = result.adminClient;
   }
   return supabaseAdminClient;
 }
