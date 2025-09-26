@@ -27,7 +27,7 @@ function initSupabaseClients() {
   };
 }
 
-export function getSupabase() {
+export function getSupabase(): ReturnType<typeof createClient> {
   if (!supabaseClient) {
     const { client } = initSupabaseClients();
     supabaseClient = client;
@@ -35,7 +35,7 @@ export function getSupabase() {
   return supabaseClient;
 }
 
-export function getSupabaseAdmin() {
+export function getSupabaseAdmin(): ReturnType<typeof createClient> {
   if (!supabaseAdminClient) {
     const { adminClient } = initSupabaseClients();
     supabaseAdminClient = adminClient;
