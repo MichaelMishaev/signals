@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: signals-nextjs
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: |
+      echo "Starting build in directory: $(pwd)" &&
+      echo "Listing root directory:" &&
+      ls -la &&
+      echo "Navigating to Next.js app..." &&
+      cd signals/next-saas-nextjs &&
+      echo "Current directory: $(pwd)" &&
+      echo "Node version:" &&
+      node --version &&
+      echo "NPM version:" &&
+      npm --version &&
+      echo "Installing dependencies..." &&
+      npm install &&
+      echo "Building application..." &&
+      npm run build &&
+      echo "Build complete!"
+    startCommand: |
+      echo "Starting application from: $(pwd)" &&
+      cd signals/next-saas-nextjs &&
+      echo "Starting Next.js server..." &&
+      npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: NODE_VERSION
+        value: 20
