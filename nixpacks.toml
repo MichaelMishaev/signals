@@ -1,0 +1,23 @@
+# Nixpacks configuration for Railway
+# Alternative to Dockerfile - Railway's native buildpack system
+
+[phases.setup]
+nixPkgs = ['nodejs_20', 'npm']
+
+[phases.install]
+cmds = [
+    'cd signals/next-saas-nextjs',
+    'npm ci'
+]
+
+[phases.build]
+cmds = [
+    'cd signals/next-saas-nextjs',
+    'npm run build'
+]
+
+[start]
+cmd = 'cd signals/next-saas-nextjs && npm start'
+
+[variables]
+NODE_ENV = 'production'

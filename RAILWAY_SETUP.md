@@ -1,5 +1,14 @@
 # 🚂 Railway + PostgreSQL Setup Guide
 
+## ⚠️ **IMPORTANT: Railway Build Fix Applied**
+
+I've added proper Node.js environment configuration:
+- **`Dockerfile`** - Containerized deployment (recommended)
+- **`nixpacks.toml`** - Railway's native buildpack system
+- **`.railwayignore`** - Optimized file exclusions
+
+Railway will auto-detect and use the Dockerfile for reliable deployment.
+
 ## 🎯 **Two Database Options**
 
 ### **Option A: Keep Supabase (Recommended - Easiest)**

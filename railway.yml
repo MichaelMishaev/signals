@@ -1,9 +1,8 @@
 # Railway Configuration - Deploy to: https://railway.app
 # Railway + Supabase: Railway hosts the app, Supabase handles database
 
-deploy:
-  startCommand: cd signals/next-saas-nextjs && npm start
-  buildCommand: cd signals/next-saas-nextjs && npm install && npm run build
+# Railway will auto-detect the Dockerfile and use it for deployment
+# No need for explicit build/start commands when using Dockerfile
 
 # Environment Variables (set in Railway dashboard):
 # NODE_ENV=production
