@@ -134,30 +134,30 @@ const EmailCardPopup = ({
       ref={dialogRef}
       className={cn(
         'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-        'w-full max-w-lg rounded-[20px] overflow-hidden',
-        'bg-background-1 dark:bg-background-8',
-        'shadow-2xl border-0 outline-none',
-        'backdrop:bg-black/70 backdrop:backdrop-blur-sm',
+        'w-full max-w-md rounded-2xl overflow-hidden',
+        'bg-white dark:bg-gray-900',
+        'shadow-xl border border-gray-200 dark:border-gray-700 outline-none',
+        'backdrop:bg-black/60 backdrop:backdrop-blur-sm',
         className,
       )}
       onClick={handleBackdropClick}
       onClose={onClose}>
-      {/* Header Section */}
-      <div className={cn('relative p-6 text-center text-white', headerColor)}>
+      {/* Google-style Header */}
+      <div className="relative px-6 pt-6 pb-4">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
+          className="absolute top-4 right-4 w-8 h-8 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full flex items-center justify-center transition-colors text-gray-500 dark:text-gray-400"
           aria-label="Close dialog">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
-        {/* Icon */}
-        <div className="space-y-2">
-          <div className="w-12 h-12 mx-auto bg-white/20 rounded-full flex items-center justify-center">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {/* Google-style Icon */}
+        <div className="text-center">
+          <div className="w-12 h-12 mx-auto mb-4 bg-blue-500 rounded-full flex items-center justify-center">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -167,18 +167,18 @@ const EmailCardPopup = ({
             </svg>
           </div>
 
-          {/* Title & Subtitle */}
-          <h2 className="text-heading-5 font-medium">{title}</h2>
-          <p className="text-white/90">{subtitle}</p>
+          {/* Google-style Title & Subtitle */}
+          <h2 className="text-xl font-normal text-gray-900 dark:text-white mb-2">{title}</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{subtitle}</p>
         </div>
       </div>
 
-      {/* Form Content */}
-      <div className="p-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Name Field */}
-          <fieldset className="space-y-2">
-            <label htmlFor="popup-name" className="text-tagline-2 text-secondary dark:text-accent font-medium">
+      {/* Google-style Form Content */}
+      <div className="px-6 pb-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Name Field - Google Style */}
+          <div className="space-y-1">
+            <label htmlFor="popup-name" className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Full Name
             </label>
             <input
@@ -192,24 +192,24 @@ const EmailCardPopup = ({
                 if (errors.name) setErrors({ ...errors, name: '' });
               }}
               className={cn(
-                'w-full px-[18px] py-3 rounded-full',
-                'border border-stroke-3 dark:border-stroke-7',
-                'bg-background-1 dark:bg-background-6',
-                'text-secondary dark:text-accent',
-                'placeholder:text-secondary/60 dark:placeholder:text-accent/60',
-                'focus:outline-none focus:border-primary-500',
-                'transition-colors',
-                errors.name && 'border-red-500',
+                'w-full px-3 py-3 rounded-md',
+                'border border-gray-300 dark:border-gray-600',
+                'bg-white dark:bg-gray-800',
+                'text-gray-900 dark:text-white',
+                'placeholder:text-gray-500 dark:placeholder:text-gray-400',
+                'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+                'transition-all duration-200',
+                errors.name && 'border-red-500 focus:ring-red-500',
               )}
               disabled={loading}
               required
             />
             {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
-          </fieldset>
+          </div>
 
-          {/* Email Field */}
-          <fieldset className="space-y-2">
-            <label htmlFor="popup-email" className="text-tagline-2 text-secondary dark:text-accent font-medium">
+          {/* Email Field - Google Style */}
+          <div className="space-y-1">
+            <label htmlFor="popup-email" className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Email Address
             </label>
             <input
@@ -223,33 +223,26 @@ const EmailCardPopup = ({
                 if (errors.email) setErrors({ ...errors, email: '' });
               }}
               className={cn(
-                'w-full px-[18px] py-3 rounded-full',
-                'border border-stroke-3 dark:border-stroke-7',
-                'bg-background-1 dark:bg-background-6',
-                'text-secondary dark:text-accent',
-                'placeholder:text-secondary/60 dark:placeholder:text-accent/60',
-                'focus:outline-none focus:border-primary-500',
-                'transition-colors',
-                errors.email && 'border-red-500',
+                'w-full px-3 py-3 rounded-md',
+                'border border-gray-300 dark:border-gray-600',
+                'bg-white dark:bg-gray-800',
+                'text-gray-900 dark:text-white',
+                'placeholder:text-gray-500 dark:placeholder:text-gray-400',
+                'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+                'transition-all duration-200',
+                errors.email && 'border-red-500 focus:ring-red-500',
               )}
               disabled={loading}
               required
             />
             {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-          </fieldset>
+          </div>
 
-          {/* Buttons */}
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 btn btn-white dark:btn-white-dark btn-md"
-              disabled={loading}>
-              <span>{cancelText}</span>
-            </button>
+          {/* Single Button - Google Style */}
+          <div className="pt-4">
             <button
               type="submit"
-              className="flex-1 btn btn-primary btn-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               disabled={loading}>
               <span className="flex items-center justify-center gap-2">
                 {loading ? (
@@ -279,8 +272,8 @@ const EmailCardPopup = ({
             </button>
           </div>
 
-          {/* Privacy Notice */}
-          <p className="text-center text-tagline-3 text-secondary/60 dark:text-accent/60 mt-4">
+          {/* Google-style Privacy Notice */}
+          <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-4 px-2">
             By submitting, you agree to our privacy policy and terms of service
           </p>
         </form>
