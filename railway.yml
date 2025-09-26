@@ -1,0 +1,17 @@
+# Railway Configuration - Deploy to: https://railway.app
+# Railway has excellent monorepo support and developer experience
+
+deploy:
+  startCommand: cd signals/next-saas-nextjs && npm start
+  buildCommand: cd signals/next-saas-nextjs && npm install && npm run build
+
+# Environment Variables (set in Railway dashboard):
+# NODE_ENV=production
+# NEXT_PUBLIC_SUPABASE_URL=https://avxygvzqfyxpzdxwmefe.supabase.co
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_rtWhC7Pp5XzJCTFTTR6VzQ_FIYgdOTQ
+# SUPABASE_SERVICE_ROLE_KEY=sb_secret_Ci7ZL06_YdZFdoB9h3SmFg_cX3INlEp
+
+# Setup:
+# 1. Connect GitHub repo at railway.app
+# 2. Add environment variables
+# 3. Deploy - Railway auto-detects Next.js and handles monorepos properly

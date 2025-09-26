@@ -1,0 +1,25 @@
+# Netlify Configuration - Deploy to: https://netlify.com
+# Netlify has good monorepo support and is cost-effective
+
+[build]
+  base = "signals/next-saas-nextjs"
+  publish = "signals/next-saas-nextjs/.next"
+  command = "npm install && npm run build"
+
+[build.environment]
+  NODE_ENV = "production"
+  NEXT_PUBLIC_SUPABASE_URL = "https://avxygvzqfyxpzdxwmefe.supabase.co"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "sb_publishable_rtWhC7Pp5XzJCTFTTR6VzQ_FIYgdOTQ"
+  SUPABASE_SERVICE_ROLE_KEY = "sb_secret_Ci7ZL06_YdZFdoB9h3SmFg_cX3INlEp"
+
+# For Next.js SSR/API Routes, you may need Netlify Functions
+# Consider upgrading to Netlify Functions for full Next.js support
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Setup:
+# 1. Connect GitHub repo at netlify.com
+# 2. Set build.base to "signals/next-saas-nextjs"
+# 3. Deploy - Netlify handles the rest

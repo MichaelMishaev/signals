@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "name": "signals-nextjs",
+  "builds": [
+    {
+      "src": "signals/next-saas-nextjs/package.json",
+      "use": "@vercel/next",
+      "config": {
+        "distDir": ".next"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/signals/next-saas-nextjs/$1"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://avxygvzqfyxpzdxwmefe.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_rtWhC7Pp5XzJCTFTTR6VzQ_FIYgdOTQ",
+    "SUPABASE_SERVICE_ROLE_KEY": "sb_secret_Ci7ZL06_YdZFdoB9h3SmFg_cX3INlEp"
+  },
+  "functions": {
+    "signals/next-saas-nextjs/src/app/api/**": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}
