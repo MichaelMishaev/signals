@@ -1,26 +1,60 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Lazy initialization of Supabase clients
+let supabaseClient: ReturnType<typeof createClient> | null = null;
+let supabaseAdminClient: ReturnType<typeof createClient> | null = null;
 
-if (!supabaseUrl) {
-  throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL environment variable');
+function initSupabaseClients() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl) {
+    throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL environment variable');
+  }
+
+  if (!supabaseAnonKey) {
+    throw new Error('Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable');
+  }
+
+  if (!supabaseServiceKey) {
+    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY environment variable');
+  }
+
+  return {
+    client: createClient(supabaseUrl, supabaseAnonKey),
+    adminClient: createClient(supabaseUrl, supabaseServiceKey)
+  };
 }
 
-if (!supabaseAnonKey) {
-  throw new Error('Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable');
+export function getSupabase() {
+  if (!supabaseClient) {
+    const { client } = initSupabaseClients();
+    supabaseClient = client;
+  }
+  return supabaseClient;
 }
 
-if (!supabaseServiceKey) {
-  throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY environment variable');
+export function getSupabaseAdmin() {
+  if (!supabaseAdminClient) {
+    const { adminClient } = initSupabaseClients();
+    supabaseAdminClient = adminClient;
+  }
+  return supabaseAdminClient;
 }
 
-// Client for browser/client-side operations
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// For backward compatibility
+export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
+  get(target, prop) {
+    return getSupabase()[prop as keyof ReturnType<typeof createClient>];
+  }
+});
 
-// Admin client for server-side operations (bypasses RLS)
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+export const supabaseAdmin = new Proxy({} as ReturnType<typeof createClient>, {
+  get(target, prop) {
+    return getSupabaseAdmin()[prop as keyof ReturnType<typeof createClient>];
+  }
+});
 
 // Type definitions for our database
 export interface SignalData {

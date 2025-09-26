@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/utils/supabase';
+import { getSupabaseAdmin } from '@/utils/supabase';
 
 // GET /api/signals - Fetch all signals with optional filtering
 export async function GET(request: NextRequest) {
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const limit = searchParams.get('limit') || '10';
     const offset = searchParams.get('offset') || '0';
 
-    let query = supabaseAdmin
+    let query = getSupabaseAdmin()
       .from('signals')
       .select('*')
       .order('created_at', { ascending: false })
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert new signal
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await getSupabaseAdmin()
       .from('signals')
       .insert([
         {

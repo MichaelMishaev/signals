@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/utils/supabase';
+import { getSupabaseAdmin } from '@/utils/supabase';
 
 // GET /api/signals/[id] - Fetch a specific signal
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Invalid signal ID' }, { status: 400 });
     }
 
-    const { data, error } = await supabaseAdmin.from('signals').select('*').eq('id', signalId).single();
+    const { data, error } = await getSupabaseAdmin().from('signals').select('*').eq('id', signalId).single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     // Log analytics for signal view
-    await supabaseAdmin.from('signal_analytics').insert([
+    await getSupabaseAdmin().from('signal_analytics').insert([
       {
         signal_id: signalId,
         user_interactions: { view: 1, timestamp: new Date().toISOString() },
@@ -61,7 +61,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     if (body.key_levels !== undefined) updateData.key_levels = body.key_levels;
     if (body.analyst_stats !== undefined) updateData.analyst_stats = body.analyst_stats;
 
-    const { data, error } = await supabaseAdmin.from('signals').update(updateData).eq('id', signalId).select().single();
+    const { data, error } = await getSupabaseAdmin().from('signals').update(updateData).eq('id', signalId).select().single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -88,7 +88,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       return NextResponse.json({ error: 'Invalid signal ID' }, { status: 400 });
     }
 
-    const { error } = await supabaseAdmin.from('signals').delete().eq('id', signalId);
+    const { error } = await getSupabaseAdmin().from('signals').delete().eq('id', signalId);
 
     if (error) {
       console.error('Error deleting signal:', error);
