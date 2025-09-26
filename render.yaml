@@ -5,9 +5,8 @@ services:
     plan: free
     region: oregon
     autoDeploy: true
-    rootDir: signals/next-saas-nextjs
-    buildCommand: npm install && npm run build
-    startCommand: npm start
+    buildCommand: cd signals/next-saas-nextjs && npm install && npm run build
+    startCommand: cd signals/next-saas-nextjs && npm start
     buildFilter:
       paths:
         - signals/next-saas-nextjs/**
