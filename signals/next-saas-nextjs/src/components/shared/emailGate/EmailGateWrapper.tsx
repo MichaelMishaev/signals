@@ -30,7 +30,7 @@ export default function EmailGateWrapper({
 
       return () => clearTimeout(timer);
     }
-  }, [emailGate.isLoading, emailGate.hasSubmittedEmail]);
+  }, [emailGate.isLoading, emailGate.hasSubmittedEmail, emailGate]);
 
   const handleEmailSubmit = async (data: { name: string; email: string }) => {
     const result = await emailGate.submitEmail(data.email, data.name, source);

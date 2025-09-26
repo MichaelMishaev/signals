@@ -11,7 +11,6 @@ interface EmailCardPopupProps {
   subtitle?: string;
   buttonText?: string;
   cancelText?: string;
-  iconColor?: string;
   headerColor?: string;
   className?: string;
 }
@@ -24,7 +23,6 @@ const EmailCardPopup = ({
   subtitle = 'Join traders accessing exclusive drill content',
   buttonText = 'Get Access',
   cancelText = 'Cancel',
-  iconColor = 'bg-primary-500',
   headerColor = 'bg-primary-500',
   className,
 }: EmailCardPopupProps) => {

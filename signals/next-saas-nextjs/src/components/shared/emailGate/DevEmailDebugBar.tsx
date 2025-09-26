@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useModalContext } from '@/context/ModalContext';
 
 export default function DevEmailDebugBar() {
-  const [storedData, setStoredData] = useState<unknown>(null);
+  const [storedData, setStoredData] = useState<{email?: string; timestamp: number} | null>(null);
   const { emailGate } = useModalContext();
 
   useEffect(() => {
