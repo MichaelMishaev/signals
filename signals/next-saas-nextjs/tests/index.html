@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signal Detail Page Tests - Comparison Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .card-hover:hover {
+        transform: translateY(-4px);
+        transition: transform 0.3s ease;
+      }
+      .score-bar {
+        height: 8px;
+        border-radius: 4px;
+        background: linear-gradient(90deg, #ef4444 0%, #f59e0b 33%, #10b981 100%);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-12">
+      <div class="max-w-7xl mx-auto px-6">
+        <h1 class="text-4xl font-bold mb-4">Signal Detail Page Tests</h1>
+        <p class="text-xl opacity-90 max-w-3xl">
+          Comprehensive comparison of three different approaches for trading signal drill-down pages. Each
+          implementation focuses on different aspects of the trading experience.
+        </p>
+        <div class="mt-6 bg-white/20 backdrop-blur-sm rounded-lg p-4">
+          <div class="flex items-center gap-4 text-sm">
+            <span class="flex items-center gap-2">
+              <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+              Recommended
+            </span>
+            <span class="flex items-center gap-2">
+              <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+              Alternative
+            </span>
+            <span class="flex items-center gap-2">
+              <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+              Specialized Use
+            </span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Quick Stats -->
+    <section class="py-8 bg-white border-b">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div class="text-center">
+            <div class="text-3xl font-bold text-blue-600">3</div>
+            <div class="text-gray-600">Test Implementations</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-green-600">Analytics</div>
+            <div class="text-gray-600">Recommended Approach</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-purple-600">15</div>
+            <div class="text-gray-600">Evaluation Criteria</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-orange-600">3</div>
+            <div class="text-gray-600">Use Cases Covered</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Comparison Grid -->
+    <main class="max-w-7xl mx-auto px-6 py-12">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <!-- Analytics Style Card -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover border-2 border-green-200">
+          <div class="h-2 bg-green-500"></div>
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-2xl font-bold text-gray-800">Analytics Style</h3>
+              <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">🏆 WINNER</span>
+            </div>
+
+            <div class="mb-6">
+              <div class="flex justify-between text-sm mb-2">
+                <span>Overall Score</span>
+                <span class="font-bold">14/15</span>
+              </div>
+              <div class="score-bar">
+                <div class="h-full bg-green-500 rounded" style="width: 93%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-3 mb-6">
+              <div class="flex justify-between text-sm">
+                <span>Trading Relevance</span>
+                <span class="text-yellow-500">★★★★★</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span>User Experience</span>
+                <span class="text-yellow-500">★★★★★</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span>Implementation</span>
+                <span class="text-yellow-500">★★★★☆</span>
+              </div>
+            </div>
+
+            <div class="space-y-2 mb-6 text-sm">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>Real-time KPI dashboard</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>Live performance tracking</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>Professional trader interface</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                <span>Complex implementation</span>
+              </div>
+            </div>
+
+            <div class="flex gap-3">
+              <a
+                href="./3-analytics-drill/preview.html"
+                class="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg text-center text-sm hover:bg-green-700 transition-colors"
+                target="_blank">
+                Live Preview
+              </a>
+              <a
+                href="./3-analytics-drill/signal-detail-analytics.tsx"
+                class="flex-1 border border-green-600 text-green-600 py-2 px-4 rounded-lg text-center text-sm hover:bg-green-50 transition-colors">
+                View Code
+              </a>
+            </div>
+
+            <div class="mt-4 p-3 bg-green-50 rounded-lg">
+              <p class="text-sm text-green-800">
+                <strong>Best for:</strong>
+                Active signals, live monitoring, professional trading platforms
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case Study Style Card -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover border-2 border-yellow-200">
+          <div class="h-2 bg-yellow-500"></div>
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-2xl font-bold text-gray-800">Case Study Style</h3>
+              <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">2ND CHOICE</span>
+            </div>
+
+            <div class="mb-6">
+              <div class="flex justify-between text-sm mb-2">
+                <span>Overall Score</span>
+                <span class="font-bold">14/15</span>
+              </div>
+              <div class="score-bar">
+                <div class="h-full bg-yellow-500 rounded" style="width: 93%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-3 mb-6">
+              <div class="flex justify-between text-sm">
+                <span>Trading Relevance</span>
+                <span class="text-yellow-500">★★★★★</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span>User Experience</span>
+                <span class="text-yellow-500">★★★★☆</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span>Implementation</span>
+                <span class="text-yellow-500">★★★★★</span>
+              </div>
+            </div>
+
+            <div class="space-y-2 mb-6 text-sm">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>Perfect performance tracking</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>Before/after comparison</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>Easy implementation</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                <span>Less dynamic interface</span>
+              </div>
+            </div>
+
+            <div class="flex gap-3">
+              <a
+                href="./1-case-study-drill/preview.html"
+                class="flex-1 bg-yellow-600 text-white py-2 px-4 rounded-lg text-center text-sm hover:bg-yellow-700 transition-colors"
+                target="_blank">
+                Live Preview
+              </a>
+              <a
+                href="./1-case-study-drill/signal-detail-case-study.tsx"
+                class="flex-1 border border-yellow-600 text-yellow-600 py-2 px-4 rounded-lg text-center text-sm hover:bg-yellow-50 transition-colors">
+                View Code
+              </a>
+            </div>
+
+            <div class="mt-4 p-3 bg-yellow-50 rounded-lg">
+              <p class="text-sm text-yellow-800">
+                <strong>Best for:</strong>
+                Signal archives, performance reviews, completed trades
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Blog Style Card -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover border-2 border-red-200">
+          <div class="h-2 bg-red-500"></div>
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-2xl font-bold text-gray-800">Blog Style</h3>
+              <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold">SPECIALIZED</span>
+            </div>
+
+            <div class="mb-6">
+              <div class="flex justify-between text-sm mb-2">
+                <span>Overall Score</span>
+                <span class="font-bold">10/15</span>
+              </div>
+              <div class="score-bar">
+                <div class="h-full bg-red-500 rounded" style="width: 67%"></div>
+              </div>
+            </div>
+
+            <div class="space-y-3 mb-6">
+              <div class="flex justify-between text-sm">
+                <span>Trading Relevance</span>
+                <span class="text-yellow-500">★★★☆☆</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span>User Experience</span>
+                <span class="text-yellow-500">★★★★☆</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span>Implementation</span>
+                <span class="text-yellow-500">★★★☆☆</span>
+              </div>
+            </div>
+
+            <div class="space-y-2 mb-6 text-sm">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>Social engagement features</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>Community building</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                <span>Educational content</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                <span>Less trading-focused</span>
+              </div>
+            </div>
+
+            <div class="flex gap-3">
+              <a
+                href="./2-blog-drill/preview.html"
+                class="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg text-center text-sm hover:bg-red-700 transition-colors"
+                target="_blank">
+                Live Preview
+              </a>
+              <a
+                href="./2-blog-drill/signal-detail-blog.tsx"
+                class="flex-1 border border-red-600 text-red-600 py-2 px-4 rounded-lg text-center text-sm hover:bg-red-50 transition-colors">
+                View Code
+              </a>
+            </div>
+
+            <div class="mt-4 p-3 bg-red-50 rounded-lg">
+              <p class="text-sm text-red-800">
+                <strong>Best for:</strong>
+                Market analysis, trading education, community discussions
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison Results -->
+      <section class="bg-white rounded-xl shadow-lg p-8 mb-12">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Final Comparison Results</h2>
+
+        <div class="mb-8">
+          <div class="bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-500 p-6 rounded-r-lg">
+            <h3 class="text-xl font-bold text-green-800 mb-2">🏆 Recommended: Analytics Style</h3>
+            <p class="text-green-700 mb-4">
+              Perfect for trading platforms with its dashboard-like interface, real-time focus, and professional visual
+              hierarchy. Matches institutional trading platform expectations.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 class="font-semibold text-green-800 mb-2">Strengths:</h4>
+                <ul class="text-sm text-green-700 space-y-1">
+                  <li>• Real-time KPI dashboard</li>
+                  <li>• Visual performance indicators</li>
+                  <li>• Professional trader interface</li>
+                  <li>• Live data integration ready</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-semibold text-green-800 mb-2">Use Cases:</h4>
+                <ul class="text-sm text-green-700 space-y-1">
+                  <li>• Active signal monitoring</li>
+                  <li>• Real-time performance tracking</li>
+                  <li>• Professional trading platforms</li>
+                  <li>• Live market analysis</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-r-lg">
+            <h3 class="text-lg font-bold text-yellow-800 mb-2">Alternative: Case Study Style</h3>
+            <p class="text-yellow-700 text-sm mb-3">
+              Perfect for signal archives and performance reviews with before/after comparison tables.
+            </p>
+            <p class="text-sm text-yellow-600">
+              <strong>Best for:</strong>
+              Completed signals, performance reviews, trading results showcase
+            </p>
+          </div>
+
+          <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-lg">
+            <h3 class="text-lg font-bold text-red-800 mb-2">Specialized: Blog Style</h3>
+            <p class="text-red-700 text-sm mb-3">
+              Good for educational content and community building but less suitable for trading decisions.
+            </p>
+            <p class="text-sm text-red-600">
+              <strong>Best for:</strong>
+              Market insights, trading education, community discussions
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Implementation Strategy -->
+      <section class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-8 mb-12">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Implementation Strategy</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white rounded-lg p-6 shadow-sm">
+            <div class="text-2xl font-bold text-blue-600 mb-2">Phase 1</div>
+            <h3 class="text-lg font-semibold mb-3">Primary Implementation</h3>
+            <ul class="text-sm space-y-2">
+              <li>
+                • Implement Analytics Style as
+                <code class="bg-gray-100 px-2 py-1 rounded">/signal/[id]</code>
+              </li>
+              <li>• Add navigation from signals feed</li>
+              <li>• Integrate real-time data</li>
+              <li>• Test with live signals</li>
+            </ul>
+          </div>
+
+          <div class="bg-white rounded-lg p-6 shadow-sm">
+            <div class="text-2xl font-bold text-yellow-600 mb-2">Phase 2</div>
+            <h3 class="text-lg font-semibold mb-3">Archive System</h3>
+            <ul class="text-sm space-y-2">
+              <li>• Use Case Study for archives</li>
+              <li>
+                • Create
+                <code class="bg-gray-100 px-2 py-1 rounded">/signal/[id]/performance</code>
+              </li>
+              <li>• Historical performance data</li>
+              <li>• Success rate tracking</li>
+            </ul>
+          </div>
+
+          <div class="bg-white rounded-lg p-6 shadow-sm">
+            <div class="text-2xl font-bold text-purple-600 mb-2">Phase 3</div>
+            <h3 class="text-lg font-semibold mb-3">Educational Content</h3>
+            <ul class="text-sm space-y-2">
+              <li>• Blog Style for education</li>
+              <li>
+                • Create
+                <code class="bg-gray-100 px-2 py-1 rounded">/analysis/[id]</code>
+              </li>
+              <li>• Market insights section</li>
+              <li>• Community features</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Technical Details -->
+      <section class="bg-white rounded-xl shadow-lg p-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">Technical Implementation Details</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Shared Interface</h3>
+            <div class="bg-gray-100 rounded-lg p-4 text-sm font-mono">
+              <pre>
+interface SignalData {
+  id: number;
+  type: string;
+  title: string;
+  content: string;
+  pair: string;
+  action: 'BUY' | 'SELL';
+  entry: number;
+  stopLoss: number;
+  takeProfit: number;
+  currentPrice: number;
+  confidence: number;
+  market: string;
+  status: string;
+  pips: number;
+  author: string;
+  authorImage: string;
+  publishDate: string;
+  // ... additional fields
+}</pre
+              >
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-4">File Structure</h3>
+            <div class="space-y-3 text-sm">
+              <div class="flex items-start gap-3">
+                <span class="w-3 h-3 bg-green-500 rounded-full mt-1.5 flex-shrink-0"></span>
+                <div>
+                  <div class="font-semibold">Analytics Style</div>
+                  <div class="text-gray-600">tests/3-analytics-drill/signal-detail-analytics.tsx</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="w-3 h-3 bg-yellow-500 rounded-full mt-1.5 flex-shrink-0"></span>
+                <div>
+                  <div class="font-semibold">Case Study Style</div>
+                  <div class="text-gray-600">tests/1-case-study-drill/signal-detail-case-study.tsx</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="w-3 h-3 bg-red-500 rounded-full mt-1.5 flex-shrink-0"></span>
+                <div>
+                  <div class="font-semibold">Blog Style</div>
+                  <div class="text-gray-600">tests/2-blog-drill/signal-detail-blog.tsx</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="w-3 h-3 bg-blue-500 rounded-full mt-1.5 flex-shrink-0"></span>
+                <div>
+                  <div class="font-semibold">Comparison Results</div>
+                  <div class="text-gray-600">tests/comparison-results.md</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 p-6 bg-blue-50 rounded-lg">
+          <h4 class="text-lg font-semibold text-blue-800 mb-2">Next Steps</h4>
+          <ol class="list-decimal list-inside space-y-2 text-blue-700 text-sm">
+            <li>Review all three implementations in detail</li>
+            <li>Choose primary approach based on business requirements</li>
+            <li>
+              Create production route at
+              <code>/src/app/signal/[id]/page.tsx</code>
+            </li>
+            <li>Integrate with existing signals feed navigation</li>
+            <li>Add real-time data connections</li>
+            <li>Implement secondary approaches for different use cases</li>
+          </ol>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+      <div class="max-w-7xl mx-auto px-6 text-center">
+        <p class="mb-4">Signal Detail Page Test Implementations</p>
+        <p class="text-sm text-gray-400">
+          Created for comprehensive comparison of different trading signal drill-down approaches
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Add smooth scrolling
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth',
+          });
+        });
+      });
+
+      // Add hover effects
+      document.querySelectorAll('.card-hover').forEach((card) => {
+        card.addEventListener('mouseenter', function () {
+          this.style.transform = 'translateY(-4px)';
+          this.style.transition = 'transform 0.3s ease';
+        });
+
+        card.addEventListener('mouseleave', function () {
+          this.style.transform = 'translateY(0)';
+        });
+      });
+    </script>
+  </body>
+</html>

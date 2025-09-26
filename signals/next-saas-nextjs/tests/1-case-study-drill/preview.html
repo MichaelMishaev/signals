@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Case Study Style - Signal Detail Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'ns-green': '#10b981',
+              'ns-green-light': '#d1fae5',
+              'ns-yellow': '#f59e0b',
+              'ns-yellow-light': '#fef3c7',
+              'background-1': '#ffffff',
+              'background-2': '#f8fafc',
+              'background-6': '#374151',
+              'primary-600': '#2563eb',
+              'primary-800': '#1e40af',
+              secondary: '#64748b',
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Preview Header -->
+    <header class="bg-white border-b py-6">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">Case Study Style Preview</h1>
+            <p class="text-gray-600">Professional performance tracking with before/after comparison</p>
+          </div>
+          <div class="flex gap-3">
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">⭐ Trading: 5/5</span>
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">👤 UX: 4/5</span>
+            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">⚡ Impl: 5/5</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Signal Detail Page Implementation -->
+    <main class="pt-7 pb-24">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="space-y-16">
+          <!-- Signal Header -->
+          <div class="space-y-4">
+            <div class="flex items-center gap-3 mb-4">
+              <span
+                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-ns-green text-white">
+                📈 SIGNAL
+              </span>
+              <span
+                class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-ns-yellow-light text-gray-800">
+                ACTIVE
+              </span>
+            </div>
+            <h1 class="text-4xl font-bold mb-4">EUR/USD Strong BUY Signal Generated</h1>
+            <div class="flex items-center gap-4 text-sm text-gray-500">
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                  A
+                </div>
+                <span>by Ahmad Ali</span>
+              </div>
+              <span>•</span>
+              <time>2025-01-15</time>
+              <span>•</span>
+              <span>FOREX</span>
+            </div>
+          </div>
+
+          <!-- Trading Chart -->
+          <figure class="max-w-full overflow-hidden rounded-2xl">
+            <div class="bg-gray-900 text-white p-8 text-center min-h-96 flex items-center justify-center">
+              <div>
+                <h3 class="text-2xl font-bold mb-4">EUR/USD Trading Chart</h3>
+                <p class="text-gray-300 mb-4">Interactive chart would be displayed here</p>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p class="text-gray-400">Entry</p>
+                    <p class="text-xl font-bold">1.0850</p>
+                  </div>
+                  <div>
+                    <p class="text-gray-400">Current</p>
+                    <p class="text-xl font-bold text-ns-green">1.0885</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </figure>
+
+          <div class="max-w-4xl mx-auto space-y-16">
+            <!-- Signal Analysis -->
+            <div class="space-y-6">
+              <h2 class="text-3xl font-bold">Signal Analysis</h2>
+              <p class="text-gray-700 leading-relaxed text-lg">
+                Technical analysis shows bullish momentum with RSI recovering from oversold territory. MACD shows
+                bullish crossover with increasing volume supporting the upward move. ECB policy stance remains hawkish
+                while USD shows weakness following recent Fed minutes.
+              </p>
+
+              <!-- Key Signal Details -->
+              <div class="bg-gray-50 rounded-xl p-6 space-y-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                  <div>
+                    <p class="text-xs text-gray-500">Entry Price</p>
+                    <p class="text-lg font-bold">1.0850</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-gray-500">Current Price</p>
+                    <p class="text-lg font-bold text-primary-600">1.0885</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-gray-500">Stop Loss</p>
+                    <p class="text-lg font-bold text-red-600">1.0820</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-gray-500">Take Profit</p>
+                    <p class="text-lg font-bold text-ns-green">1.0920</p>
+                  </div>
+                </div>
+                <div class="border-t pt-4">
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm">Current P&L:</span>
+                    <span class="text-lg font-bold text-ns-green">+35 pips (1.21%)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Performance Metrics (Case Study Style) -->
+            <div>
+              <h3 class="text-2xl font-bold mb-6">Signal Performance</h3>
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Metrics Column -->
+                <div class="space-y-4">
+                  <p class="py-4 text-gray-600 font-medium border-b">Metric</p>
+                  <p class="py-4 border-b">Entry Price</p>
+                  <p class="py-4 border-b">Current Price</p>
+                  <p class="py-4 border-b">Profit/Loss</p>
+                  <p class="py-4 border-b">Confidence Level</p>
+                  <p class="py-4">Risk/Reward Ratio</p>
+                </div>
+
+                <!-- Signal Entry -->
+                <div class="text-center px-6 bg-white rounded-2xl shadow-sm space-y-4">
+                  <p class="py-4 text-gray-600 font-medium border-b">Signal Entry</p>
+                  <p class="py-4 border-b">1.0850</p>
+                  <p class="py-4 border-b">1.0850</p>
+                  <p class="py-4 border-b">0 pips</p>
+                  <p class="py-4 border-b">87%</p>
+                  <p class="py-4">1:2.3</p>
+                </div>
+
+                <!-- Current Status -->
+                <div class="text-center px-6 bg-white rounded-2xl shadow-sm space-y-4">
+                  <p class="py-4 text-gray-600 font-medium border-b">Current Status</p>
+                  <p class="py-4 border-b">1.0850</p>
+                  <p class="py-4 font-bold text-primary-600 border-b">1.0885</p>
+                  <p class="py-4 font-bold text-ns-green border-b">+35 pips</p>
+                  <p class="py-4 border-b">87%</p>
+                  <p class="py-4">In Progress</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trader Testimonial -->
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-8">
+              <div class="text-center">
+                <blockquote class="text-lg italic mb-4">
+                  "This EUR/USD signal is performing exactly as predicted. The technical analysis was spot-on with the
+                  RSI recovery and volume confirmation."
+                </blockquote>
+                <div class="flex items-center justify-center gap-3">
+                  <div
+                    class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                    A
+                  </div>
+                  <div>
+                    <p class="font-semibold">Ahmad Ali</p>
+                    <p class="text-sm text-gray-600">Senior FX Analyst</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Risk Management -->
+            <div class="space-y-6">
+              <h4 class="text-2xl font-bold">Risk Management Strategy</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <ul class="space-y-3">
+                  <li class="flex justify-between">
+                    <span>Position Size:</span>
+                    <span class="font-semibold">2% of account</span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span>Maximum Risk:</span>
+                    <span class="font-semibold">30 pips</span>
+                  </li>
+                </ul>
+                <ul class="space-y-3">
+                  <li class="flex justify-between">
+                    <span>Reward Target:</span>
+                    <span class="font-semibold">70 pips</span>
+                  </li>
+                  <li class="flex justify-between">
+                    <span>Risk/Reward Ratio:</span>
+                    <span class="font-semibold">1:2.3</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Analysis -->
+    <footer class="bg-yellow-50 border-t py-8">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h3 class="text-lg font-semibold text-yellow-800 mb-3">✅ Key Strengths</h3>
+            <ul class="text-sm text-yellow-700 space-y-1">
+              <li>• Perfect before/after performance tracking</li>
+              <li>• Professional metrics display with clean comparison</li>
+              <li>• Built-in testimonial section for credibility</li>
+              <li>• Easy implementation with existing components</li>
+              <li>• Natural progression from analysis to results</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-yellow-800 mb-3">🎯 Best Use Cases</h3>
+            <ul class="text-sm text-yellow-700 space-y-1">
+              <li>• Signal archives and performance reviews</li>
+              <li>• Completed trades showcase</li>
+              <li>• Professional trading results</li>
+              <li>• Before/after signal comparison</li>
+              <li>• Trading strategy validation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

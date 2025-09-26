@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics Style - Signal Detail Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'ns-green': '#10b981',
+              'ns-green-light': '#d1fae5',
+              'ns-yellow': '#f59e0b',
+              'ns-yellow-light': '#fef3c7',
+              'background-1': '#ffffff',
+              'background-2': '#f8fafc',
+              'background-6': '#374151',
+              'primary-600': '#2563eb',
+              'primary-800': '#1e40af',
+              secondary: '#64748b',
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Preview Header -->
+    <header class="bg-gradient-to-r from-green-500 to-blue-600 text-white py-6">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold">Analytics Style Preview</h1>
+            <p class="opacity-90">Real-time dashboard with professional KPIs and live tracking</p>
+          </div>
+          <div class="flex gap-3">
+            <span class="bg-white/20 px-3 py-1 rounded-full text-sm">🏆 RECOMMENDED WINNER</span>
+          </div>
+        </div>
+        <div class="mt-4 flex gap-3">
+          <span class="bg-green-400/30 px-3 py-1 rounded-full text-sm">⭐ Trading: 5/5</span>
+          <span class="bg-green-400/30 px-3 py-1 rounded-full text-sm">👤 UX: 5/5</span>
+          <span class="bg-blue-400/30 px-3 py-1 rounded-full text-sm">⚡ Impl: 4/5</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Signal Detail Analytics Implementation -->
+    <main class="pt-16 pb-24 bg-gray-50">
+      <div class="max-w-6xl mx-auto px-6">
+        <!-- Signal Header -->
+        <div class="text-center mb-12">
+          <div class="flex items-center justify-center gap-3 mb-4">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-ns-green text-white">
+              📈 SIGNAL ANALYTICS
+            </span>
+            <span
+              class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-ns-yellow-light text-gray-800">
+              ACTIVE
+            </span>
+          </div>
+          <h1 class="text-4xl font-bold mb-4">EUR/USD Strong BUY Signal Generated</h1>
+          <p class="text-gray-600 max-w-2xl mx-auto">
+            Technical analysis shows bullish momentum with RSI recovering from oversold territory. MACD shows bullish
+            crossover with increasing volume.
+          </p>
+        </div>
+
+        <!-- KPI Dashboard -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+          <div class="bg-white rounded-xl p-6 text-center shadow-sm">
+            <h3 class="text-2xl font-bold text-ns-green">+35</h3>
+            <p class="text-sm text-gray-500">Current Pips</p>
+          </div>
+          <div class="bg-white rounded-xl p-6 text-center shadow-sm">
+            <h3 class="text-2xl font-bold text-primary-600">87%</h3>
+            <p class="text-sm text-gray-500">Confidence</p>
+          </div>
+          <div class="bg-white rounded-xl p-6 text-center shadow-sm">
+            <h3 class="text-2xl font-bold text-ns-yellow">1:2.3</h3>
+            <p class="text-sm text-gray-500">Risk/Reward</p>
+          </div>
+          <div class="bg-white rounded-xl p-6 text-center shadow-sm">
+            <h3 class="text-2xl font-bold text-gray-700">FOREX</h3>
+            <p class="text-sm text-gray-500">Market</p>
+          </div>
+        </div>
+
+        <!-- Price Movement Analytics -->
+        <div class="bg-white rounded-xl p-8 mb-12 shadow-sm">
+          <h2 class="text-2xl font-bold mb-6">Price Movement Analytics</h2>
+
+          <!-- Chart Area -->
+          <div class="bg-gray-900 rounded-lg p-6 mb-6 min-h-96 flex items-center justify-center">
+            <div class="text-center text-white">
+              <h3 class="text-3xl font-bold mb-4">EUR/USD Real-Time Chart</h3>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-4">
+                <div>
+                  <p class="text-xs text-gray-400">Entry Point</p>
+                  <p class="text-xl font-bold">1.0850</p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-400">Current Price</p>
+                  <p class="text-xl font-bold text-ns-green">1.0885</p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-400">Price Change</p>
+                  <p class="text-xl font-bold text-ns-green">+35 pips</p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-400">Distance to Target</p>
+                  <p class="text-xl font-bold text-ns-yellow">35 pips</p>
+                </div>
+              </div>
+              <p class="text-sm text-gray-400">Interactive candlestick chart with technical indicators</p>
+            </div>
+          </div>
+
+          <!-- Key Levels -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="text-lg font-semibold mb-3">Support Levels</h4>
+              <div class="space-y-2">
+                <div class="flex justify-between p-2 bg-red-50 rounded">
+                  <span>Support 1</span>
+                  <span class="font-mono">1.0820</span>
+                </div>
+                <div class="flex justify-between p-2 bg-red-50 rounded">
+                  <span>Support 2</span>
+                  <span class="font-mono">1.0790</span>
+                </div>
+                <div class="flex justify-between p-2 bg-red-50 rounded">
+                  <span>Support 3</span>
+                  <span class="font-mono">1.0750</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 class="text-lg font-semibold mb-3">Resistance Levels</h4>
+              <div class="space-y-2">
+                <div class="flex justify-between p-2 bg-green-50 rounded">
+                  <span>Resistance 1</span>
+                  <span class="font-mono">1.0920</span>
+                </div>
+                <div class="flex justify-between p-2 bg-green-50 rounded">
+                  <span>Resistance 2</span>
+                  <span class="font-mono">1.0950</span>
+                </div>
+                <div class="flex justify-between p-2 bg-green-50 rounded">
+                  <span>Resistance 3</span>
+                  <span class="font-mono">1.0980</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="bg-white rounded-xl p-8 mb-12 shadow-sm">
+          <h2 class="text-2xl font-bold mb-6">Performance Analytics</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Signal Quality Score -->
+            <div class="text-center">
+              <div class="relative w-24 h-24 mx-auto mb-4">
+                <svg class="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="40" stroke="#e5e7eb" stroke-width="8" fill="none" />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    stroke="#10b981"
+                    stroke-width="8"
+                    fill="none"
+                    stroke-dasharray="218, 251"
+                    stroke-linecap="round" />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-lg font-bold">87%</span>
+                </div>
+              </div>
+              <h4 class="font-semibold">Signal Quality</h4>
+              <p class="text-sm text-gray-500">Confidence Score</p>
+            </div>
+
+            <!-- Risk Assessment -->
+            <div class="text-center">
+              <div class="relative w-24 h-24 mx-auto mb-4">
+                <svg class="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="40" stroke="#e5e7eb" stroke-width="8" fill="none" />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    stroke="#f59e0b"
+                    stroke-width="8"
+                    fill="none"
+                    stroke-dasharray="188, 251"
+                    stroke-linecap="round" />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-lg font-bold">75%</span>
+                </div>
+              </div>
+              <h4 class="font-semibold">Risk Level</h4>
+              <p class="text-sm text-gray-500">Medium Risk</p>
+            </div>
+
+            <!-- Profit Potential -->
+            <div class="text-center">
+              <div class="relative w-24 h-24 mx-auto mb-4">
+                <svg class="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="40" stroke="#e5e7eb" stroke-width="8" fill="none" />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    stroke="#3b82f6"
+                    stroke-width="8"
+                    fill="none"
+                    stroke-dasharray="226, 251"
+                    stroke-linecap="round" />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-lg font-bold">90%</span>
+                </div>
+              </div>
+              <h4 class="font-semibold">Profit Potential</h4>
+              <p class="text-sm text-gray-500">High Probability</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Signal Breakdown -->
+        <div class="bg-white rounded-xl p-8 mb-12 shadow-sm">
+          <h2 class="text-2xl font-bold mb-6">Signal Breakdown Analytics</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h4 class="text-lg font-semibold mb-4">Entry Analysis</h4>
+              <div class="space-y-3">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Action Type</span>
+                  <span class="font-semibold text-ns-green">BUY</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Entry Price</span>
+                  <span class="font-mono">1.0850</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Stop Loss</span>
+                  <span class="font-mono text-red-600">1.0820</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Take Profit</span>
+                  <span class="font-mono text-ns-green">1.0920</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="text-lg font-semibold mb-4">Live Status</h4>
+              <div class="space-y-3">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Current Price</span>
+                  <span class="font-mono font-bold">1.0885</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Unrealized P&L</span>
+                  <span class="font-semibold text-ns-green">+35 pips</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Time Active</span>
+                  <span>4h 23m</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Progress to Target</span>
+                  <span>50.0%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analyst Information -->
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-8">
+          <div class="flex items-center gap-4 mb-6">
+            <div
+              class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
+              A
+            </div>
+            <div>
+              <h3 class="text-xl font-bold">Ahmad Ali</h3>
+              <p class="text-gray-600">Senior Trading Analyst</p>
+              <p class="text-sm mt-1">Published: 2025-01-15</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <p class="text-2xl font-bold">94%</p>
+              <p class="text-sm text-gray-600">Success Rate</p>
+            </div>
+            <div>
+              <p class="text-2xl font-bold">127</p>
+              <p class="text-sm text-gray-600">Signals Published</p>
+            </div>
+            <div>
+              <p class="text-2xl font-bold">+2,340</p>
+              <p class="text-sm text-gray-600">Total Pips</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Analysis -->
+    <footer class="bg-green-50 border-t py-8">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-6">
+          <h3 class="text-2xl font-bold text-green-800 mb-2">🏆 Why Analytics Style Wins</h3>
+          <p class="text-green-700">Perfect combination of professional design and trading functionality</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <h4 class="font-semibold text-green-800 mb-3">🎯 Key Features</h4>
+            <ul class="text-sm text-green-700 space-y-1">
+              <li>• Real-time KPI dashboard</li>
+              <li>• Circular progress indicators</li>
+              <li>• Live chart integration</li>
+              <li>• Support/resistance tables</li>
+            </ul>
+          </div>
+          <div class="text-center">
+            <h4 class="font-semibold text-green-800 mb-3">💡 Perfect For</h4>
+            <ul class="text-sm text-green-700 space-y-1">
+              <li>• Active signal monitoring</li>
+              <li>• Professional traders</li>
+              <li>• Real-time analysis</li>
+              <li>• Institutional platforms</li>
+            </ul>
+          </div>
+          <div class="text-center">
+            <h4 class="font-semibold text-green-800 mb-3">⚡ Advantages</h4>
+            <ul class="text-sm text-green-700 space-y-1">
+              <li>• Instant data comprehension</li>
+              <li>• Professional appearance</li>
+              <li>• Scalable design</li>
+              <li>• Trader-friendly layout</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

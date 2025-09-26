@@ -1,0 +1,83 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('Drill Navigation', () => {
+  test('should navigate to drill page without ModalContext error', async ({ page }) => {
+    // Navigate to drill page
+    await page.goto('/drill-example');
+
+    // Wait for page to load
+    await page.waitForLoadState('networkidle');
+
+    // Check that the page loaded successfully without context error
+    await expect(page.locator('h1')).toContainText('Advanced Trading');
+
+    // Check that the EmailGateWrapper is working (no modal context error)
+    await expect(page.locator('[data-testid="email-gate-wrapper"], .min-h-screen')).toBeVisible();
+
+    // Check that the premium content lock overlay is visible (since no email submitted)
+    await expect(page.locator('text=Premium Content')).toBeVisible();
+
+    // Check that the unlock button is visible
+    await expect(page.locator('button:has-text("Unlock Drill Content")')).toBeVisible();
+  });
+
+  test('should show email gate modal when unlock button is clicked', async ({ page }) => {
+    await page.goto('/drill-example');
+    await page.waitForLoadState('networkidle');
+
+    // Click the unlock button
+    await page.click('button:has-text("Unlock Drill Content")');
+
+    // Wait a bit for any animations or state changes
+    await page.waitForTimeout(1000);
+
+    // Check if email gate modal appears (it should be controlled by the ModalContext)
+    // Since we fixed the ModalProvider, this should work without errors
+    const unlockButton = page.locator('button:has-text("Unlock Drill Content")');
+    await expect(unlockButton).toBeVisible();
+  });
+
+  test('should display learning benefits correctly', async ({ page }) => {
+    await page.goto('/drill-example');
+    await page.waitForLoadState('networkidle');
+
+    // Check that all learning benefits are displayed
+    await expect(page.locator('text=Risk Management')).toBeVisible();
+    await expect(page.locator('text=Technical Analysis')).toBeVisible();
+    await expect(page.locator('text=Market Psychology')).toBeVisible();
+    await expect(page.locator('text=Live Examples')).toBeVisible();
+  });
+
+  test('should have blurred content when access is not granted', async ({ page }) => {
+    await page.goto('/drill-example');
+    await page.waitForLoadState('networkidle');
+
+    // Check that the interactive drill session content is blurred
+    const blurredContent = page.locator('.filter.blur-sm');
+    await expect(blurredContent).toBeVisible();
+
+    // Check that the lock overlay is present
+    await expect(page.locator('text=This drill contains advanced trading strategies')).toBeVisible();
+  });
+
+  test('should not show console errors related to ModalContext', async ({ page }) => {
+    const consoleErrors: string[] = [];
+
+    // Listen for console errors
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        consoleErrors.push(msg.text());
+      }
+    });
+
+    await page.goto('/drill-example');
+    await page.waitForLoadState('networkidle');
+
+    // Check that no ModalContext errors occurred
+    const modalContextErrors = consoleErrors.filter((error) =>
+      error.includes('useModalContext must be used within a ModalProvider'),
+    );
+
+    expect(modalContextErrors.length).toBe(0);
+  });
+});

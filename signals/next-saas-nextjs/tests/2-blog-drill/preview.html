@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog Style - Signal Detail Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'ns-green': '#10b981',
+              'ns-green-light': '#d1fae5',
+              'ns-yellow': '#f59e0b',
+              'ns-yellow-light': '#fef3c7',
+              'background-1': '#ffffff',
+              'background-2': '#f8fafc',
+              'background-6': '#374151',
+              'primary-600': '#2563eb',
+              'primary-800': '#1e40af',
+              secondary: '#64748b',
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Preview Header -->
+    <header class="bg-white border-b py-6">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">Blog Style Preview</h1>
+            <p class="text-gray-600">Community-focused layout with social features and detailed analysis</p>
+          </div>
+          <div class="flex gap-3">
+            <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">⭐ Trading: 3/5</span>
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">👤 UX: 4/5</span>
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">⚡ Impl: 3/5</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Signal Detail Blog Implementation -->
+    <main class="pt-7 pb-14">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="max-w-5xl mx-auto space-y-8">
+          <!-- Signal Header -->
+          <div class="flex items-center gap-3 mb-4">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-ns-green text-white">
+              📈 SIGNAL
+            </span>
+            <span
+              class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-ns-yellow-light text-gray-800">
+              ACTIVE
+            </span>
+            <span
+              class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-ns-green-light text-gray-800">
+              +35 pips
+            </span>
+          </div>
+
+          <h2 class="text-4xl font-bold mb-6">EUR/USD Strong BUY Signal Generated</h2>
+
+          <div class="flex items-center gap-3 mb-8">
+            <figure class="w-12 h-12 rounded-full overflow-hidden bg-gray-200">
+              <div
+                class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
+                A
+              </div>
+            </figure>
+            <div>
+              <h3 class="font-medium">Ahmad Ali</h3>
+              <time class="text-sm flex items-center gap-2 text-gray-500">
+                2025-01-15
+                <span>•</span>
+                FOREX
+                <span>•</span>
+                87% Confidence
+              </time>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trading Chart -->
+        <figure class="max-w-full rounded-lg overflow-hidden my-10">
+          <div class="bg-gray-900 text-white p-8 text-center min-h-96 flex flex-col items-center justify-center">
+            <h3 class="text-3xl font-bold mb-4">EUR/USD Live Chart</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-6">
+              <div>
+                <p class="text-xs text-gray-400">Entry</p>
+                <p class="text-xl font-bold text-white">1.0850</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-400">Current</p>
+                <p class="text-xl font-bold text-ns-green">1.0885</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-400">Stop Loss</p>
+                <p class="text-xl font-bold text-red-400">1.0820</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-400">Target</p>
+                <p class="text-xl font-bold text-ns-yellow">1.0920</p>
+              </div>
+            </div>
+            <div class="text-center">
+              <p class="text-sm text-gray-400">Real-time price movement and technical indicators</p>
+              <p class="text-2xl font-bold mt-2 text-ns-green">Current P&L: +35 pips</p>
+            </div>
+          </div>
+        </figure>
+
+        <!-- Signal Analysis -->
+        <article class="max-w-4xl mx-auto">
+          <div class="mb-8">
+            <h3 class="text-2xl font-bold mb-4">Signal Overview</h3>
+            <p class="text-lg leading-relaxed text-gray-700 mb-6">
+              Technical analysis shows bullish momentum with RSI recovering from oversold territory. MACD shows bullish
+              crossover with increasing volume supporting the upward move. ECB policy stance remains hawkish while USD
+              shows weakness following recent Fed minutes.
+            </p>
+
+            <!-- Signal Metrics -->
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8">
+              <h4 class="text-xl font-bold mb-4">Key Signal Metrics</h4>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="text-center">
+                  <p class="text-sm text-gray-600">Action</p>
+                  <p class="text-lg font-bold text-ns-green">BUY</p>
+                </div>
+                <div class="text-center">
+                  <p class="text-sm text-gray-600">Confidence</p>
+                  <p class="text-lg font-bold">87%</p>
+                </div>
+                <div class="text-center">
+                  <p class="text-sm text-gray-600">Risk/Reward</p>
+                  <p class="text-lg font-bold">1:2.3</p>
+                </div>
+                <div class="text-center">
+                  <p class="text-sm text-gray-600">Status</p>
+                  <p class="text-lg font-bold text-ns-yellow">ACTIVE</p>
+                </div>
+              </div>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">Technical Analysis</h3>
+            <div class="space-y-4 mb-8">
+              <h4 class="text-xl font-semibold">Key Indicators:</h4>
+              <ul class="space-y-2 pl-4">
+                <li>
+                  •
+                  <strong>RSI</strong>
+                  : Recovering from oversold territory (32 → 45)
+                </li>
+                <li>
+                  •
+                  <strong>MACD</strong>
+                  : Bullish crossover confirmed
+                </li>
+                <li>
+                  •
+                  <strong>Support Level</strong>
+                  : Strong support at 1.0820
+                </li>
+                <li>
+                  •
+                  <strong>Volume</strong>
+                  : Increasing buying volume
+                </li>
+              </ul>
+
+              <h4 class="text-xl font-semibold">Market Sentiment:</h4>
+              <ul class="space-y-2 pl-4">
+                <li>• ECB policy stance remains hawkish</li>
+                <li>• USD weakness following Fed minutes</li>
+                <li>• Risk-on sentiment supporting EUR</li>
+              </ul>
+
+              <h4 class="text-xl font-semibold">Entry Strategy:</h4>
+              <p>Entry at current levels with tight stop loss provides excellent risk-reward ratio of 1:2.3</p>
+            </div>
+
+            <!-- Live Performance Section -->
+            <div class="bg-gray-50 rounded-xl p-6">
+              <h4 class="text-xl font-bold mb-4">Live Performance Tracking</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-semibold mb-2">Entry Levels</h5>
+                  <ul class="space-y-1 text-sm">
+                    <li>Entry: 1.0850</li>
+                    <li>
+                      Stop Loss:
+                      <span class="text-red-600">1.0820</span>
+                    </li>
+                    <li>
+                      Take Profit:
+                      <span class="text-ns-green">1.0920</span>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h5 class="font-semibold mb-2">Current Status</h5>
+                  <ul class="space-y-1 text-sm">
+                    <li>
+                      Current Price:
+                      <span class="font-bold">1.0885</span>
+                    </li>
+                    <li>
+                      Unrealized P&L:
+                      <span class="text-ns-green">+35 pips</span>
+                    </li>
+                    <li>Distance to TP: 35 pips</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Social Share & Comments Section -->
+        <div class="max-w-4xl mx-auto space-y-8">
+          <!-- Share Links -->
+          <div class="border-t border-b py-6">
+            <h4 class="text-lg font-semibold mb-4">Share This Signal</h4>
+            <div class="flex gap-4">
+              <button class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">
+                Share on Twitter
+              </button>
+              <button class="bg-blue-800 text-white px-4 py-2 rounded text-sm hover:bg-blue-900">
+                Share on Facebook
+              </button>
+              <button class="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700">
+                Share on WhatsApp
+              </button>
+            </div>
+          </div>
+
+          <!-- Comments Section -->
+          <div>
+            <h4 class="text-xl font-bold mb-4">Trader Discussion (3 comments)</h4>
+            <div class="space-y-4">
+              <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex gap-3">
+                  <div
+                    class="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center text-white font-bold">
+                    M
+                  </div>
+                  <div>
+                    <p class="font-semibold">Mike Trader</p>
+                    <p class="text-sm text-gray-500">2 hours ago</p>
+                    <p class="mt-2">
+                      Great analysis! Already in profit with this signal. The RSI confirmation was key.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex gap-3">
+                  <div class="w-10 h-10 bg-ns-green rounded-full flex items-center justify-center text-white font-bold">
+                    S
+                  </div>
+                  <div>
+                    <p class="font-semibold">Sarah FX</p>
+                    <p class="text-sm text-gray-500">1 hour ago</p>
+                    <p class="mt-2">Watching this closely. The volume spike at entry was perfect timing!</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex gap-3">
+                  <div
+                    class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                    J
+                  </div>
+                  <div>
+                    <p class="font-semibold">John Trading</p>
+                    <p class="text-sm text-gray-500">30 minutes ago</p>
+                    <p class="mt-2">Following this signal. Good risk management with tight stop loss.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <h5 class="font-semibold mb-2">Add a comment</h5>
+              <textarea
+                class="w-full p-3 border rounded-lg resize-none"
+                rows="3"
+                placeholder="Share your thoughts on this signal..."></textarea>
+              <button class="mt-2 bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700">
+                Post Comment
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Analysis -->
+    <footer class="bg-blue-50 border-t py-8">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h3 class="text-lg font-semibold text-blue-800 mb-3">✅ Key Strengths</h3>
+            <ul class="text-sm text-blue-700 space-y-1">
+              <li>• Social engagement with comments and sharing</li>
+              <li>• Perfect author attribution and branding</li>
+              <li>• Natural reading flow for detailed analysis</li>
+              <li>• Community building features</li>
+              <li>• Good for educational trading content</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-blue-800 mb-3">🎯 Best Use Cases</h3>
+            <ul class="text-sm text-blue-700 space-y-1">
+              <li>• Market analysis and education</li>
+              <li>• Trading community discussions</li>
+              <li>• Detailed technical analysis</li>
+              <li>• Social sharing of insights</li>
+              <li>• Building trader relationships</li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-6 p-4 bg-orange-100 rounded-lg">
+          <h4 class="font-semibold text-orange-800 mb-2">⚠️ Considerations</h4>
+          <p class="text-sm text-orange-700">
+            While great for community building, this style is less optimized for quick trading decisions and may scatter
+            important metrics throughout the content.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

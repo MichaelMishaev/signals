@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "shadcn-ui": {
+      "command": "npx",
+      "args": ["-y", "shadcn-ui-mcp-server"],
+      "env": {},
+      "description": "MCP server for shadcn/ui component references"
+    },
+    "render": {
+      "command": "render-mcp",
+      "args": [],
+      "env": {
+        "RENDER_API_KEY": "${RENDER_API_KEY}"
+      },
+      "description": "MCP server for Render.com deployment monitoring and management"
+    }
+  }
+}

@@ -1,0 +1,1022 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Popup Components - 8 Variations</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary-500: #6366f1;
+        --primary-600: #4f46e5;
+        --primary-700: #4338ca;
+        --ns-green: #10b981;
+        --ns-red: #ef4444;
+        --ns-yellow: #fbbf24;
+        --background-1: #ffffff;
+        --background-2: #f9fafb;
+        --background-6: #e5e7eb;
+        --background-7: #d1d5db;
+        --background-8: #1f2937;
+        --secondary: #1a1a1c;
+        --accent: #fcfcfd;
+        --stroke-3: #e5e7eb;
+        --stroke-7: #374151;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 48px;
+        color: #1f2937;
+        margin-bottom: 20px;
+        font-weight: 800;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #6b7280;
+        font-size: 18px;
+        margin-bottom: 50px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+        margin-bottom: 50px;
+      }
+
+      .card {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .variant-label {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .variant-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 8px;
+      }
+
+      .variant-description {
+        font-size: 14px;
+        color: #6b7280;
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+
+      .preview-btn {
+        width: 100%;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .preview-btn:hover {
+        background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+        transform: scale(1.02);
+      }
+
+      /* Modal/Dialog Styles */
+      dialog {
+        border: none;
+        padding: 0;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        max-width: 90vw;
+        max-height: 90vh;
+        overflow: visible;
+      }
+
+      dialog::backdrop {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+      }
+
+      /* Popup Variant Styles */
+      .popup-cta {
+        background: white;
+        border-radius: 20px;
+        padding: 32px;
+        max-width: 400px;
+        text-align: center;
+      }
+
+      .popup-card {
+        background: white;
+        border-radius: 20px;
+        max-width: 500px;
+        overflow: hidden;
+      }
+
+      .popup-card-header {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        padding: 24px;
+        text-align: center;
+        color: white;
+        position: relative;
+      }
+
+      .popup-minimal {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        max-width: 320px;
+        position: relative;
+      }
+
+      .popup-premium {
+        background: white;
+        border-radius: 20px;
+        max-width: 400px;
+        overflow: hidden;
+      }
+
+      .popup-premium-header {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        padding: 24px;
+        text-align: center;
+        color: white;
+        position: relative;
+      }
+
+      .popup-gradient {
+        background: linear-gradient(135deg, #a855f7, #ec4899, #fb923c);
+        padding: 2px;
+        border-radius: 20px;
+        max-width: 500px;
+      }
+
+      .popup-gradient-inner {
+        background: white;
+        border-radius: 18px;
+        padding: 32px;
+      }
+
+      .popup-sidebar {
+        background: white;
+        border-radius: 20px;
+        display: flex;
+        max-width: 600px;
+        height: 400px;
+        overflow: hidden;
+      }
+
+      .popup-sidebar-left {
+        width: 200px;
+        background: linear-gradient(180deg, #6366f1 0%, #4338ca 100%);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+      }
+
+      .popup-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        max-width: 700px;
+        padding: 48px;
+        color: white;
+        text-align: center;
+        position: relative;
+      }
+
+      .popup-notification {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        max-width: 400px;
+        position: relative;
+      }
+
+      /* Form Elements */
+      .badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: #06b6d4;
+        color: white;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 16px;
+      }
+
+      .popup-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 8px;
+      }
+
+      .popup-subtitle {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 24px;
+        line-height: 1.5;
+      }
+
+      input[type='text'],
+      input[type='email'] {
+        width: 100%;
+        padding: 12px 18px;
+        border: 1px solid #e5e7eb;
+        border-radius: 9999px;
+        font-size: 14px;
+        margin-bottom: 12px;
+        transition: all 0.3s;
+      }
+
+      input[type='text']:focus,
+      input[type='email']:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .btn {
+        flex: 1;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 9999px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background: #6366f1;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #4f46e5;
+        transform: translateY(-1px);
+      }
+
+      .btn-secondary {
+        background: #f3f4f6;
+        color: #1f2937;
+      }
+
+      .btn-secondary:hover {
+        background: #e5e7eb;
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+      }
+
+      .close-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+      }
+
+      .close-btn-dark {
+        background: #f3f4f6;
+        color: #1f2937;
+      }
+
+      .close-btn-dark:hover {
+        background: #e5e7eb;
+      }
+
+      /* Special Elements */
+      .icon-circle {
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+      }
+
+      .new-badge {
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        width: 48px;
+        height: 48px;
+        background: #ef4444;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        font-weight: 700;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .live-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #10b981;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+        margin-right: 8px;
+      }
+
+      /* Features Section */
+      .features-grid {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 50px;
+      }
+
+      .features-grid h2 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .features-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 24px;
+      }
+
+      .feature-item {
+        display: flex;
+        align-items: start;
+        gap: 12px;
+      }
+
+      .feature-icon {
+        width: 24px;
+        height: 24px;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .feature-text {
+        flex: 1;
+      }
+
+      .feature-text h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 4px;
+      }
+
+      .feature-text p {
+        font-size: 14px;
+        color: #6b7280;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📧 Email Popup Collection</h1>
+      <p class="subtitle">8 Beautiful Popup Variations for Trading Signals Platform</p>
+
+      <div class="grid">
+        <!-- 1. CTA Variant -->
+        <div class="card">
+          <div class="card-header">
+            <span class="variant-label">Variant 1</span>
+          </div>
+          <h3 class="variant-name">CTA Style</h3>
+          <p class="variant-description">
+            Clean and focused call-to-action popup with badge, perfect for drill access and gated content.
+          </p>
+          <button class="preview-btn" onclick="showPopup('cta')">Preview CTA Popup</button>
+        </div>
+
+        <!-- 2. Card Variant -->
+        <div class="card">
+          <div class="card-header">
+            <span class="variant-label">Variant 2</span>
+          </div>
+          <h3 class="variant-name">Card Style</h3>
+          <p class="variant-description">
+            Professional card layout with colored header and icon, ideal for premium content access.
+          </p>
+          <button class="preview-btn" onclick="showPopup('card')">Preview Card Popup</button>
+        </div>
+
+        <!-- 3. Minimal Variant -->
+        <div class="card">
+          <div class="card-header">
+            <span class="variant-label">Variant 3</span>
+          </div>
+          <h3 class="variant-name">Minimal Style</h3>
+          <p class="variant-description">
+            Compact and clean design for quick email capture without disrupting user flow.
+          </p>
+          <button class="preview-btn" onclick="showPopup('minimal')">Preview Minimal Popup</button>
+        </div>
+
+        <!-- 4. Premium Variant -->
+        <div class="card">
+          <div class="card-header">
+            <span class="variant-label">Variant 4</span>
+          </div>
+          <h3 class="variant-name">Premium Style</h3>
+          <p class="variant-description">
+            Gradient header with lightning icon, perfect for exclusive content and VIP access.
+          </p>
+          <button class="preview-btn" onclick="showPopup('premium')">Preview Premium Popup</button>
+        </div>
+
+        <!-- 5. Gradient Variant -->
+        <div class="card">
+          <div class="card-header">
+            <span class="variant-label">Variant 5</span>
+          </div>
+          <h3 class="variant-name">Gradient Border</h3>
+          <p class="variant-description">
+            Eye-catching gradient border design for special offers and limited-time promotions.
+          </p>
+          <button class="preview-btn" onclick="showPopup('gradient')">Preview Gradient Popup</button>
+        </div>
+
+        <!-- 6. Sidebar Variant -->
+        <div class="card">
+          <div class="card-header">
+            <span class="variant-label">Variant 6</span>
+          </div>
+          <h3 class="variant-name">Sidebar Style</h3>
+          <p class="variant-description">Split layout with visual sidebar showing social proof and community size.</p>
+          <button class="preview-btn" onclick="showPopup('sidebar')">Preview Sidebar Popup</button>
+        </div>
+
+        <!-- 7. Hero Variant -->
+        <div class="card">
+          <div class="card-header">
+            <span class="variant-label">Variant 7</span>
+          </div>
+          <h3 class="variant-name">Hero Style</h3>
+          <p class="variant-description">
+            Full-width hero popup with gradient background, perfect for major announcements.
+          </p>
+          <button class="preview-btn" onclick="showPopup('hero')">Preview Hero Popup</button>
+        </div>
+
+        <!-- 8. Notification Variant -->
+        <div class="card">
+          <div class="card-header">
+            <span class="variant-label">Variant 8</span>
+          </div>
+          <h3 class="variant-name">Notification Style</h3>
+          <p class="variant-description">Compact notification-style popup with live indicator and urgency badge.</p>
+          <button class="preview-btn" onclick="showPopup('notification')">Preview Notification Popup</button>
+        </div>
+      </div>
+
+      <!-- Features Section -->
+      <div class="features-grid">
+        <h2>🚀 Component Features</h2>
+        <div class="features-list">
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg width="12" height="12" viewBox="0 0 20 20" fill="white">
+                <path
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3>8 Unique Variants</h3>
+              <p>Different styles for every use case</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg width="12" height="12" viewBox="0 0 20 20" fill="white">
+                <path
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3>Dark Mode Support</h3>
+              <p>Seamless theme switching</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg width="12" height="12" viewBox="0 0 20 20" fill="white">
+                <path
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3>Fully Responsive</h3>
+              <p>Works on all device sizes</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg width="12" height="12" viewBox="0 0 20 20" fill="white">
+                <path
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3>Form Validation</h3>
+              <p>Built-in email validation</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg width="12" height="12" viewBox="0 0 20 20" fill="white">
+                <path
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3>Loading States</h3>
+              <p>Smooth loading animations</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg width="12" height="12" viewBox="0 0 20 20" fill="white">
+                <path
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3>Customizable</h3>
+              <p>Props for all text and actions</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg width="12" height="12" viewBox="0 0 20 20" fill="white">
+                <path
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3>Accessibility</h3>
+              <p>Keyboard navigation & ARIA labels</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg width="12" height="12" viewBox="0 0 20 20" fill="white">
+                <path
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
+              </svg>
+            </div>
+            <div class="feature-text">
+              <h3>ESC to Close</h3>
+              <p>Standard modal behavior</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Popup Dialogs -->
+    <!-- 1. CTA -->
+    <dialog id="cta-popup">
+      <div class="popup-cta">
+        <span class="badge">ACCESS REQUIRED</span>
+        <h2 class="popup-title">Continue to Drill Content</h2>
+        <p class="popup-subtitle">Please provide your details to access premium drill materials.</p>
+        <form onsubmit="handleSubmit(event)">
+          <input type="text" placeholder="Full Name" required />
+          <input type="email" placeholder="Email Address" required />
+          <div class="btn-group">
+            <button type="button" class="btn btn-secondary" onclick="closePopup('cta')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Access Now</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- 2. Card -->
+    <dialog id="card-popup">
+      <div class="popup-card">
+        <div class="popup-card-header">
+          <button class="close-btn" onclick="closePopup('card')">✕</button>
+          <div class="icon-circle">
+            <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+              <path
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                stroke="white"
+                stroke-width="2"
+                fill="none" />
+            </svg>
+          </div>
+          <h2 style="color: white; font-size: 24px; margin: 0">Premium Access</h2>
+          <p style="color: rgba(255, 255, 255, 0.9); margin-top: 8px">Join traders accessing exclusive drill content</p>
+        </div>
+        <div style="padding: 32px">
+          <form onsubmit="handleSubmit(event)">
+            <input type="text" placeholder="Full Name" required />
+            <input type="email" placeholder="Email Address" required />
+            <div class="btn-group">
+              <button type="button" class="btn btn-secondary" onclick="closePopup('card')">Cancel</button>
+              <button type="submit" class="btn btn-primary">Get Access</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 3. Minimal -->
+    <dialog id="minimal-popup">
+      <div class="popup-minimal">
+        <button
+          class="close-btn close-btn-dark"
+          style="
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            background: #1f2937;
+            color: white;
+          "
+          onclick="closePopup('minimal')">
+          ✕
+        </button>
+        <div style="text-align: center">
+          <h3 style="font-size: 18px; color: #1f2937; margin-bottom: 8px">Quick Access</h3>
+          <p style="font-size: 12px; color: #6b7280; margin-bottom: 16px">Enter details to continue</p>
+          <form onsubmit="handleSubmit(event)">
+            <input type="text" placeholder="Name" required style="padding: 10px 16px; font-size: 14px" />
+            <input type="email" placeholder="Email" required style="padding: 10px 16px; font-size: 14px" />
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px">Continue</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 4. Premium -->
+    <dialog id="premium-popup">
+      <div class="popup-premium">
+        <div class="popup-premium-header">
+          <button class="close-btn" onclick="closePopup('premium')">✕</button>
+          <div
+            style="
+              width: 64px;
+              height: 64px;
+              margin: 0 auto 16px;
+              background: #10b981;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            ">
+            <svg width="32" height="32" fill="white" viewBox="0 0 24 24">
+              <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke="none" />
+            </svg>
+          </div>
+          <h2 style="color: white; font-size: 24px; margin: 0">Exclusive Content</h2>
+          <p style="color: rgba(255, 255, 255, 0.9); margin-top: 8px">Unlock premium drill materials</p>
+        </div>
+        <div style="padding: 24px">
+          <form onsubmit="handleSubmit(event)">
+            <input type="text" placeholder="Your Name" required />
+            <input type="email" placeholder="Email Address" required />
+            <button type="submit" class="btn btn-primary" style="width: 100%">Get Instant Access</button>
+            <p style="text-align: center; font-size: 12px; color: #6b7280; margin-top: 16px">
+              By continuing, you agree to receive premium content
+            </p>
+          </form>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 5. Gradient -->
+    <dialog id="gradient-popup">
+      <div class="popup-gradient">
+        <div class="popup-gradient-inner">
+          <button class="close-btn close-btn-dark" style="float: right" onclick="closePopup('gradient')">✕</button>
+          <div style="text-align: center; clear: both">
+            <span
+              style="
+                display: inline-block;
+                padding: 4px 16px;
+                background: linear-gradient(135deg, #a855f7, #ec4899);
+                color: white;
+                border-radius: 20px;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-bottom: 16px;
+              ">
+              EXCLUSIVE OFFER
+            </span>
+            <h2
+              style="
+                font-size: 28px;
+                font-weight: 800;
+                background: linear-gradient(135deg, #a855f7, #ec4899);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 8px;
+              ">
+              Special Access
+            </h2>
+            <p style="color: #6b7280; margin-bottom: 24px">Join our exclusive trading community today</p>
+            <form onsubmit="handleSubmit(event)">
+              <input
+                type="text"
+                placeholder="Your Name"
+                required
+                style="
+                  border: 2px solid transparent;
+                  background:
+                    linear-gradient(white, white) padding-box,
+                    linear-gradient(135deg, #a855f7, #ec4899) border-box;
+                " />
+              <input
+                type="email"
+                placeholder="Email Address"
+                required
+                style="
+                  border: 2px solid transparent;
+                  background:
+                    linear-gradient(white, white) padding-box,
+                    linear-gradient(135deg, #a855f7, #ec4899) border-box;
+                " />
+              <button
+                type="submit"
+                style="
+                  width: 100%;
+                  padding: 12px;
+                  background: linear-gradient(135deg, #a855f7, #ec4899);
+                  color: white;
+                  border: none;
+                  border-radius: 9999px;
+                  font-weight: 600;
+                  cursor: pointer;
+                ">
+                Claim Access
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 6. Sidebar -->
+    <dialog id="sidebar-popup">
+      <div class="popup-sidebar">
+        <div class="popup-sidebar-left">
+          <div
+            style="
+              width: 80px;
+              height: 80px;
+              background: rgba(255, 255, 255, 0.2);
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin-bottom: 16px;
+            ">
+            <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
+              <path
+                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                stroke="white"
+                stroke-width="2"
+                fill="none" />
+            </svg>
+          </div>
+          <h3 style="font-size: 18px; font-weight: 700">Join 10,000+ Traders</h3>
+          <p style="font-size: 14px; opacity: 0.9; margin-top: 8px">Get exclusive insights</p>
+        </div>
+        <div style="flex: 1; padding: 32px">
+          <button class="close-btn close-btn-dark" style="float: right" onclick="closePopup('sidebar')">✕</button>
+          <div style="clear: both">
+            <h2 style="font-size: 24px; color: #1f2937; margin-bottom: 8px">Welcome to Elite Trading</h2>
+            <p style="color: #6b7280; margin-bottom: 24px">Access professional-grade signals and analysis</p>
+            <form onsubmit="handleSubmit(event)">
+              <input type="text" placeholder="Full Name" required style="border-radius: 8px" />
+              <input type="email" placeholder="Email Address" required style="border-radius: 8px" />
+              <button type="submit" class="btn btn-primary" style="width: 100%">Join Community</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- 7. Hero -->
+    <dialog id="hero-popup">
+      <div class="popup-hero">
+        <button class="close-btn" onclick="closePopup('hero')">✕</button>
+        <h1 style="font-size: 36px; font-weight: 800; margin-bottom: 16px">Transform Your Trading</h1>
+        <p style="font-size: 18px; opacity: 0.9; max-width: 500px; margin: 0 auto 32px">
+          Join thousands of successful traders getting daily signals and market insights
+        </p>
+        <form onsubmit="handleSubmit(event)" style="max-width: 400px; margin: 0 auto">
+          <div style="display: flex; gap: 12px; margin-bottom: 16px">
+            <input
+              type="text"
+              placeholder="Your Name"
+              required
+              style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white" />
+            <input
+              type="email"
+              placeholder="Email Address"
+              required
+              style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white" />
+          </div>
+          <button
+            type="submit"
+            style="
+              padding: 12px 32px;
+              background: white;
+              color: #6366f1;
+              border: none;
+              border-radius: 9999px;
+              font-weight: 600;
+              cursor: pointer;
+            ">
+            Start Trading Smarter
+          </button>
+        </form>
+        <p style="font-size: 12px; opacity: 0.7; margin-top: 16px">No spam. Unsubscribe anytime.</p>
+      </div>
+    </dialog>
+
+    <!-- 8. Notification -->
+    <dialog id="notification-popup">
+      <div class="popup-notification">
+        <div class="new-badge">NEW</div>
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px">
+          <div>
+            <h3 style="font-size: 16px; color: #1f2937; display: flex; align-items: center">
+              <span class="live-dot"></span>
+              Limited Time Offer
+            </h3>
+            <p style="font-size: 12px; color: #6b7280; margin-top: 4px">Get instant access to premium signals</p>
+          </div>
+          <button
+            class="close-btn close-btn-dark"
+            style="position: static; width: 24px; height: 24px"
+            onclick="closePopup('notification')">
+            ✕
+          </button>
+        </div>
+        <form onsubmit="handleSubmit(event)" style="display: flex; gap: 8px">
+          <input
+            type="text"
+            placeholder="Name"
+            required
+            style="flex: 1; padding: 8px 12px; border-radius: 8px; font-size: 14px" />
+          <input
+            type="email"
+            placeholder="Email"
+            required
+            style="flex: 1; padding: 8px 12px; border-radius: 8px; font-size: 14px" />
+          <button
+            type="submit"
+            style="
+              padding: 8px 16px;
+              background: #10b981;
+              color: white;
+              border: none;
+              border-radius: 8px;
+              font-weight: 600;
+              cursor: pointer;
+            ">
+            Go
+          </button>
+        </form>
+      </div>
+    </dialog>
+
+    <script>
+      function showPopup(variant) {
+        const dialog = document.getElementById(variant + '-popup');
+        dialog.showModal();
+      }
+
+      function closePopup(variant) {
+        const dialog = document.getElementById(variant + '-popup');
+        dialog.close();
+      }
+
+      function handleSubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+        const variant = form.closest('dialog').id.replace('-popup', '');
+
+        // Show success message
+        alert(`Success! Form submitted from ${variant} popup.\nThis would normally send the data to your server.`);
+
+        // Reset form and close
+        form.reset();
+        closePopup(variant);
+      }
+
+      // Close dialogs when clicking outside
+      document.querySelectorAll('dialog').forEach((dialog) => {
+        dialog.addEventListener('click', (e) => {
+          if (e.target === dialog) {
+            dialog.close();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
