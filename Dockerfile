@@ -1,31 +1,31 @@
-# Railway Dockerfile for Next.js monorepo deployment
-FROM node:20-alpine AS base
+# Railway Dockerfile - Next.js monorepo deployment
+FROM node:20-alpine
 
-# Set working directory to the Next.js app
+# Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files first for better caching
 COPY signals/next-saas-nextjs/package*.json ./
 
-# Install dependencies WITHOUT running scripts (bypass Husky)
-RUN npm ci --ignore-scripts
-
-# Copy application code
-COPY signals/next-saas-nextjs .
-
-# Set environment variables
+# Set environment to skip git hooks and dev tools
 ENV NODE_ENV=production
 ENV CI=true
 ENV HUSKY=0
 
-# Build the Next.js application
+# Install all dependencies (needed for build)
+RUN npm ci --ignore-scripts
+
+# Copy source code
+COPY signals/next-saas-nextjs .
+
+# Build the application
 RUN npm run build
 
-# Remove devDependencies after build
+# Clean up dev dependencies
 RUN npm prune --omit=dev
 
-# Expose port (Railway will override with PORT env var)
-EXPOSE 3000
+# Expose port
+EXPOSE $PORT
 
-# Start the application
+# Start command
 CMD ["npm", "start"]
