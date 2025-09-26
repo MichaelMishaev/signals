@@ -7,14 +7,22 @@ WORKDIR /app
 # Copy package files
 COPY signals/next-saas-nextjs/package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Set environment variables to skip git hooks and dev tools
+ENV HUSKY=0
+ENV CI=true
+ENV NODE_ENV=production
+
+# Install dependencies (including devDependencies for build)
+RUN npm ci
 
 # Copy application code
 COPY signals/next-saas-nextjs .
 
 # Build the Next.js application
 RUN npm run build
+
+# Remove devDependencies after build
+RUN npm prune --omit=dev
 
 # Expose port (Railway will override with PORT env var)
 EXPOSE 3000
