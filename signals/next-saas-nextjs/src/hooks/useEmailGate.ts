@@ -16,6 +16,7 @@ export const useEmailGate = () => {
 
   useEffect(() => {
     checkEmailStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const checkEmailStatus = async () => {

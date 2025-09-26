@@ -4,10 +4,33 @@ import EmailGateWrapper from '@/components/shared/emailGate/EmailGateWrapper';
 import SignalDetailAnalytics from '@/components/shared/signalDrill/SignalDetailAnalytics';
 
 interface Signal {
-  id: string;
-  title?: string;
-  description?: string;
-  [key: string]: unknown;
+  id: number;
+  type: string;
+  title: string;
+  content: string;
+  pair: string;
+  action: 'BUY' | 'SELL';
+  entry: number;
+  stopLoss: number;
+  takeProfit: number;
+  currentPrice: number;
+  confidence: number;
+  market: string;
+  status: string;
+  pips: number;
+  author: string;
+  authorImage: string;
+  publishDate: string;
+  keyLevels: {
+    resistance: number[];
+    support: number[];
+  };
+  chartImage?: string;
+  analystStats?: {
+    successRate: number;
+    totalSignals: number;
+    totalPips: number;
+  };
 }
 
 interface SignalPageClientProps {
