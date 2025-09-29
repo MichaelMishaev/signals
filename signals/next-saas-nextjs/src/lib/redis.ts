@@ -8,33 +8,50 @@ const getRedisUrl = () => {
   return 'redis://localhost:6379';
 };
 
-const redis = new Redis(getRedisUrl(), {
-  maxRetriesPerRequest: 3,
-  retryStrategy: (times) => {
-    if (times > 3) {
-      // Stop retrying after 3 attempts
-      return null;
-    }
-    // Reconnect after 2 seconds
-    return Math.min(times * 200, 2000);
-  },
-  reconnectOnError: (err) => {
-    const targetErrors = ['READONLY', 'ECONNRESET', 'ECONNREFUSED'];
-    return targetErrors.some(targetError => err.message.includes(targetError));
+// Create Redis client only if not in build mode or if Redis URL is provided
+const shouldCreateRedis = () => {
+  // During build (NODE_ENV=production and no real Redis URL), don't create client
+  if (process.env.NODE_ENV === 'production' && !process.env.REDIS_URL) {
+    return false;
   }
-});
+  return true;
+};
 
-redis.on('error', (err) => {
-  console.error('Redis Client Error:', err);
-});
+let redis: Redis | null = null;
 
-redis.on('connect', () => {
-  console.log('Redis Client Connected');
-});
+if (shouldCreateRedis()) {
+  redis = new Redis(getRedisUrl(), {
+    maxRetriesPerRequest: 3,
+    lazyConnect: true, // Don't connect immediately
+    retryStrategy: (times) => {
+      if (times > 3) {
+        // Stop retrying after 3 attempts
+        return null;
+      }
+      // Reconnect after 2 seconds
+      return Math.min(times * 200, 2000);
+    },
+    reconnectOnError: (err) => {
+      const targetErrors = ['READONLY', 'ECONNRESET', 'ECONNREFUSED'];
+      return targetErrors.some(targetError => err.message.includes(targetError));
+    }
+  });
+}
+
+if (redis) {
+  redis.on('error', (err) => {
+    console.error('Redis Client Error:', err);
+  });
+
+  redis.on('connect', () => {
+    console.log('Redis Client Connected');
+  });
+}
 
 // Session cache functions
 export const sessionCache = {
   set: async (key: string, value: any, expirySeconds = 900) => {
+    if (!redis) return false;
     try {
       await redis.setex(`session:${key}`, expirySeconds, JSON.stringify(value));
       return true;
@@ -45,6 +62,7 @@ export const sessionCache = {
   },
 
   get: async (key: string) => {
+    if (!redis) return null;
     try {
       const data = await redis.get(`session:${key}`);
       return data ? JSON.parse(data) : null;
@@ -55,6 +73,7 @@ export const sessionCache = {
   },
 
   delete: async (key: string) => {
+    if (!redis) return false;
     try {
       await redis.del(`session:${key}`);
       return true;
@@ -65,6 +84,7 @@ export const sessionCache = {
   },
 
   extend: async (key: string, expirySeconds = 900) => {
+    if (!redis) return false;
     try {
       await redis.expire(`session:${key}`, expirySeconds);
       return true;
@@ -78,6 +98,7 @@ export const sessionCache = {
 // Verification code cache
 export const verificationCache = {
   set: async (email: string, code: string, expirySeconds = 600) => {
+    if (!redis) return false;
     try {
       await redis.setex(`verify:${email}`, expirySeconds, code);
       return true;
@@ -88,6 +109,7 @@ export const verificationCache = {
   },
 
   get: async (email: string) => {
+    if (!redis) return null;
     try {
       return await redis.get(`verify:${email}`);
     } catch (error) {
@@ -97,6 +119,7 @@ export const verificationCache = {
   },
 
   delete: async (email: string) => {
+    if (!redis) return false;
     try {
       await redis.del(`verify:${email}`);
       return true;
@@ -110,6 +133,7 @@ export const verificationCache = {
 // Magic link token cache
 export const magicLinkCache = {
   set: async (token: string, email: string, expirySeconds = 600) => {
+    if (!redis) return false;
     try {
       await redis.setex(`magic:${token}`, expirySeconds, email);
       return true;
@@ -120,6 +144,7 @@ export const magicLinkCache = {
   },
 
   get: async (token: string) => {
+    if (!redis) return null;
     try {
       return await redis.get(`magic:${token}`);
     } catch (error) {
@@ -129,6 +154,7 @@ export const magicLinkCache = {
   },
 
   delete: async (token: string) => {
+    if (!redis) return false;
     try {
       await redis.del(`magic:${token}`);
       return true;
