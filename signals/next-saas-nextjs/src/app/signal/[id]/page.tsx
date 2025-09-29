@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import SignalPageClient from './SignalPageClient';
 
-// Fetch signal data from our API route (which handles RLS properly)
+// Fetch signal data and associated drills
 async function getSignalData(id: string) {
   try {
     const baseUrl =
@@ -9,48 +9,62 @@ async function getSignalData(id: string) {
         ? process.env.NEXT_PUBLIC_SITE_URL
         : `http://localhost:${process.env.PORT || 5001}`;
 
-    const response = await fetch(`${baseUrl}/api/signals/${id}`, {
-      // Disable caching for real-time data
+    // Fetch signal data
+    const signalResponse = await fetch(`${baseUrl}/api/signals/${id}`, {
       cache: 'no-store',
     });
 
-    if (!response.ok) {
+    if (!signalResponse.ok) {
       throw new Error('Failed to fetch signal');
     }
 
-    const data = await response.json();
+    const signalData = await signalResponse.json();
 
-    if (!data || !data.signal) {
+    if (!signalData || !signalData.signal) {
       return null;
     }
 
-    const signal = data.signal;
+    // Fetch associated drills
+    const drillsResponse = await fetch(`${baseUrl}/api/drills?signal_id=${id}`, {
+      cache: 'no-store',
+    });
+
+    let drills = [];
+    if (drillsResponse.ok) {
+      const drillsData = await drillsResponse.json();
+      drills = drillsData.drills || [];
+    }
+
+    const signal = signalData.signal;
 
     // Transform database format to component format
     return {
-      id: signal.id,
-      type: 'SIGNAL',
-      title: signal.title,
-      content: signal.content,
-      pair: signal.pair,
-      action: signal.action,
-      entry: signal.entry,
-      stopLoss: signal.stop_loss,
-      takeProfit: signal.take_profit,
-      currentPrice: signal.current_price,
-      confidence: signal.confidence,
-      market: signal.market,
-      status: signal.status,
-      pips: signal.pips,
-      author: signal.author,
-      authorImage: signal.author_image || '/images/avatars/default.jpg',
-      publishDate: signal.published_date,
-      keyLevels: signal.key_levels || {
-        resistance: [],
-        support: [],
+      signal: {
+        id: signal.id,
+        type: 'SIGNAL',
+        title: signal.title,
+        content: signal.content,
+        pair: signal.pair,
+        action: signal.action,
+        entry: signal.entry,
+        stopLoss: signal.stop_loss,
+        takeProfit: signal.take_profit,
+        currentPrice: signal.current_price,
+        confidence: signal.confidence,
+        market: signal.market,
+        status: signal.status,
+        pips: signal.pips,
+        author: signal.author,
+        authorImage: signal.author_image || '/images/avatar/avatar-1.png',
+        publishDate: signal.published_date,
+        keyLevels: signal.key_levels || {
+          resistance: [],
+          support: [],
+        },
+        chartImage: signal.chart_image,
+        analystStats: signal.analyst_stats,
       },
-      chartImage: signal.chart_image,
-      analystStats: signal.analyst_stats,
+      drills: drills
     };
   } catch (error) {
     console.error('Error fetching signal data:', error);
@@ -66,28 +80,28 @@ interface PageProps {
 
 export default async function SignalDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
-  const signal = await getSignalData(resolvedParams.id);
+  const data = await getSignalData(resolvedParams.id);
 
-  if (!signal) {
+  if (!data) {
     notFound();
   }
 
-  return <SignalPageClient signal={signal} signalId={resolvedParams.id} />;
+  return <SignalPageClient signal={data.signal} drills={data.drills} signalId={resolvedParams.id} />;
 }
 
 export async function generateMetadata({ params }: PageProps) {
   const resolvedParams = await params;
-  const signal = await getSignalData(resolvedParams.id);
+  const data = await getSignalData(resolvedParams.id);
 
-  if (!signal) {
+  if (!data) {
     return {
       title: 'Signal Not Found',
     };
   }
 
   return {
-    title: `${signal.title} - Signal Analysis`,
-    description: signal.content,
-    keywords: `trading, signals, ${signal.pair}, ${signal.market}, ${signal.action}`,
+    title: `${data.signal.title} - Signal Analysis`,
+    description: data.signal.content,
+    keywords: `trading, signals, ${data.signal.pair}, ${data.signal.market}, ${data.signal.action}`,
   };
 }

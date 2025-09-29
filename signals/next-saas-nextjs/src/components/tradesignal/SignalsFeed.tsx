@@ -7,6 +7,7 @@ import { SignalData } from '@/utils/supabase';
 const SignalsFeed = () => {
   const [signals, setSignals] = useState<SignalData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [selectedMarket, setSelectedMarket] = useState<string>('ALL');
   const [showPremiumModal, setShowPremiumModal] = useState(false);
 
@@ -25,7 +26,25 @@ const SignalsFeed = () => {
     };
 
     fetchSignals();
+
+    // Set up automatic refresh every 30 seconds to catch new signals
+    const interval = setInterval(fetchSignals, 30000);
+    return () => clearInterval(interval);
   }, []);
+
+  // Manual refresh function
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const response = await fetch('/api/signals?limit=5&status=ACTIVE');
+      const data = await response.json();
+      setSignals(data.signals || []);
+    } catch (error) {
+      console.error('Error refreshing signals:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const filteredSignals = selectedMarket === 'ALL' ? signals : signals.filter((s) => s.market === selectedMarket);
 
@@ -56,7 +75,29 @@ const SignalsFeed = () => {
           <span className="badge badge-primary text-xs">LIVE SIGNALS</span>
         </RevealAnimation>
         <RevealAnimation delay={0.2}>
-          <h3 className="text-lg font-bold">Latest Trading Signals</h3>
+          <div className="flex items-center justify-center gap-3">
+            <h3 className="text-lg font-bold">Latest Trading Signals</h3>
+            <button
+              onClick={handleRefresh}
+              disabled={refreshing}
+              className="p-1.5 rounded-lg bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 hover:bg-primary-200 dark:hover:bg-primary-800 transition-colors disabled:opacity-50"
+              title="Refresh signals"
+            >
+              <svg
+                className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+            </button>
+          </div>
         </RevealAnimation>
         <RevealAnimation delay={0.3}>
           <p className="text-xs text-secondary/70">Real-time signals with entry, SL & TP levels</p>
@@ -66,7 +107,7 @@ const SignalsFeed = () => {
       {/* Market Filter */}
       <RevealAnimation delay={0.4}>
         <div className="flex flex-wrap justify-center gap-1 mb-6">
-          {['ALL', 'FOREX', 'CRYPTO', 'PSX'].map((market) => (
+          {['ALL', 'FOREX', 'CRYPTO', 'PSX', 'TEST'].map((market) => (
             <button
               key={market}
               onClick={() => setSelectedMarket(market)}
@@ -93,7 +134,7 @@ const SignalsFeed = () => {
             <p className="text-sm text-secondary/60">No signals available</p>
           </div>
         ) : (
-          filteredSignals.slice(0, 2).map((signal, index) => (
+          filteredSignals.slice(0, 5).map((signal, index) => (
             <RevealAnimation key={signal.id} delay={0.5 + index * 0.1}>
               <div className="bg-gray-50 dark:bg-background-5 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
                 {/* Signal Header */}

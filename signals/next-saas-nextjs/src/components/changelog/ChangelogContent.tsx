@@ -1,9 +1,13 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import gradient16 from '@public/images/gradient/gradient-16.png';
 import gradient27 from '@public/images/gradient/gradient-27.png';
 import gradient6 from '@public/images/gradient/gradient-6.png';
 import Image from 'next/image';
 import Link from 'next/link';
 import RevealAnimation from '../animation/RevealAnimation';
+import { SignalData } from '@/utils/supabase';
 
 interface SignalUpdate {
   id: number;
@@ -23,9 +27,11 @@ interface SignalUpdate {
   pips?: number;
   author: string;
   priority: 'HIGH' | 'MEDIUM' | 'LOW';
+  hasDrillData?: boolean;
 }
 
-const signalsData: SignalUpdate[] = [
+// Fallback static data if API fails
+const fallbackSignalsData: SignalUpdate[] = [
   {
     id: 4, // Match database ID
     type: 'SIGNAL',
@@ -159,6 +165,54 @@ const signalsData: SignalUpdate[] = [
 ];
 
 const ChangelogContent = () => {
+  const [signalsData, setSignalsData] = useState<SignalUpdate[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch signals from API
+  useEffect(() => {
+    const fetchSignals = async () => {
+      try {
+        const response = await fetch('/api/signals?limit=10&status=ACTIVE');
+        const data = await response.json();
+
+        // Convert API signals to SignalUpdate format
+        const formattedSignals: SignalUpdate[] = data.signals.map((signal: SignalData, index: number) => ({
+          id: signal.id,
+          type: 'SIGNAL' as const,
+          timestamp: index === 0 ? 'Today' : `${index} days ago`,
+          title: signal.title,
+          content: signal.content,
+          pair: signal.pair,
+          action: signal.action as 'BUY' | 'SELL',
+          entry: signal.entry,
+          stopLoss: signal.stop_loss,
+          takeProfit: signal.take_profit,
+          confidence: signal.confidence,
+          market: signal.market as 'FOREX' | 'CRYPTO' | 'PSX' | 'COMMODITIES',
+          status: signal.status as 'ACTIVE' | 'CLOSED' | 'CANCELLED',
+          pips: signal.pips,
+          author: signal.author,
+          priority: signal.priority as 'HIGH' | 'MEDIUM' | 'LOW',
+          // Check if drill data is available
+          hasDrillData: !!(signal.key_levels && signal.analyst_stats && signal.current_price),
+        }));
+
+        setSignalsData(formattedSignals);
+      } catch (error) {
+        console.error('Error fetching signals:', error);
+        // Use fallback data if API fails
+        setSignalsData(fallbackSignalsData);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSignals();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchSignals, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'SIGNAL':
@@ -250,7 +304,17 @@ const ChangelogContent = () => {
               </div>
             </RevealAnimation>
 
-            {signalsData.map((signal, index) => (
+            {loading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+                <p className="text-sm text-secondary/60 mt-2">Loading signals...</p>
+              </div>
+            ) : signalsData.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-sm text-secondary/60">No signals available</p>
+              </div>
+            ) : (
+              signalsData.map((signal, index) => (
               <RevealAnimation key={`${signal.id}-${index}`} delay={0.6 + index * 0.1}>
                 <div className="relative max-w-[850px] mx-auto">
                   {/* Timeline dot with priority indicator */}
@@ -277,10 +341,20 @@ const ChangelogContent = () => {
                         {signal.status === 'CLOSED' && signal.result ? signal.result : signal.status}
                       </span>
                     )}
+                    {/* Drill availability indicator */}
+                    {signal.type === 'SIGNAL' && (
+                      <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
+                        signal.hasDrillData
+                          ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+                          : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                      }`}>
+                        {signal.hasDrillData ? '📊 DRILL AVAILABLE' : '📋 BASIC SIGNAL'}
+                      </span>
+                    )}
                   </div>
 
-                  {/* Wrap signal content with Link for SIGNAL type only */}
-                  {signal.type === 'SIGNAL' ? (
+                  {/* Wrap signal content with Link only if drill data is available */}
+                  {signal.type === 'SIGNAL' && signal.hasDrillData ? (
                     <Link href={`/signal/${signal.id}`} className="block">
                       <div className="bg-background-2 dark:bg-background-6 px-[42px] py-10 space-y-6 rounded-[20px] relative overflow-hidden z-10 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer">
                         {/* Gradient background */}
@@ -383,6 +457,65 @@ const ChangelogContent = () => {
                         </div>
                       </div>
                     </Link>
+                  ) : signal.type === 'SIGNAL' && !signal.hasDrillData ? (
+                    /* Non-clickable signal without drill data */
+                    <div className="bg-background-2 dark:bg-background-6 px-[42px] py-10 space-y-6 rounded-[20px] relative overflow-hidden z-10 opacity-90">
+                      {/* Gradient background */}
+                      {index % 3 === 0 && (
+                        <div className="-z-10 absolute -right-[105%] -top-[50%] sm:-right-[104%] sm:-top-[95%] md:-right-[88%] md:-top-[98%] lg:-right-[80%] lg:-top-[90%] xl:-right-[78%] xl:-top-[97%] -rotate-[160deg] size-[650px] sm:size-[1060px] pointer-events-none select-none">
+                          <Image src={gradient27} alt="gradient" />
+                        </div>
+                      )}
+                      {index % 3 === 1 && (
+                        <div className="-z-10 absolute -right-[100%] -top-[45%] sm:-right-[120%] sm:-top-[95%] md:-right-[94%] md:-top-[98%] lg:-right-[84%] xl:-right-[74%] xl:-top-[92%] -rotate-[260deg] size-[650px] sm:size-[1060px] pointer-events-none select-none">
+                          <Image src={gradient6} alt="gradient" />
+                        </div>
+                      )}
+                      {index % 3 === 2 && (
+                        <div className="-z-10 absolute -right-[100%] -bottom-[45%] sm:-right-[120%] sm:-bottom-[95%] md:-right-[94%] md:-bottom-[98%] lg:-right-[84%] xl:-right-[74%] xl:-bottom-[92%] rotate-[260deg] size-[650px] sm:size-[1060px] pointer-events-none select-none">
+                          <Image src={gradient16} alt="gradient" />
+                        </div>
+                      )}
+
+                      {/* Signal content */}
+                      <div className="space-y-4">
+                        <h3 className="text-xl sm:text-2xl font-semibold leading-tight">{signal.title}</h3>
+                        <p className="text-secondary/80 dark:text-accent/80 leading-relaxed">{signal.content}</p>
+
+                        {/* Signal details */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                          <div className="text-center p-3 bg-background-1 dark:bg-background-5 rounded-lg">
+                            <p className="text-xs text-secondary/60">Entry</p>
+                            <p className="font-bold">{signal.entry?.toFixed(4)}</p>
+                          </div>
+                          <div className="text-center p-3 bg-background-1 dark:bg-background-5 rounded-lg">
+                            <p className="text-xs text-secondary/60">Stop Loss</p>
+                            <p className="font-bold text-red-600">{signal.stopLoss?.toFixed(4)}</p>
+                          </div>
+                          <div className="text-center p-3 bg-background-1 dark:bg-background-5 rounded-lg">
+                            <p className="text-xs text-secondary/60">Take Profit</p>
+                            <p className="font-bold text-ns-green">{signal.takeProfit?.toFixed(4)}</p>
+                          </div>
+                          <div className="text-center p-3 bg-background-1 dark:bg-background-5 rounded-lg">
+                            <p className="text-xs text-secondary/60">Confidence</p>
+                            <p className="font-bold">{signal.confidence}%</p>
+                          </div>
+                        </div>
+
+                        {/* Author and metadata */}
+                        <div className="flex justify-between items-center pt-4 border-t border-stroke-2 dark:border-stroke-6">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
+                              <span className="text-white text-sm font-bold">{signal.author.charAt(0)}</span>
+                            </div>
+                            <span className="text-sm font-medium">{signal.author}</span>
+                          </div>
+                          <span className={`px-2 py-1 rounded text-xs ${getPriorityDotColor(signal.priority)} text-white`}>
+                            {signal.priority}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   ) : (
                     <div className="bg-background-2 dark:bg-background-6 px-[42px] py-10 space-y-6 rounded-[20px] relative overflow-hidden z-10">
                       {/* Gradient backgrounds for non-signal items */}
@@ -424,7 +557,7 @@ const ChangelogContent = () => {
                   )}
                 </div>
               </RevealAnimation>
-            ))}
+            )))}
           </div>
         </div>
       </div>

@@ -5,9 +5,11 @@ import { useModalContext } from '@/context/ModalContext';
 
 export default function DevEmailDebugBar() {
   const [storedData, setStoredData] = useState<{email?: string; timestamp: number} | null>(null);
+  const [mounted, setMounted] = useState(false);
   const { emailGate } = useModalContext();
 
   useEffect(() => {
+    setMounted(true);
     const data = localStorage.getItem('emailGate');
     if (data) {
       setStoredData(JSON.parse(data));
@@ -15,12 +17,34 @@ export default function DevEmailDebugBar() {
   }, [emailGate.hasSubmittedEmail]);
 
   const clearEmail = () => {
+    // Clear localStorage
     localStorage.removeItem('emailGate');
+
+    // Clear rate limiting data from localStorage
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('email_submission_')) {
+        localStorage.removeItem(key);
+      }
+    });
+
+    // Clear email verification cookie if it exists
+    document.cookie = 'email_verified=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'verification_message=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+    // Use the email gate's clear function
+    if (emailGate.clearEmailGate) {
+      emailGate.clearEmailGate();
+    }
+
+    // Update local state immediately
+    setStoredData(null);
+
+    // Reload page to reset all state
     window.location.reload();
   };
 
-  // Only show in development
-  if (process.env.NODE_ENV !== 'development') return null;
+  // Only show in development and after hydration
+  if (process.env.NODE_ENV !== 'development' || !mounted) return null;
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[99999] bg-yellow-400/95 text-black px-4 py-2 text-xs font-mono">

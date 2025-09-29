@@ -4,6 +4,7 @@
 import { MobileMenuProvider } from '@/context/MobileMenuContext';
 import { navigationItems } from '@/data/header';
 import { useNavbarScroll } from '@/hooks/useScrollHeader';
+import { useProductionMode } from '@/hooks/useProductionMode';
 import { cn } from '@/utils/cn';
 import { FC } from 'react';
 import MobileMenu from '../MobileMenu';
@@ -25,6 +26,7 @@ interface NavbarTwoProps {
 
 const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName }) => {
   const { isScrolled } = useNavbarScroll(150);
+  const { isProductionMode, mounted } = useProductionMode();
 
   return (
     <MobileMenuProvider>
@@ -37,49 +39,55 @@ const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName 
           )}>
           {/* logo */}
           <LogoV2 />
-          {/* navigation */}
-          <nav className="hidden items-center xl:flex">
-            <ul className="flex items-center gap-6">
-              {navigationItems.map((item) => {
-                const renderMegaMenu = () => {
-                  switch (item?.megaMenuComponent) {
-                    case 'HomeMegaMenu':
-                      return <HomeMegaMenu className={megaMenuColor} />;
-                    case 'PageMegaMenu':
-                      return <PageMegaMenu className={megaMenuColor} />;
-                    case 'AboutMenu':
-                      return <AboutMenu className={megaMenuColor} />;
-                    case 'ServicesMenu':
-                      return <ServicesMenu className={megaMenuColor} />;
-                    case 'BlogMenu':
-                      return <BlogMenu className={megaMenuColor} />;
-                    default:
-                      return null;
-                  }
-                };
+          {/* navigation - hidden in production mode */}
+          {mounted && !isProductionMode && (
+            <nav className="hidden items-center xl:flex">
+              <ul className="flex items-center gap-6">
+                {navigationItems.map((item) => {
+                  const renderMegaMenu = () => {
+                    switch (item?.megaMenuComponent) {
+                      case 'HomeMegaMenu':
+                        return <HomeMegaMenu className={megaMenuColor} />;
+                      case 'PageMegaMenu':
+                        return <PageMegaMenu className={megaMenuColor} />;
+                      case 'AboutMenu':
+                        return <AboutMenu className={megaMenuColor} />;
+                      case 'ServicesMenu':
+                        return <ServicesMenu className={megaMenuColor} />;
+                      case 'BlogMenu':
+                        return <BlogMenu className={megaMenuColor} />;
+                      default:
+                        return null;
+                    }
+                  };
 
-                // mega menu render
-                return (
-                  <li
-                    key={item?.id}
-                    className={cn('py-5', item?.hasDropdown ? 'group/nav relative cursor-pointer' : '')}>
-                    <NavItemLink variant="white" item={item} />
-                    {item.hasDropdown && renderMegaMenu()}
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-          <NavCTAButton
-            href="/signup-01"
-            btnClassName={cn(isScrolled && 'btn-white', btnClassName)}
-            label="Get started"
-          />
-          {/* mobile menu btn */}
-          <MobileMenuButton />
+                  // mega menu render
+                  return (
+                    <li
+                      key={item?.id}
+                      className={cn('py-5', item?.hasDropdown ? 'group/nav relative cursor-pointer' : '')}>
+                      <NavItemLink variant="white" item={item} />
+                      {item.hasDropdown && renderMegaMenu()}
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          )}
+          {/* CTA Button - hidden in production mode */}
+          {mounted && !isProductionMode && (
+            <NavCTAButton
+              href="/signup-01"
+              btnClassName={cn(isScrolled && 'btn-white', btnClassName)}
+              label="Get started"
+            />
+          )}
+          {/* mobile menu btn - hidden in production mode */}
+          {mounted && !isProductionMode && <MobileMenuButton />}
         </div>
 
-        <MobileMenu />
+        {/* Mobile menu - hidden in production mode */}
+        {mounted && !isProductionMode && <MobileMenu />}
       </header>
     </MobileMenuProvider>
   );

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import RevealAnimation from '@/components/animation/RevealAnimation';
 
 interface SignalData {
@@ -38,12 +39,27 @@ interface SignalDetailAnalyticsProps {
 }
 
 const SignalDetailAnalytics = ({ signal }: SignalDetailAnalyticsProps) => {
-  const profitLoss = (signal.currentPrice - signal.entry) * (signal.action === 'BUY' ? 1 : -1);
+  const profitLoss = signal.currentPrice ? (signal.currentPrice - signal.entry) * (signal.action === 'BUY' ? 1 : -1) : 0;
   const riskRewardRatio = Math.abs((signal.takeProfit - signal.entry) / (signal.entry - signal.stopLoss));
 
   return (
     <section className="pt-[70px] pb-[100px] analytics">
       <div className="max-w-[1200px] w-[95%] mx-auto">
+        {/* Back to Main Menu Button */}
+        <RevealAnimation delay={0.05}>
+          <div className="mb-8">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-background-6 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-background-5 transition-colors duration-200 text-secondary dark:text-accent"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back to Main Menu
+            </Link>
+          </div>
+        </RevealAnimation>
+
         {/* Signal Header */}
         <RevealAnimation delay={0.1}>
           <div className="text-center mb-12">
@@ -120,7 +136,7 @@ const SignalDetailAnalytics = ({ signal }: SignalDetailAnalyticsProps) => {
                       </div>
                       <div>
                         <p className="text-xs text-gray-400">Current Price</p>
-                        <p className="text-xl font-bold text-ns-green">{signal.currentPrice.toFixed(4)}</p>
+                        <p className="text-xl font-bold text-ns-green">{signal.currentPrice ? signal.currentPrice.toFixed(4) : 'N/A'}</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-400">Price Change</p>
@@ -132,7 +148,7 @@ const SignalDetailAnalytics = ({ signal }: SignalDetailAnalyticsProps) => {
                       <div>
                         <p className="text-xs text-gray-400">Distance to Target</p>
                         <p className="text-xl font-bold text-ns-yellow">
-                          {((signal.takeProfit - signal.currentPrice) * 10000).toFixed(0)} pips
+                          {signal.currentPrice ? ((signal.takeProfit - signal.currentPrice) * 10000).toFixed(0) : 'N/A'} pips
                         </p>
                       </div>
                     </div>
@@ -142,30 +158,40 @@ const SignalDetailAnalytics = ({ signal }: SignalDetailAnalyticsProps) => {
               </div>
 
               {/* Key Levels Table */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="text-lg font-semibold mb-3">Support Levels</h4>
-                  <div className="space-y-2">
-                    {signal.keyLevels.support.map((level, index) => (
-                      <div key={index} className="flex justify-between p-2 bg-red-50 dark:bg-red-900/20 rounded">
-                        <span>Support {index + 1}</span>
-                        <span className="font-mono">{level.toFixed(4)}</span>
-                      </div>
-                    ))}
+              {signal.keyLevels ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="text-lg font-semibold mb-3">Support Levels</h4>
+                    <div className="space-y-2">
+                      {signal.keyLevels.support?.map((level, index) => (
+                        <div key={index} className="flex justify-between p-2 bg-red-50 dark:bg-red-900/20 rounded">
+                          <span>Support {index + 1}</span>
+                          <span className="font-mono">{level.toFixed(4)}</span>
+                        </div>
+                      )) || (
+                        <div className="p-2 text-secondary/60 text-center">No support levels available</div>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold mb-3">Resistance Levels</h4>
+                    <div className="space-y-2">
+                      {signal.keyLevels.resistance?.map((level, index) => (
+                        <div key={index} className="flex justify-between p-2 bg-green-50 dark:bg-green-900/20 rounded">
+                          <span>Resistance {index + 1}</span>
+                          <span className="font-mono">{level.toFixed(4)}</span>
+                        </div>
+                      )) || (
+                        <div className="p-2 text-secondary/60 text-center">No resistance levels available</div>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <h4 className="text-lg font-semibold mb-3">Resistance Levels</h4>
-                  <div className="space-y-2">
-                    {signal.keyLevels.resistance.map((level, index) => (
-                      <div key={index} className="flex justify-between p-2 bg-green-50 dark:bg-green-900/20 rounded">
-                        <span>Resistance {index + 1}</span>
-                        <span className="font-mono">{level.toFixed(4)}</span>
-                      </div>
-                    ))}
-                  </div>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-secondary/60">Key levels analysis not available for this signal</p>
                 </div>
-              </div>
+              )}
             </div>
           </RevealAnimation>
 
@@ -285,7 +311,7 @@ const SignalDetailAnalytics = ({ signal }: SignalDetailAnalyticsProps) => {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-secondary/60">Current Price</span>
-                      <span className="font-mono font-bold">{signal.currentPrice.toFixed(4)}</span>
+                      <span className="font-mono font-bold">{signal.currentPrice ? signal.currentPrice.toFixed(4) : 'N/A'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-secondary/60">Unrealized P&L</span>

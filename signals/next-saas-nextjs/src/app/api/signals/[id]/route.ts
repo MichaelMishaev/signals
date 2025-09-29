@@ -89,11 +89,19 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
     if (body.title !== undefined) updateData.title = body.title;
     if (body.content !== undefined) updateData.content = body.content;
+    if (body.pair !== undefined) updateData.pair = body.pair;
+    if (body.action !== undefined) updateData.action = body.action;
+    if (body.entry !== undefined) updateData.entry = parseFloat(body.entry);
+    if (body.stop_loss !== undefined) updateData.stop_loss = parseFloat(body.stop_loss);
+    if (body.take_profit !== undefined) updateData.take_profit = parseFloat(body.take_profit);
     if (body.current_price !== undefined) {
       updateData.current_price = body.current_price ? parseFloat(body.current_price) : null;
     }
+    if (body.confidence !== undefined) updateData.confidence = parseInt(body.confidence);
+    if (body.market !== undefined) updateData.market = body.market;
     if (body.status !== undefined) updateData.status = body.status;
     if (body.priority !== undefined) updateData.priority = body.priority;
+    if (body.author !== undefined) updateData.author = body.author;
     if (body.chart_image !== undefined) updateData.chart_image = body.chart_image;
     if (body.key_levels !== undefined) updateData.key_levels = body.key_levels;
     if (body.analyst_stats !== undefined) updateData.analyst_stats = body.analyst_stats;
