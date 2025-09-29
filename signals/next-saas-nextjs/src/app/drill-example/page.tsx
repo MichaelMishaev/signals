@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useModalContext } from '@/context/ModalContext';
 import EmailGateWrapper from '@/components/shared/emailGate/EmailGateWrapper';
 import RevealAnimation from '@/components/animation/RevealAnimation';
@@ -18,6 +19,21 @@ const DrillExamplePage = () => {
       <div className="min-h-screen bg-background-1 dark:bg-background-8 py-16">
         <div className="main-container">
           <div className="max-w-4xl mx-auto">
+            {/* Back to Main Menu Button */}
+            <RevealAnimation>
+              <div className="mb-8">
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-background-2 dark:bg-background-7 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-background-3 dark:hover:bg-background-6 transition-colors duration-200 text-secondary dark:text-accent"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  Back to Main Menu
+                </Link>
+              </div>
+            </RevealAnimation>
+
             {/* Page Header */}
             <div className="text-center space-y-6 mb-12">
               <RevealAnimation>
@@ -154,7 +170,10 @@ const DrillExamplePage = () => {
                             This drill contains advanced trading strategies and live market analysis.
                           </p>
                         </div>
-                        <button onClick={emailGate.openEmailGate} className="btn btn-primary btn-lg">
+                        <button
+                          data-testid="unlock-drill-button"
+                          onClick={emailGate.openEmailGate}
+                          className="btn btn-primary btn-lg">
                           <span>Unlock Drill Content</span>
                         </button>
                       </div>
@@ -162,7 +181,9 @@ const DrillExamplePage = () => {
                   )}
 
                   {/* Content - Blurred if no access, clear if has access */}
-                  <div className={`space-y-6 ${!hasAccess ? 'filter blur-sm' : ''}`}>
+                  <div
+                    data-testid="drill-content"
+                    className={`space-y-6 ${!hasAccess ? 'filter blur-sm' : ''}`}>
                     <h2 className="text-heading-5 text-secondary dark:text-accent">Interactive Drill Session</h2>
                     <div className="grid md:grid-cols-2 gap-8">
                       <div className="space-y-4">
@@ -197,7 +218,10 @@ const DrillExamplePage = () => {
                     <p className="text-tagline-2 text-secondary/70 dark:text-accent/70 mb-4">
                       Ready to dive deep into advanced trading strategies?
                     </p>
-                    <button onClick={emailGate.openEmailGate} className="btn btn-secondary btn-lg">
+                    <button
+                      data-testid="start-drill-button"
+                      onClick={emailGate.openEmailGate}
+                      className="btn btn-secondary btn-lg">
                       <span>Start Advanced Drill</span>
                     </button>
                   </div>
