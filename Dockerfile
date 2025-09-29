@@ -23,6 +23,10 @@ RUN npx prisma generate
 # Set production environment for build
 ENV NODE_ENV=production
 
+# Set placeholder environment variables for build (will be overridden at runtime)
+ENV NEXT_PUBLIC_SUPABASE_URL=placeholder_url
+ENV SUPABASE_SERVICE_ROLE_KEY=placeholder_key
+
 # Build the application (needs TypeScript and other dev deps)
 RUN npm run build
 
