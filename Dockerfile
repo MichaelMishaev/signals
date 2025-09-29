@@ -17,6 +17,9 @@ RUN npm ci --ignore-scripts
 # Copy source code
 COPY signals/next-saas-nextjs .
 
+# Generate Prisma client (required for build)
+RUN npx prisma generate
+
 # Set production environment for build
 ENV NODE_ENV=production
 
