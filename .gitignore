@@ -3,3 +3,12 @@ node_modules
 .env
 
 /src/generated/prisma
+
+# Claude Code configuration
+.claude/
+
+# Playwright test results and reports
+test-results/
+playwright-report/
+**/test-results/
+**/playwright-report/

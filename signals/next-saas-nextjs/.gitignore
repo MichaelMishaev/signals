@@ -50,3 +50,10 @@ rnd_*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Playwright test results and reports
+test-results/
+playwright-report/
+
+# Claude Code configuration
+.claude/
