@@ -1,10 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Missing Supabase environment variables');
+  }
+
+  return createClient(supabaseUrl, supabaseKey);
+}
 
 export async function PUT(
   request: NextRequest,
@@ -13,6 +19,7 @@ export async function PUT(
   try {
     const body = await request.json();
     const drillId = parseInt(params.id);
+    const supabase = getSupabaseClient();
 
     // Check if we're working with a database or generated drills
     const { data: existingDrill } = await supabase
@@ -56,6 +63,7 @@ export async function DELETE(
 ) {
   try {
     const drillId = parseInt(params.id);
+    const supabase = getSupabaseClient();
 
     // Try to delete from database
     const { error } = await supabase
@@ -82,6 +90,7 @@ export async function GET(
 ) {
   try {
     const drillId = parseInt(params.id);
+    const supabase = getSupabaseClient();
 
     const { data: drill, error } = await supabase
       .from('drills')
