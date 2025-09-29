@@ -14,7 +14,7 @@ ENV HUSKY=0
 # Install ALL dependencies including devDependencies (needed for TypeScript & build)
 RUN npm ci --ignore-scripts
 
-# Copy source code
+# Copy source code and Prisma schema
 COPY signals/next-saas-nextjs .
 
 # Generate Prisma client (required for build)

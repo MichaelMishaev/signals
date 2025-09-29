@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  drillProgress DrillProgress[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model DrillProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  drillId     String
+  completed   Boolean  @default(false)
+  score       Int?
+  timeSpent   Int?     // in seconds
+  attempts    Int      @default(0)
+  lastAttempt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, drillId])
+  @@map("drill_progress")
+}
+
+model FeatureFlag {
+  id          String              @id @default(cuid())
+  key         String              @unique
+  name        String
+  description String?
+  enabled     Boolean             @default(false)
+  type        FeatureFlagType     @default(BOOLEAN)
+  value       Json?
+  rules       Json?               // JSON rules for complex conditions
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  scopeFlags  FeatureFlagScope[]
+
+  @@map("feature_flags")
+}
+
+model FeatureFlagScope {
+  id          String              @id @default(cuid())
+  flagId      String
+  scope       String              // e.g., "signal", "drill", "page", "section"
+  scopeId     String              // e.g., signal ID, drill ID, route path, section ID
+  enabled     Boolean             @default(true)
+  state       FeatureFlagState    @default(ACTIVE)
+  metadata    Json?               // Additional metadata for the scope
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  flag        FeatureFlag         @relation(fields: [flagId], references: [id], onDelete: Cascade)
+
+  @@unique([flagId, scope, scopeId])
+  @@index([scope, scopeId])
+  @@map("feature_flag_scopes")
+}
+
+enum FeatureFlagType {
+  BOOLEAN
+  STRING
+  NUMBER
+  JSON
+}
+
+enum FeatureFlagState {
+  DRAFT
+  REVIEW
+  ACTIVE
+  ARCHIVED
+}
+
+model Signal {
+  id            Int      @id @default(autoincrement())
+  title         String
+  content       String   @db.Text
+  pair          String
+  action        String   // BUY or SELL
+  entry         Float
+  stop_loss     Float
+  take_profit   Float
+  current_price Float?
+  confidence    Int
+  market        String
+  status        String   @default("ACTIVE") // ACTIVE, CLOSED, CANCELLED
+  priority      String   @default("MEDIUM") // HIGH, MEDIUM, LOW
+  author        String
+  author_image  String?
+  chart_image   String?
+  published_date String
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  key_levels    Json?
+  analyst_stats Json?
+  colors        Json?
+
+  drills        Drill[]
+
+  @@map("signals")
+}
+
+model Drill {
+  id          Int      @id @default(autoincrement())
+  signal_id   Int
+  title       String
+  description String
+  type        String   // CASE_STUDY, BLOG, ANALYTICS
+  content     String   @db.Text
+  order_index Int      @default(1)
+  is_active   Boolean  @default(true)
+  image_url   String?
+  created_at  DateTime @default(now())
+
+  signal      Signal   @relation(fields: [signal_id], references: [id], onDelete: Cascade)
+
+  @@map("drills")
+}
