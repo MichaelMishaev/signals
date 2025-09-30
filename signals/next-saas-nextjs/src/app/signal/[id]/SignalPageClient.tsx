@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import EmailGateWrapper from '@/components/shared/emailGate/EmailGateWrapper';
 import SignalDetailAnalytics from '@/components/shared/signalDrill/SignalDetailAnalytics';
+import { ActionButton } from '@/components/shared/sharedbuttons';
 
 interface Signal {
   id: number;
@@ -173,6 +174,15 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
                 <span className="text-sm text-secondary/60">
                   Entry: {signal.entry.toFixed(4)} | Confidence: {signal.confidence}%
                 </span>
+              </div>
+              {/* Action Button */}
+              <div className="mt-4">
+                <ActionButton
+                  variant={['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'][signal.id % 4] as any}
+                  onClick={() => console.log(`Execute ${signal.action} trade for ${signal.pair}`)}
+                  size="md"
+                  customText={signal.action === 'BUY' ? 'EXECUTE BUY NOW' : 'EXECUTE SELL NOW'}
+                />
               </div>
             </div>
           </div>

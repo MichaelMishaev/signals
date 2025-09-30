@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ActionButton } from '@/components/shared/sharedbuttons';
 
 interface Signal {
   id: number;
@@ -1100,6 +1101,15 @@ export default function SignalsAdminPage() {
                             <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
                               {signal.market}
                             </span>
+                          </div>
+                          {/* Action Button */}
+                          <div className="mt-3">
+                            <ActionButton
+                              variant={['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'][signal.id % 4] as any}
+                              onClick={() => console.log(`Execute trade for signal ${signal.id}`)}
+                              size="sm"
+                              customText={`EXECUTE ${signal.action}`}
+                            />
                           </div>
                         </div>
                         <div className="flex gap-2">

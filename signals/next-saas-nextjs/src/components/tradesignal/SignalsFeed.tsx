@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import RevealAnimation from '../animation/RevealAnimation';
 import { SignalData } from '@/utils/supabase';
+import { ActionButton } from '@/components/shared/sharedbuttons';
 
 const SignalsFeed = () => {
   const [signals, setSignals] = useState<SignalData[]>([]);
@@ -65,6 +66,20 @@ const SignalsFeed = () => {
     return action === 'BUY'
       ? 'text-primary-600 dark:text-ns-green font-bold'
       : 'text-red-600 dark:text-ns-red font-bold';
+  };
+
+  // Randomly assign ActionButton variants to signals
+  const getRandomButtonVariant = (index: number): 'urgent-countdown' | 'live-pulse' | 'profit-alert' | 'rocket-launch' => {
+    const variants = ['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'] as const;
+    // Use signal index to ensure consistency on re-renders
+    const variantIndex = index % variants.length;
+    return variants[variantIndex];
+  };
+
+  const handleTradeAction = (signalId: string, action: string) => {
+    console.log(`Trade action initiated for signal ${signalId}: ${action}`);
+    // Here you would implement the actual trade action
+    // For example: navigate to trading page, open modal, etc.
   };
 
   return (
@@ -176,6 +191,18 @@ const SignalsFeed = () => {
                       {signal.take_profit.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
                     </span>
                   </div>
+                </div>
+
+                {/* Action Button - Smaller for sidebar */}
+                <div className="mt-2">
+                  <ActionButton
+                    variant={getRandomButtonVariant(index)}
+                    onClick={() => handleTradeAction(signal.id, signal.action)}
+                    fullWidth
+                    size="sm"
+                    customText={signal.action === 'BUY' ? 'BUY NOW' : 'SELL NOW'}
+                    className="!py-2 !text-xs sm:!text-sm"
+                  />
                 </div>
               </div>
             </RevealAnimation>

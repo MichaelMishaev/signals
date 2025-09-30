@@ -8,6 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import RevealAnimation from '../animation/RevealAnimation';
 import { SignalData } from '@/utils/supabase';
+import { ActionButton } from '@/components/shared/sharedbuttons';
 
 interface SignalUpdate {
   id: number;
@@ -443,6 +444,17 @@ const ChangelogContent = () => {
                                 </div>
                               </div>
                             )}
+
+                            {/* Action Button for Signal */}
+                            <div className="pt-3">
+                              <ActionButton
+                                variant={['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'][index % 4] as any}
+                                onClick={() => console.log(`Execute ${signal.action} for ${signal.pair}`)}
+                                fullWidth
+                                size="md"
+                                customText={signal.action === 'BUY' ? 'BUY ORDER' : 'SELL ORDER'}
+                              />
+                            </div>
                           </div>
                         )}
 
@@ -501,6 +513,19 @@ const ChangelogContent = () => {
                             <p className="font-bold">{signal.confidence}%</p>
                           </div>
                         </div>
+
+                        {/* Action Button for Non-Drill Signal */}
+                        {signal.action && (
+                          <div className="pt-3">
+                            <ActionButton
+                              variant={['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'][index % 4] as any}
+                              onClick={() => console.log(`Execute ${signal.action} for ${signal.pair}`)}
+                              fullWidth
+                              size="md"
+                              customText={signal.action === 'BUY' ? 'BUY ORDER' : 'SELL ORDER'}
+                            />
+                          </div>
+                        )}
 
                         {/* Author and metadata */}
                         <div className="flex justify-between items-center pt-4 border-t border-stroke-2 dark:border-stroke-6">
