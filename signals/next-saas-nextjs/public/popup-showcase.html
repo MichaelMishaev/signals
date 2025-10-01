@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Popups - Responsive Showcase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Animations */
+        @keyframes slideInUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes countdown {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
+        }
+
+        .animate-slideInUp { animation: slideInUp 0.5s ease-out; }
+        .animate-slideInDown { animation: slideInDown 0.5s ease-out; }
+        .animate-scaleIn { animation: scaleIn 0.3s ease-out; }
+        .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+        .animate-shake { animation: shake 0.5s; }
+        .animate-pulse-slow { animation: pulse 2s infinite; }
+        .animate-countdown { animation: countdown 10s linear; }
+        .animate-glow { animation: glow 2s infinite; }
+
+        /* Backdrop blur for modals */
+        .backdrop-blur-sm {
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen">
+    <!-- Header -->
+    <div class="text-center py-8 px-4">
+        <h1 class="text-4xl sm:text-5xl font-black text-white mb-4">Trading Popups Showcase</h1>
+        <p class="text-gray-400 text-sm sm:text-base">10 Responsive Popup Designs with Timer Support</p>
+        <p class="text-yellow-400 text-xs sm:text-sm mt-2">Click on any popup to preview • All designs are mobile-responsive</p>
+    </div>
+
+    <!-- Popup Grid -->
+    <div class="container mx-auto px-4 pb-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Popup 1: Profit Alert Modal -->
+            <div class="relative">
+                <button onclick="showPopup('popup1')" class="w-full p-4 bg-gray-800 hover:bg-gray-700 rounded-lg text-left transition-colors">
+                    <h3 class="text-white font-bold mb-1">1. Profit Alert Modal</h3>
+                    <p class="text-gray-400 text-sm">Urgent profit opportunity with countdown timer</p>
+                </button>
+
+                <div id="popup1" class="fixed inset-0 z-50 hidden">
+                    <div class="fixed inset-0 bg-black/70 backdrop-blur-sm animate-fadeIn" onclick="hidePopup('popup1')"></div>
+                    <div class="fixed inset-x-4 top-1/2 -translate-y-1/2 max-w-lg mx-auto animate-scaleIn">
+                        <div class="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl p-1">
+                            <div class="bg-gray-900 rounded-2xl p-4 sm:p-6">
+                                <!-- Timer bar -->
+                                <div class="h-1 bg-gray-700 rounded-full mb-4 overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-yellow-400 to-orange-500 animate-countdown"></div>
+                                </div>
+
+                                <!-- Content -->
+                                <div class="text-center">
+                                    <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse-slow">
+                                        <span class="text-2xl sm:text-3xl">💰</span>
+                                    </div>
+                                    <h2 class="text-xl sm:text-2xl font-bold text-white mb-2">High Profit Alert!</h2>
+                                    <p class="text-gray-300 text-sm sm:text-base mb-4">EUR/USD showing 89% win probability. Entry window closing in 30 seconds!</p>
+
+                                    <div class="bg-gray-800 rounded-lg p-3 mb-4">
+                                        <div class="flex justify-between text-xs sm:text-sm mb-2">
+                                            <span class="text-gray-400">Entry:</span>
+                                            <span class="text-white font-bold">1.0850</span>
+                                        </div>
+                                        <div class="flex justify-between text-xs sm:text-sm mb-2">
+                                            <span class="text-gray-400">Take Profit:</span>
+                                            <span class="text-green-400 font-bold">1.0920</span>
+                                        </div>
+                                        <div class="flex justify-between text-xs sm:text-sm">
+                                            <span class="text-gray-400">Stop Loss:</span>
+                                            <span class="text-red-400 font-bold">1.0820</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex gap-3">
+                                        <button onclick="hidePopup('popup1')" class="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-semibold transition-colors">
+                                            Skip
+                                        </button>
+                                        <button class="flex-1 px-4 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold rounded-lg transition-all transform hover:scale-105">
+                                            Trade Now
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popup 2: Welcome Bonus -->
+            <div class="relative">
+                <button onclick="showPopup('popup2')" class="w-full p-4 bg-gray-800 hover:bg-gray-700 rounded-lg text-left transition-colors">
+                    <h3 class="text-white font-bold mb-1">2. Welcome Bonus Popup</h3>
+                    <p class="text-gray-400 text-sm">First-time visitor special offer</p>
+                </button>
+
+                <div id="popup2" class="fixed inset-0 z-50 hidden">
+                    <div class="fixed inset-0 bg-black/60" onclick="hidePopup('popup2')"></div>
+                    <div class="fixed bottom-0 left-0 right-0 sm:bottom-4 sm:right-4 sm:left-auto sm:max-w-sm animate-slideInUp">
+                        <div class="bg-gradient-to-r from-purple-600 to-blue-600 p-4 sm:rounded-xl shadow-2xl">
+                            <button onclick="hidePopup('popup2')" class="absolute top-2 right-2 w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
+                                <span class="text-white text-xl">×</span>
+                            </button>
+
+                            <div class="flex items-start gap-3">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                                        <span class="text-2xl">🎁</span>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-white font-bold text-base sm:text-lg mb-1">Welcome Gift!</h3>
+                                    <p class="text-white/90 text-xs sm:text-sm mb-3">Get $100 bonus credits on your first deposit!</p>
+                                    <button class="px-4 py-2 bg-white text-purple-600 rounded-lg font-bold text-sm hover:bg-gray-100 transition-colors">
+                                        Claim Now →
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mt-3 pt-3 border-t border-white/20">
+                                <p class="text-white/70 text-xs">Limited time offer • Expires in 24 hours</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popup 3: Live Signal Notification -->
+            <div class="relative">
+                <button onclick="showPopup('popup3')" class="w-full p-4 bg-gray-800 hover:bg-gray-700 rounded-lg text-left transition-colors">
+                    <h3 class="text-white font-bold mb-1">3. Live Signal Toast</h3>
+                    <p class="text-gray-400 text-sm">Top-right notification style</p>
+                </button>
+
+                <div id="popup3" class="fixed top-4 right-4 z-50 hidden max-w-sm animate-slideInDown">
+                    <div class="bg-gray-800 border border-green-500 rounded-lg shadow-2xl p-4">
+                        <div class="flex items-start gap-3">
+                            <div class="flex-shrink-0">
+                                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h4 class="text-white font-bold text-sm">NEW SIGNAL</h4>
+                                    <span class="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs rounded-full">LIVE</span>
+                                </div>
+                                <p class="text-gray-400 text-xs mb-2">BTC/USDT Buy Signal Generated</p>
+                                <div class="flex items-center gap-2 text-xs">
+                                    <span class="text-gray-500">Entry:</span>
+                                    <span class="text-white font-mono">45,250</span>
+                                    <span class="text-green-400">↑ 2.5%</span>
+                                </div>
+                                <div class="mt-3 flex gap-2">
+                                    <button onclick="hidePopup('popup3')" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded text-xs transition-colors">
+                                        Dismiss
+                                    </button>
+                                    <button class="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-xs font-bold transition-colors">
+                                        View Signal
+                                    </button>
+                                </div>
+                            </div>
+                            <button onclick="hidePopup('popup3')" class="text-gray-500 hover:text-white transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popup 4: Exit Intent -->
+            <div class="relative">
+                <button onclick="showPopup('popup4')" class="w-full p-4 bg-gray-800 hover:bg-gray-700 rounded-lg text-left transition-colors">
+                    <h3 class="text-white font-bold mb-1">4. Exit Intent Popup</h3>
+                    <p class="text-gray-400 text-sm">Last chance offer before leaving</p>
+                </button>
+
+                <div id="popup4" class="fixed inset-0 z-50 hidden">
+                    <div class="fixed inset-0 bg-black/80 backdrop-blur-sm animate-fadeIn" onclick="hidePopup('popup4')"></div>
+                    <div class="fixed inset-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:max-w-md sm:w-full animate-scaleIn">
+                        <div class="bg-gray-900 rounded-2xl p-6 sm:p-8 h-full sm:h-auto flex flex-col justify-center">
+                            <div class="text-center">
+                                <div class="text-5xl sm:text-6xl mb-4 animate-shake">👋</div>
+                                <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Wait! Don't Go!</h2>
+                                <p class="text-gray-400 mb-6">Get exclusive access to VIP signals for the next 24 hours!</p>
+
+                                <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6">
+                                    <p class="text-red-400 font-bold text-lg mb-1">LIMITED TIME OFFER</p>
+                                    <p class="text-white text-2xl font-black">50% OFF</p>
+                                    <p class="text-gray-400 text-sm">Premium Membership</p>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <button class="w-full px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition-colors transform hover:scale-105">
+                                        Claim Your Discount
+                                    </button>
+                                    <button onclick="hidePopup('popup4')" class="w-full px-6 py-3 text-gray-400 hover:text-white transition-colors">
+                                        No thanks, I'll pass
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popup 5: Cookie Consent Banner -->
+            <div class="relative">
+                <button onclick="showPopup('popup5')" class="w-full p-4 bg-gray-800 hover:bg-gray-700 rounded-lg text-left transition-colors">
+                    <h3 class="text-white font-bold mb-1">5. Cookie Consent Banner</h3>
+                    <p class="text-gray-400 text-sm">Bottom sticky bar style</p>
+                </button>
+
+                <div id="popup5" class="fixed bottom-0 left-0 right-0 z-50 hidden animate-slideInUp">
+                    <div class="bg-gray-900 border-t border-gray-800 p-4 sm:p-6">
+                        <div class="max-w-6xl mx-auto">
+                            <div class="flex flex-col sm:flex-row items-center gap-4">
+                                <div class="flex-1 text-center sm:text-left">
+                                    <p class="text-white text-sm sm:text-base mb-2">
+                                        🍪 We use cookies to enhance your trading experience
+                                    </p>
+                                    <p class="text-gray-400 text-xs sm:text-sm">
+                                        By continuing, you agree to our use of cookies for analytics and personalization.
+                                    </p>
+                                </div>
+                                <div class="flex gap-3">
+                                    <button onclick="hidePopup('popup5')" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition-colors">
+                                        Settings
+                                    </button>
+                                    <button onclick="hidePopup('popup5')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold transition-colors">
+                                        Accept All
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popup 6: Account Verification -->
+            <div class="relative">
+                <button onclick="showPopup('popup6')" class="w-full p-4 bg-gray-800 hover:bg-gray-700 rounded-lg text-left transition-colors">
+                    <h3 class="text-white font-bold mb-1">6. Account Verification</h3>
+                    <p class="text-gray-400 text-sm">Security verification modal</p>
+                </button>
+
+                <div id="popup6" class="fixed inset-0 z-50 hidden">
+                    <div class="fixed inset-0 bg-black/70 backdrop-blur-sm" onclick="hidePopup('popup6')"></div>
+                    <div class="fixed inset-x-4 top-1/2 -translate-y-1/2 max-w-sm mx-auto animate-scaleIn">
+                        <div class="bg-gray-900 rounded-2xl p-6 border border-orange-500/30">
+                            <div class="text-center mb-6">
+                                <div class="w-16 h-16 bg-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-2">Verify Your Account</h3>
+                                <p class="text-gray-400 text-sm">Complete verification to unlock all features</p>
+                            </div>
+
+                            <div class="space-y-3 mb-6">
+                                <div class="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
+                                    <div class="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-white text-sm font-medium">Email Verified</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
+                                    <div class="w-8 h-8 bg-orange-500/20 rounded-full flex items-center justify-center">
+                                        <span class="text-orange-500 text-sm font-bold">!</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-white text-sm font-medium">Phone Number</p>
+                                        <p class="text-gray-500 text-xs">Required for withdrawals</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
+                                    <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                                        <span class="text-gray-400 text-sm">3</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-white text-sm font-medium">Identity Document</p>
+                                        <p class="text-gray-500 text-xs">Unlock unlimited trading</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-bold transition-colors">
+                                Complete Verification
+                            </button>
+                            <button onclick="hidePopup('popup6')" class="w-full mt-3 text-gray-500 hover:text-white text-sm transition-colors">
+                                I'll do this later
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popup 7: Market Alert -->
+            <div class="relative">
+                <button onclick="showPopup('popup7')" class="w-full p-4 bg-gray-800 hover:bg-gray-700 rounded-lg text-left transition-colors">
+                    <h3 class="text-white font-bold mb-1">7. Market Alert Overlay</h3>
+                    <p class="text-gray-400 text-sm">Critical market movement notification</p>
+                </button>
+
+                <div id="popup7" class="fixed inset-0 z-50 hidden">
+                    <div class="fixed inset-0 bg-red-900/20 animate-pulse-slow"></div>
+                    <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg px-4">
+                        <div class="bg-gray-900 border-2 border-red-500 rounded-2xl p-6 animate-shake">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
+                                    <span class="text-white text-xl">⚠️</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-white flex-1">MARKET ALERT</h3>
+                                <button onclick="hidePopup('popup7')" class="text-gray-400 hover:text-white">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="bg-red-500/10 rounded-lg p-4 mb-4">
+                                <p class="text-red-400 font-bold mb-2">HIGH VOLATILITY DETECTED</p>
+                                <p class="text-white text-sm">Major price movement on EUR/USD</p>
+                                <div class="mt-3 flex items-center gap-4">
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Current</p>
+                                        <p class="text-white font-bold">1.0892</p>
+                                    </div>
+                                    <div class="text-red-500 text-2xl">→</div>
+                                    <div>
+                                        <p class="text-gray-400 text-xs">Change</p>
+                                        <p class="text-red-400 font-bold">-2.45%</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <button onclick="hidePopup('popup7')" class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
+                                    Ignore
+                                </button>
+                                <button class="flex-1 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold transition-colors">
+                                    Manage Position
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popup 8: Newsletter Signup -->
+            <div class="relative">
+                <button onclick="showPopup('popup8')" class="w-full p-4 bg-gray-800 hover:bg-gray-700 rounded-lg text-left transition-colors">
+                    <h3 class="text-white font-bold mb-1">8. Newsletter Signup</h3>
+                    <p class="text-gray-400 text-sm">Email capture with incentive</p>
+                </button>
+
+                <div id="popup8" class="fixed inset-0 z-50 hidden">
+                    <div class="fixed inset-0 bg-black/60" onclick="hidePopup('popup8')"></div>
+                    <div class="fixed inset-x-4 top-1/2 -translate-y-1/2 max-w-md mx-auto animate-scaleIn">
+                        <div class="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-1">
+                            <div class="bg-gray-900 rounded-2xl p-6">
+                                <button onclick="hidePopup('popup8')" class="absolute top-4 right-4 w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors">
+                                    ×
+                                </button>
+
+                                <div class="text-center mb-6">
+                                    <div class="text-5xl mb-4">📧</div>
+                                    <h3 class="text-2xl font-bold text-white mb-2">Get Free Trading Signals</h3>
+                                    <p class="text-gray-300">Join 50,000+ traders receiving daily market insights</p>
+                                </div>
+
+                                <form class="space-y-4">
+                                    <input type="email" placeholder="Enter your email" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors">
+
+                                    <div class="flex items-start gap-2">
+                                        <input type="checkbox" id="terms" class="mt-1">
+                                        <label for="terms" class="text-xs text-gray-400">
+                                            I agree to receive trading signals and market updates. You can unsubscribe anytime.
+                                        </label>
+                                    </div>
+
+                                    <button type="submit" class="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-bold transition-all transform hover:scale-105">
+                                        Get Free Signals
+                                    </button>
+                                </form>
+
+                                <p class="text-center text-gray-500 text-xs mt-4">
+                                    No credit card required • Instant access
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popup 9: Success Notification -->
+            <div class="relative">
+                <button onclick="showPopup('popup9')" class="w-full p-4 bg-gray-800 hover:bg-gray-700 rounded-lg text-left transition-colors">
+                    <h3 class="text-white font-bold mb-1">9. Success Notification</h3>
+                    <p class="text-gray-400 text-sm">Trade execution confirmation</p>
+                </button>
+
+                <div id="popup9" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 hidden animate-scaleIn">
+                    <div class="bg-gray-900 rounded-2xl p-8 shadow-2xl border border-green-500/30 max-w-sm">
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse-slow">
+                                <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+
+                            <h3 class="text-2xl font-bold text-white mb-2">Trade Executed!</h3>
+                            <p class="text-gray-400 mb-6">Your position has been opened successfully</p>
+
+                            <div class="bg-gray-800 rounded-lg p-4 mb-6 text-left">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-gray-400 text-sm">Order ID:</span>
+                                    <span class="text-white font-mono text-sm">#T-2024-0892</span>
+                                </div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-gray-400 text-sm">Pair:</span>
+                                    <span class="text-white font-bold">EUR/USD</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400 text-sm">Position:</span>
+                                    <span class="text-green-400 font-bold">BUY 0.5 LOT</span>
+                                </div>
+                            </div>
+
+                            <button onclick="hidePopup('popup9')" class="w-full px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-bold transition-colors">
+                                View Position
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popup 10: Feedback Survey -->
+            <div class="relative">
+                <button onclick="showPopup('popup10')" class="w-full p-4 bg-gray-800 hover:bg-gray-700 rounded-lg text-left transition-colors">
+                    <h3 class="text-white font-bold mb-1">10. Feedback Survey</h3>
+                    <p class="text-gray-400 text-sm">Quick rating with emoji reactions</p>
+                </button>
+
+                <div id="popup10" class="fixed inset-0 z-50 hidden">
+                    <div class="fixed inset-0 bg-black/50" onclick="hidePopup('popup10')"></div>
+                    <div class="fixed bottom-0 inset-x-0 sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:max-w-md sm:w-full">
+                        <div class="bg-gray-900 rounded-t-2xl sm:rounded-2xl p-6 animate-slideInUp">
+                            <div class="text-center mb-6">
+                                <h3 class="text-xl font-bold text-white mb-2">How's your trading experience?</h3>
+                                <p class="text-gray-400 text-sm">Your feedback helps us improve</p>
+                            </div>
+
+                            <div class="flex justify-center gap-3 mb-6">
+                                <button class="group p-3 hover:bg-gray-800 rounded-xl transition-all hover:scale-110">
+                                    <span class="text-3xl group-hover:animate-bounce">😡</span>
+                                    <p class="text-gray-400 text-xs mt-1">Terrible</p>
+                                </button>
+                                <button class="group p-3 hover:bg-gray-800 rounded-xl transition-all hover:scale-110">
+                                    <span class="text-3xl group-hover:animate-bounce">😕</span>
+                                    <p class="text-gray-400 text-xs mt-1">Bad</p>
+                                </button>
+                                <button class="group p-3 hover:bg-gray-800 rounded-xl transition-all hover:scale-110">
+                                    <span class="text-3xl group-hover:animate-bounce">😐</span>
+                                    <p class="text-gray-400 text-xs mt-1">Okay</p>
+                                </button>
+                                <button class="group p-3 hover:bg-gray-800 rounded-xl transition-all hover:scale-110">
+                                    <span class="text-3xl group-hover:animate-bounce">😊</span>
+                                    <p class="text-gray-400 text-xs mt-1">Good</p>
+                                </button>
+                                <button class="group p-3 hover:bg-gray-800 rounded-xl transition-all hover:scale-110">
+                                    <span class="text-3xl group-hover:animate-bounce">😍</span>
+                                    <p class="text-gray-400 text-xs mt-1">Excellent</p>
+                                </button>
+                            </div>
+
+                            <textarea placeholder="Tell us more (optional)" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors resize-none" rows="3"></textarea>
+
+                            <div class="flex gap-3 mt-4">
+                                <button onclick="hidePopup('popup10')" class="flex-1 px-4 py-2 text-gray-400 hover:text-white transition-colors">
+                                    Skip
+                                </button>
+                                <button class="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition-colors">
+                                    Submit Feedback
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Timer Controls Preview -->
+    <div class="container mx-auto px-4 pb-8">
+        <div class="bg-gray-800 rounded-xl p-6">
+            <h2 class="text-white font-bold text-lg mb-4">⏱️ Timer Configuration (Coming Soon)</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-gray-700 rounded-lg p-4">
+                    <h3 class="text-white font-semibold mb-2">Delay Timer</h3>
+                    <p class="text-gray-400 text-sm mb-3">Show popup after X seconds on page</p>
+                    <input type="number" placeholder="Seconds" class="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white">
+                </div>
+                <div class="bg-gray-700 rounded-lg p-4">
+                    <h3 class="text-white font-semibold mb-2">Auto-Dismiss</h3>
+                    <p class="text-gray-400 text-sm mb-3">Close automatically after X seconds</p>
+                    <input type="number" placeholder="Seconds" class="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white">
+                </div>
+                <div class="bg-gray-700 rounded-lg p-4">
+                    <h3 class="text-white font-semibold mb-2">Frequency</h3>
+                    <p class="text-gray-400 text-sm mb-3">Show once per X hours/days</p>
+                    <select class="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white">
+                        <option>Once per session</option>
+                        <option>Every hour</option>
+                        <option>Daily</option>
+                        <option>Weekly</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPopup(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hidePopup(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close popups with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('[id^="popup"]').forEach(popup => {
+                    popup.classList.add('hidden');
+                });
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+</body>
+</html>

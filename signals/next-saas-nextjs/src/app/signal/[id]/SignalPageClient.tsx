@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import EmailGateWrapper from '@/components/shared/emailGate/EmailGateWrapper';
 import SignalDetailAnalytics from '@/components/shared/signalDrill/SignalDetailAnalytics';
 import { ActionButton } from '@/components/shared/sharedbuttons';
+import { LiveSignalToast, useLiveSignalToast } from '@/components/shared/popups';
 
 interface Signal {
   id: number;
@@ -57,6 +59,27 @@ interface SignalPageClientProps {
 export default function SignalPageClient({ signal, drills, signalId }: SignalPageClientProps) {
   const [activeTab, setActiveTab] = useState<string>(drills.length > 0 ? drills[0].type : 'overview');
 
+  // Live Signal Toast Hook
+  const {
+    showToast,
+    hideToast,
+    handleStartTrading,
+    buttonPressed,
+    clickCount
+  } = useLiveSignalToast();
+
+  // Check if user has email in localStorage (from EmailGateWrapper)
+  useEffect(() => {
+    const userEmail = localStorage.getItem('userEmail');
+    const tradingStartTime = localStorage.getItem('tradingStartTime');
+
+    // If user has email but hasn't started the trading flow yet
+    if (userEmail && !tradingStartTime) {
+      // Start the timer when they view a drill page
+      handleStartTrading();
+    }
+  }, [handleStartTrading]);
+
   // If no drills available, show the legacy analytics view
   if (!drills || drills.length === 0) {
     return (
@@ -64,9 +87,52 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
         source={`signal_${signalId}`}
         title="Access Premium Signal Analysis"
         subtitle="Get instant access to detailed trading signals and live market analysis">
-        <div className="min-h-screen bg-background-1 dark:bg-background-8">
+        <div className="min-h-screen bg-background-1 dark:bg-background-8 pb-24">
           <SignalDetailAnalytics signal={signal} />
         </div>
+
+        {/* Sticky Action Button for Analytics View */}
+        <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white to-white/95 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900/95 border-t border-gray-200 dark:border-gray-700 p-3 sm:p-4 md:p-5 z-40 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center">
+              <div className="hidden sm:block flex-1">
+                <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+                  Educational content • Risk disclosure applies
+                </p>
+              </div>
+              <div className="w-full sm:w-auto sm:min-w-[280px] md:min-w-[320px]">
+                <ActionButton
+                  variant={['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'][signal.id % 4] as any}
+                  onClick={() => {
+                    // Start the trading flow if not already started
+                    if (!buttonPressed) {
+                      handleStartTrading();
+                    }
+                    // Navigate to external trading platform
+                    window.open('https://platform.example.com/trade', '_blank');
+                    console.log(`Opening trade for ${signal.pair}`);
+                  }}
+                  fullWidth
+                  size="md"
+                  customText={signal.action === 'BUY' ? 'START LEARNING' : 'VIEW ANALYSIS'}
+                  className="shadow-xl hover:shadow-2xl transition-shadow !py-3 sm:!py-3.5 md:!py-4"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Live Signal Toast */}
+        {showToast && (
+          <LiveSignalToast
+            onClose={hideToast}
+            onAction={() => {
+              // Navigate to analysis page
+              window.open('https://platform.example.com/analysis', '_blank');
+              hideToast();
+            }}
+          />
+        )}
       </EmailGateWrapper>
     );
   }
@@ -160,6 +226,24 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
         {/* Signal Header */}
         <div className="bg-white dark:bg-background-6 border-b border-gray-200 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Home Button */}
+            <div className="pt-4">
+              <Link
+                href="/"
+                onClick={() => {
+                  // Start the trading flow when clicking home
+                  if (!buttonPressed) {
+                    handleStartTrading();
+                  }
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <span className="text-sm font-medium">Home</span>
+              </Link>
+            </div>
             <div className="py-6">
               <h1 className="text-3xl font-bold">{signal.title}</h1>
               <p className="text-secondary/70 dark:text-accent/70 mt-2">{signal.content}</p>
@@ -174,15 +258,6 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
                 <span className="text-sm text-secondary/60">
                   Entry: {signal.entry.toFixed(4)} | Confidence: {signal.confidence}%
                 </span>
-              </div>
-              {/* Action Button */}
-              <div className="mt-4">
-                <ActionButton
-                  variant={['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'][signal.id % 4] as any}
-                  onClick={() => console.log(`Execute ${signal.action} trade for ${signal.pair}`)}
-                  size="md"
-                  customText={signal.action === 'BUY' ? 'EXECUTE BUY NOW' : 'EXECUTE SELL NOW'}
-                />
               </div>
             </div>
           </div>
@@ -210,7 +285,7 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
         </div>
 
         {/* Drill Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
           {drills
             .filter(drill => drill.type === activeTab)
             .map(drill => (
@@ -219,7 +294,50 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
               </div>
             ))}
         </div>
+
+        {/* Sticky Action Button */}
+        <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white to-white/95 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900/95 border-t border-gray-200 dark:border-gray-700 p-3 sm:p-4 md:p-5 z-40 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center">
+              <div className="hidden sm:block flex-1">
+                <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+                  Educational content • Risk disclosure applies
+                </p>
+              </div>
+              <div className="w-full sm:w-auto sm:min-w-[280px] md:min-w-[320px]">
+                <ActionButton
+                  variant={['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'][signal.id % 4] as any}
+                  onClick={() => {
+                    // Start the trading flow if not already started
+                    if (!buttonPressed) {
+                      handleStartTrading();
+                    }
+                    // Navigate to external trading platform
+                    window.open('https://platform.example.com/trade', '_blank');
+                    console.log(`Opening trade for ${signal.pair}`);
+                  }}
+                  fullWidth
+                  size="md"
+                  customText={signal.action === 'BUY' ? 'START LEARNING' : 'VIEW ANALYSIS'}
+                  className="shadow-xl hover:shadow-2xl transition-shadow !py-3 sm:!py-3.5 md:!py-4"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Live Signal Toast */}
+      {showToast && (
+        <LiveSignalToast
+          onClose={hideToast}
+          onAction={() => {
+            // Navigate to analysis page
+            window.open('https://platform.example.com/analysis', '_blank');
+            hideToast();
+          }}
+        />
+      )}
     </EmailGateWrapper>
   );
 }

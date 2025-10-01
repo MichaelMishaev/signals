@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compliant Market Analysis Toast - Test</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes slideInDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes slideOutUp {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(-100%); opacity: 0; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .animate-slideInDown { animation: slideInDown 0.5s ease-out; }
+    .animate-slideOutUp { animation: slideOutUp 0.3s ease-out; }
+    .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+  </style>
+</head>
+<body class="bg-gray-950 min-h-screen p-4">
+  <!-- Header -->
+  <div class="max-w-6xl mx-auto mb-8">
+    <h1 class="text-3xl font-bold text-white mb-2">Compliant Market Analysis Toast</h1>
+    <p class="text-gray-400">Regulatory compliant educational content flow</p>
+    <div class="mt-2 px-4 py-2 bg-yellow-900/20 border border-yellow-500/30 rounded-lg inline-block">
+      <p class="text-yellow-400 text-sm">⚠️ All content is for educational purposes only. Trading involves risk.</p>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-8">
+    <!-- Left: Flow Control -->
+    <div class="space-y-6">
+      <!-- Step 1: Email Form -->
+      <div id="emailForm" class="bg-gray-900 rounded-lg p-6">
+        <h3 class="text-white text-lg font-bold mb-2">Access Market Analysis</h3>
+        <p class="text-gray-400 text-sm mb-4">
+          Educational content for informational purposes only. Trading involves risk.
+        </p>
+        <form onsubmit="handleEmailSubmit(event)">
+          <div class="space-y-4">
+            <div>
+              <label for="email" class="block text-sm text-gray-400 mb-2">Email for Updates</label>
+              <input
+                type="email"
+                id="email"
+                class="w-full px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none"
+                placeholder="your@email.com"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="w-full px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg transition-colors"
+            >
+              Start Learning
+            </button>
+            <p class="text-gray-500 text-xs text-center">
+              By continuing, you acknowledge market risks and that this is educational content only.
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 2: Success Message -->
+      <div id="successMessage" class="bg-gray-900 rounded-lg p-6 hidden">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-white text-lg font-bold mb-2">Welcome to Market Analysis</h3>
+          <p class="text-gray-400 text-sm mb-4">You'll receive educational updates</p>
+          <div class="bg-gray-800 rounded-lg p-4 space-y-2">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Timer:</span>
+              <span id="timer" class="text-white font-mono">60s</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Interactions:</span>
+              <span id="clickCounter" class="text-white font-mono">0 / 2</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Status:</span>
+              <span id="status" class="text-blue-400">Learning Mode Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compliance Info -->
+      <div class="bg-gray-900 rounded-lg p-6">
+        <h3 class="text-white text-lg font-bold mb-4">Compliance Notice</h3>
+        <ul class="space-y-2 text-sm text-gray-400">
+          <li class="flex items-start gap-2">
+            <span class="text-blue-500">✓</span>
+            <span>Educational content only</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-blue-500">✓</span>
+            <span>No profit guarantees</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-blue-500">✓</span>
+            <span>Risk disclaimers included</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-blue-500">✓</span>
+            <span>Past performance disclosure</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-blue-500">✓</span>
+            <span>Google Ads compliant</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="bg-gray-900 rounded-lg p-6">
+        <h3 class="text-white text-lg font-bold mb-4">Test Actions</h3>
+        <div class="space-y-3">
+          <button
+            onclick="skipToSubmitted()"
+            class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+          >
+            Skip to Email Submitted
+          </button>
+          <button
+            onclick="triggerToast()"
+            class="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+          >
+            Show Toast Immediately
+          </button>
+          <button
+            onclick="resetFlow()"
+            class="w-full px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+          >
+            Reset Everything
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Interaction Area -->
+    <div class="space-y-6">
+      <!-- Click Area -->
+      <div
+        id="clickArea"
+        onclick="trackClick()"
+        class="bg-gray-900 rounded-lg p-8 min-h-[400px] cursor-pointer hover:bg-gray-800 transition-colors"
+      >
+        <div class="h-full flex flex-col items-center justify-center text-center">
+          <div class="text-6xl mb-4">📊</div>
+          <h3 class="text-white text-xl font-bold mb-2">Browse Educational Content</h3>
+          <p class="text-gray-400">Interact with the platform to receive analysis updates</p>
+          <div class="mt-6 px-4 py-2 bg-gray-800 rounded-lg">
+            <p class="text-white text-2xl font-mono" id="bigClickCounter">0 / 2</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow Info -->
+      <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+        <h4 class="text-blue-400 font-bold mb-2">Compliant Flow:</h4>
+        <ol class="text-sm text-gray-300 space-y-1 list-decimal list-inside">
+          <li>User submits email for updates</li>
+          <li>Button navigates to external platform</li>
+          <li>1-minute timer starts</li>
+          <li>User interacts with content (2 clicks)</li>
+          <li>Educational toast appears with disclaimers</li>
+        </ol>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="bg-red-900/10 border border-red-500/20 rounded-lg p-4">
+        <p class="text-red-400 text-xs font-bold mb-1">RISK DISCLAIMER</p>
+        <p class="text-gray-400 text-xs">
+          Trading involves substantial risk of loss. Past performance does not guarantee future results.
+          This content is for educational purposes only and should not be considered investment advice.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compliant Market Analysis Toast (Hidden by default) -->
+  <div id="marketAnalysisToast" class="fixed top-4 right-4 z-50 max-w-sm hidden animate-slideInDown">
+    <div class="bg-gray-800 border border-blue-500 rounded-lg shadow-2xl p-4">
+      <div class="flex items-start gap-3">
+        <div class="flex-shrink-0">
+          <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <h4 class="text-white font-bold text-sm">ANALYSIS</h4>
+            <span class="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-xs rounded-full">INFO</span>
+          </div>
+          <p class="text-gray-400 text-xs mb-1">
+            Market analysis available. Educational purposes only.
+          </p>
+          <p class="text-gray-500 text-[10px] mb-2">
+            Past performance doesn't guarantee future results.
+          </p>
+          <div class="mt-3 flex gap-2">
+            <button
+              onclick="closeToast()"
+              class="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded text-xs transition-colors"
+            >
+              Dismiss
+            </button>
+            <button
+              onclick="viewAnalysis()"
+              class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded text-xs font-bold transition-colors"
+            >
+              View
+            </button>
+          </div>
+        </div>
+        <button
+          onclick="closeToast()"
+          class="text-gray-500 hover:text-white transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State management
+    let state = {
+      emailSubmitted: false,
+      submissionTime: null,
+      clickCount: 0,
+      canShowToast: false,
+      timerInterval: null,
+      timeRemaining: 60
+    };
+
+    // Load state from localStorage
+    function loadState() {
+      const savedState = localStorage.getItem('compliantToastState');
+      if (savedState) {
+        state = { ...state, ...JSON.parse(savedState) };
+        if (state.emailSubmitted) {
+          showSuccessMessage();
+          if (state.submissionTime) {
+            const elapsed = Date.now() - state.submissionTime;
+            const remaining = Math.max(0, 60 - Math.floor(elapsed / 1000));
+            state.timeRemaining = remaining;
+
+            if (remaining > 0) {
+              startTimer();
+            } else {
+              state.canShowToast = true;
+              updateStatus();
+              checkToastConditions();
+            }
+          }
+        }
+        updateCounters();
+      }
+    }
+
+    // Save state to localStorage
+    function saveState() {
+      localStorage.setItem('compliantToastState', JSON.stringify(state));
+    }
+
+    // Handle email submission
+    function handleEmailSubmit(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value;
+
+      // Submit email
+      state.emailSubmitted = true;
+      state.submissionTime = Date.now();
+      state.clickCount = 0;
+      state.timeRemaining = 60;
+      saveState();
+
+      // Show success message
+      document.getElementById('emailForm').classList.add('hidden');
+      showSuccessMessage();
+      startTimer();
+
+      // Simulate navigation to external platform
+      console.log('Would navigate to external trading platform');
+      alert('In production, this would navigate to: https://platform.example.com/learn');
+    }
+
+    // Show success message
+    function showSuccessMessage() {
+      document.getElementById('emailForm').classList.add('hidden');
+      document.getElementById('successMessage').classList.remove('hidden');
+    }
+
+    // Start countdown timer
+    function startTimer() {
+      if (state.timerInterval) clearInterval(state.timerInterval);
+
+      state.timerInterval = setInterval(() => {
+        state.timeRemaining--;
+        document.getElementById('timer').textContent = state.timeRemaining + 's';
+
+        if (state.timeRemaining <= 0) {
+          clearInterval(state.timerInterval);
+          state.canShowToast = true;
+          updateStatus();
+          checkToastConditions();
+        }
+      }, 1000);
+    }
+
+    // Track clicks
+    function trackClick() {
+      if (!state.emailSubmitted) {
+        alert('Please submit your email first');
+        return;
+      }
+
+      state.clickCount++;
+      saveState();
+      updateCounters();
+      checkToastConditions();
+    }
+
+    // Update counters display
+    function updateCounters() {
+      document.getElementById('clickCounter').textContent = `${state.clickCount} / 2`;
+      document.getElementById('bigClickCounter').textContent = `${state.clickCount} / 2`;
+    }
+
+    // Update status display
+    function updateStatus() {
+      const statusEl = document.getElementById('status');
+      if (!state.emailSubmitted) {
+        statusEl.textContent = 'Not started';
+        statusEl.className = 'text-gray-400';
+      } else if (!state.canShowToast) {
+        statusEl.textContent = 'Timer active...';
+        statusEl.className = 'text-yellow-400';
+      } else if (state.clickCount < 2) {
+        statusEl.textContent = 'Ready - Browse content';
+        statusEl.className = 'text-blue-400';
+      } else {
+        statusEl.textContent = 'Analysis available';
+        statusEl.className = 'text-green-400';
+      }
+    }
+
+    // Check if conditions are met to show toast
+    function checkToastConditions() {
+      if (state.emailSubmitted && state.canShowToast && state.clickCount >= 2) {
+        showToast();
+      }
+      updateStatus();
+    }
+
+    // Show the toast
+    function showToast() {
+      document.getElementById('marketAnalysisToast').classList.remove('hidden');
+    }
+
+    // Close the toast
+    function closeToast() {
+      const toast = document.getElementById('marketAnalysisToast');
+      toast.classList.add('animate-slideOutUp');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('animate-slideOutUp');
+      }, 300);
+    }
+
+    // View analysis action
+    function viewAnalysis() {
+      alert('Opening educational market analysis...');
+      closeToast();
+    }
+
+    // Quick actions for testing
+    function skipToSubmitted() {
+      state.emailSubmitted = true;
+      state.submissionTime = Date.now();
+      state.clickCount = 0;
+      state.timeRemaining = 60;
+      saveState();
+      showSuccessMessage();
+      startTimer();
+    }
+
+    function triggerToast() {
+      showToast();
+    }
+
+    function resetFlow() {
+      localStorage.removeItem('compliantToastState');
+      location.reload();
+    }
+
+    // Initialize on load
+    loadState();
+  </script>
+</body>
+</html>

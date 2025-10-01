@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Signal Toast - Email Confirmation Flow Test</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes slideInDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes slideOutUp {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(-100%); opacity: 0; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .animate-slideInDown { animation: slideInDown 0.5s ease-out; }
+    .animate-slideOutUp { animation: slideOutUp 0.3s ease-out; }
+    .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+  </style>
+</head>
+<body class="bg-gray-950 min-h-screen p-4">
+  <!-- Header -->
+  <div class="max-w-6xl mx-auto mb-8">
+    <h1 class="text-3xl font-bold text-white mb-2">Live Signal Toast Test</h1>
+    <p class="text-gray-400">Email Confirmation → 1 Minute Timer → 2 Clicks → Toast Appears</p>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-8">
+    <!-- Left: Flow Control -->
+    <div class="space-y-6">
+      <!-- Step 1: Email Form -->
+      <div id="emailForm" class="bg-gray-900 rounded-lg p-6">
+        <h3 class="text-white text-lg font-bold mb-4">Step 1: Get Live Trading Signals</h3>
+        <form onsubmit="handleEmailSubmit(event)">
+          <div class="space-y-4">
+            <div>
+              <label for="email" class="block text-sm text-gray-400 mb-2">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                class="w-full px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-green-500 focus:outline-none"
+                placeholder="your@email.com"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="w-full px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition-colors"
+            >
+              Send Confirmation Email
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 2: Confirmation Code -->
+      <div id="confirmForm" class="bg-gray-900 rounded-lg p-6 hidden">
+        <h3 class="text-white text-lg font-bold mb-2">Step 2: Check Your Email</h3>
+        <p class="text-gray-400 text-sm mb-4">We've sent a confirmation code to <span id="emailDisplay"></span></p>
+        <form onsubmit="handleConfirmation(event)">
+          <div class="space-y-4">
+            <div>
+              <label for="code" class="block text-sm text-gray-400 mb-2">Confirmation Code</label>
+              <input
+                type="text"
+                id="code"
+                class="w-full px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-green-500 focus:outline-none"
+                placeholder="Enter any code (test mode)"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="w-full px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition-colors"
+            >
+              Confirm Email
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 3: Success & Instructions -->
+      <div id="successMessage" class="bg-gray-900 rounded-lg p-6 hidden">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 class="text-white text-lg font-bold mb-2">Email Confirmed!</h3>
+          <p class="text-gray-400 text-sm mb-4">Toast will appear after 1 minute and 2 clicks</p>
+          <div class="bg-gray-800 rounded-lg p-4 space-y-2">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Timer:</span>
+              <span id="timer" class="text-white font-mono">60s</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Clicks:</span>
+              <span id="clickCounter" class="text-white font-mono">0 / 2</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Status:</span>
+              <span id="status" class="text-yellow-400">Waiting...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="bg-gray-900 rounded-lg p-6">
+        <h3 class="text-white text-lg font-bold mb-4">Quick Actions (Test Mode)</h3>
+        <div class="space-y-3">
+          <button
+            onclick="skipToConfirmed()"
+            class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+          >
+            Skip to Email Confirmed
+          </button>
+          <button
+            onclick="triggerToast()"
+            class="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+          >
+            Trigger Toast Immediately
+          </button>
+          <button
+            onclick="resetFlow()"
+            class="w-full px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+          >
+            Reset Everything
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Click Area -->
+    <div class="space-y-6">
+      <!-- Click Area -->
+      <div
+        id="clickArea"
+        onclick="trackClick()"
+        class="bg-gray-900 rounded-lg p-8 min-h-[400px] cursor-pointer hover:bg-gray-800 transition-colors"
+      >
+        <div class="h-full flex flex-col items-center justify-center text-center">
+          <div class="text-6xl mb-4">👆</div>
+          <h3 class="text-white text-xl font-bold mb-2">Click Anywhere Here</h3>
+          <p class="text-gray-400">After confirming email, click 2 times to trigger the toast</p>
+          <div class="mt-6 px-4 py-2 bg-gray-800 rounded-lg">
+            <p class="text-white text-2xl font-mono" id="bigClickCounter">0 / 2</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Box -->
+      <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+        <h4 class="text-blue-400 font-bold mb-2">How It Works:</h4>
+        <ol class="text-sm text-gray-300 space-y-1 list-decimal list-inside">
+          <li>Submit email address</li>
+          <li>Enter confirmation code</li>
+          <li>Wait 1 minute (timer starts)</li>
+          <li>Click anywhere 2 times</li>
+          <li>Live Signal Toast appears!</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Signal Toast (Hidden by default) -->
+  <div id="liveSignalToast" class="fixed top-4 right-4 z-50 max-w-sm hidden animate-slideInDown">
+    <div class="bg-gray-800 border border-green-500 rounded-lg shadow-2xl p-4">
+      <div class="flex items-start gap-3">
+        <div class="flex-shrink-0">
+          <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <h4 class="text-white font-bold text-sm">SIGNAL</h4>
+            <span class="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs rounded-full">LIVE</span>
+          </div>
+          <p class="text-gray-400 text-xs mb-2">Strong BUY signal detected for EUR/USD</p>
+          <div class="mt-3 flex gap-2">
+            <button
+              onclick="closeToast()"
+              class="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded text-xs transition-colors"
+            >
+              Later
+            </button>
+            <button
+              onclick="tradeNow()"
+              class="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-xs font-bold transition-colors"
+            >
+              Trade
+            </button>
+          </div>
+        </div>
+        <button
+          onclick="closeToast()"
+          class="text-gray-500 hover:text-white transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State management
+    let state = {
+      emailConfirmed: false,
+      confirmationTime: null,
+      clickCount: 0,
+      canShowToast: false,
+      timerInterval: null,
+      timeRemaining: 60
+    };
+
+    // Load state from localStorage
+    function loadState() {
+      const savedState = localStorage.getItem('liveSignalTestState');
+      if (savedState) {
+        state = { ...state, ...JSON.parse(savedState) };
+        if (state.emailConfirmed) {
+          showSuccessMessage();
+          if (state.confirmationTime) {
+            const elapsed = Date.now() - state.confirmationTime;
+            const remaining = Math.max(0, 60 - Math.floor(elapsed / 1000));
+            state.timeRemaining = remaining;
+
+            if (remaining > 0) {
+              startTimer();
+            } else {
+              state.canShowToast = true;
+              updateStatus();
+            }
+          }
+        }
+        updateCounters();
+      }
+    }
+
+    // Save state to localStorage
+    function saveState() {
+      localStorage.setItem('liveSignalTestState', JSON.stringify(state));
+    }
+
+    // Handle email submission
+    function handleEmailSubmit(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value;
+      document.getElementById('emailDisplay').textContent = email;
+      document.getElementById('emailForm').classList.add('hidden');
+      document.getElementById('confirmForm').classList.remove('hidden');
+    }
+
+    // Handle confirmation
+    function handleConfirmation(event) {
+      event.preventDefault();
+      confirmEmail();
+    }
+
+    // Confirm email and start timer
+    function confirmEmail() {
+      state.emailConfirmed = true;
+      state.confirmationTime = Date.now();
+      state.clickCount = 0;
+      state.timeRemaining = 60;
+      saveState();
+
+      document.getElementById('confirmForm').classList.add('hidden');
+      showSuccessMessage();
+      startTimer();
+    }
+
+    // Show success message
+    function showSuccessMessage() {
+      document.getElementById('emailForm').classList.add('hidden');
+      document.getElementById('confirmForm').classList.add('hidden');
+      document.getElementById('successMessage').classList.remove('hidden');
+    }
+
+    // Start countdown timer
+    function startTimer() {
+      if (state.timerInterval) clearInterval(state.timerInterval);
+
+      state.timerInterval = setInterval(() => {
+        state.timeRemaining--;
+        document.getElementById('timer').textContent = state.timeRemaining + 's';
+
+        if (state.timeRemaining <= 0) {
+          clearInterval(state.timerInterval);
+          state.canShowToast = true;
+          updateStatus();
+          checkToastConditions();
+        }
+      }, 1000);
+    }
+
+    // Track clicks
+    function trackClick() {
+      if (!state.emailConfirmed) {
+        alert('Please confirm your email first!');
+        return;
+      }
+
+      state.clickCount++;
+      saveState();
+      updateCounters();
+      checkToastConditions();
+    }
+
+    // Update counters display
+    function updateCounters() {
+      document.getElementById('clickCounter').textContent = `${state.clickCount} / 2`;
+      document.getElementById('bigClickCounter').textContent = `${state.clickCount} / 2`;
+    }
+
+    // Update status display
+    function updateStatus() {
+      const statusEl = document.getElementById('status');
+      if (!state.emailConfirmed) {
+        statusEl.textContent = 'Not confirmed';
+        statusEl.className = 'text-gray-400';
+      } else if (!state.canShowToast) {
+        statusEl.textContent = 'Waiting for timer...';
+        statusEl.className = 'text-yellow-400';
+      } else if (state.clickCount < 2) {
+        statusEl.textContent = 'Ready! Click 2 times';
+        statusEl.className = 'text-blue-400';
+      } else {
+        statusEl.textContent = 'Toast triggered!';
+        statusEl.className = 'text-green-400';
+      }
+    }
+
+    // Check if conditions are met to show toast
+    function checkToastConditions() {
+      if (state.emailConfirmed && state.canShowToast && state.clickCount >= 2) {
+        showToast();
+      }
+      updateStatus();
+    }
+
+    // Show the toast
+    function showToast() {
+      document.getElementById('liveSignalToast').classList.remove('hidden');
+    }
+
+    // Close the toast
+    function closeToast() {
+      const toast = document.getElementById('liveSignalToast');
+      toast.classList.add('animate-slideOutUp');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('animate-slideOutUp');
+      }, 300);
+    }
+
+    // Trade action
+    function tradeNow() {
+      alert('Opening trade for EUR/USD!');
+      closeToast();
+    }
+
+    // Quick actions for testing
+    function skipToConfirmed() {
+      confirmEmail();
+    }
+
+    function triggerToast() {
+      showToast();
+    }
+
+    function resetFlow() {
+      localStorage.removeItem('liveSignalTestState');
+      location.reload();
+    }
+
+    // Initialize on load
+    loadState();
+  </script>
+</body>
+</html>
