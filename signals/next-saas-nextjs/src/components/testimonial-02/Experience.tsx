@@ -1,3 +1,5 @@
+'use client';
+
 import { projectAchievements } from '@/data/achievements';
 import RevealAnimation from '../animation/RevealAnimation';
 import OurAchievements from '../shared/OurAchievements';
