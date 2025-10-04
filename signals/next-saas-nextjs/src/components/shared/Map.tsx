@@ -6,7 +6,7 @@ import { MapContainer } from 'react-leaflet/MapContainer';
 const position: [number, number] = [39.8283, -98.5795];
 
 const Map = () => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') return null;
   return (
     <>
       <MapContainer className="h-full w-full" center={position} zoom={6}>

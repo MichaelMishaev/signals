@@ -1,4 +1,5 @@
 import OurMission from '@/components/aboutpage-01/OurMission';
+import ProjectAchievementsWrapper from '@/components/aboutpage-01/ProjectAchievementsWrapper';
 import VisionStatement from '@/components/aboutpage-01/VisionStatement';
 import WhyChooseUs from '@/components/aboutpage-01/WhyChooseUs';
 import RevealAnimation from '@/components/animation/RevealAnimation';
@@ -6,10 +7,8 @@ import Team from '@/components/homepage-05/Team';
 import CTA from '@/components/homepage-08/CTA';
 import FooterThree from '@/components/shared/footer/FooterThree';
 import NavbarOne from '@/components/shared/header/NavbarOne';
-import OurAchievements from '@/components/shared/OurAchievements';
 import PageHero from '@/components/shared/PageHero';
 import ReviewsV3 from '@/components/shared/reviews/ReviewsV3';
-import { projectAchievements } from '@/data/achievements';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -48,7 +47,7 @@ const AboutPage01 = () => {
                 </p>
               </RevealAnimation>
             </div>
-            <OurAchievements achievements={projectAchievements} />
+            <ProjectAchievementsWrapper />
           </div>
         </section>
         <WhyChooseUs />

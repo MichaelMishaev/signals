@@ -1,3 +1,4 @@
+'use client';
 import { projectAchievements } from '@/data/achievements';
 import { GradientStarIcon, GraphCheckIcon, ReloadIcon, ThreeDotsIcon, UserGroupIcon } from '@/icons';
 import authorAvatarBgImage from '@public/images/avatar/author-avatar-bg.png';

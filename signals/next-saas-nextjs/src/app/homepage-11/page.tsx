@@ -6,11 +6,10 @@ import FeaturesHighlight from '@/components/homepage-11/FeaturesHighlight';
 import Hero from '@/components/homepage-11/Hero';
 import Pricing from '@/components/homepage-11/Pricing';
 import Process from '@/components/homepage-11/Process';
+import ProjectAchievementsWrapper from '@/components/homepage-11/ProjectAchievementsWrapper';
 import Reviews from '@/components/homepage-11/Reviews';
 import FooterThree from '@/components/shared/footer/FooterThree';
 import NavbarOne from '@/components/shared/header/NavbarOne';
-import OurAchievements from '@/components/shared/OurAchievements';
-import { projectAchievements } from '@/data/achievements';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -32,7 +31,7 @@ const HomePage11 = () => {
         <Process />
         <section className="py-16 md:py-[120px] max-xl:px-5">
           <div className="main-container">
-            <OurAchievements achievements={projectAchievements} instant={false} />
+            <ProjectAchievementsWrapper />
           </div>
         </section>
         <Pricing />

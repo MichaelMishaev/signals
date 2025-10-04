@@ -2,14 +2,13 @@ import ClientsMarquee from '@/components/homepage-09/ClientsMarquee';
 import Features from '@/components/homepage-09/Features';
 import Hero from '@/components/homepage-09/Hero';
 import Pricing from '@/components/homepage-09/Pricing';
+import ProjectAchievementsWrapper from '@/components/homepage-09/ProjectAchievementsWrapper';
 import Reviews from '@/components/homepage-09/Reviews';
 import SelectUs from '@/components/homepage-09/SelectUs';
 import Steps from '@/components/homepage-09/Steps';
 import CTAV1 from '@/components/shared/cta/CTAV1';
 import FooterThree from '@/components/shared/footer/FooterThree';
 import NavbarOne from '@/components/shared/header/NavbarOne';
-import OurAchievements from '@/components/shared/OurAchievements';
-import { projectAchievements } from '@/data/achievements';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -29,7 +28,7 @@ const HomePage09 = () => {
         <Features />
         <section className="py-16 md:py-20 lg:py-[90px] xl:py-[100px]">
           <div className="main-container">
-            <OurAchievements achievements={projectAchievements} className="dark:bg-background-8" instant={true} />
+            <ProjectAchievementsWrapper />
           </div>
         </section>
         <SelectUs />

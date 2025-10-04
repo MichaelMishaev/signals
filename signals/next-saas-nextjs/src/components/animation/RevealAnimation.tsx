@@ -139,8 +139,10 @@ const RevealAnimation = ({
 
   // Early return if children is not valid (after all hooks)
   if (!children || !React.isValidElement(children)) {
-    console.warn('RevealAnimation: Invalid children prop provided');
-    return null;
+    if (typeof window !== 'undefined') {
+      console.warn('RevealAnimation: Invalid children prop provided');
+    }
+    return <>{children}</>;
   }
 
   // Clone the child element and add the ref, className, and data-ns-animate attribute

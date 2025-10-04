@@ -13,6 +13,8 @@ import NavbarTwo from '@/components/shared/header/NavbarTwo';
 import { Metadata } from 'next';
 import { Fragment } from 'react';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Security software - NextSaaS',
 };

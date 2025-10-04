@@ -1,5 +1,8 @@
+'use client';
+import dynamic from 'next/dynamic';
 import RevealAnimation from '../animation/RevealAnimation';
-import Map from '../shared/Map';
+
+const Map = dynamic(() => import('../shared/Map'), { ssr: false });
 
 const ContactMap = () => {
   return (

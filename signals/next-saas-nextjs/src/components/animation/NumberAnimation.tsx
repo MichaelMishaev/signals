@@ -38,6 +38,8 @@ const NumberAnimation: React.FC<NumberAnimationProps> = ({
   const [isAnimated, setIsAnimated] = useState(false);
 
   const animate = (element: HTMLElement, properties: Record<string, string>, duration: number) => {
+    if (typeof window === 'undefined') return;
+
     const startTime = performance.now();
     const startValues: Record<string, number> = {};
 
@@ -70,6 +72,7 @@ const NumberAnimation: React.FC<NumberAnimationProps> = ({
   };
 
   const initAnimation = useCallback(() => {
+    if (typeof window === 'undefined') return;
     if (!elementRef.current || isAnimated) return;
 
     const element = elementRef.current;
@@ -169,7 +172,7 @@ const NumberAnimation: React.FC<NumberAnimationProps> = ({
       }
 
       // Handle percentage symbol
-      if (hasPercentage) {
+      if (hasPercentage && typeof document !== 'undefined') {
         const percentageSpan = document.createElement('span');
         percentageSpan.textContent = '%';
         percentageSpan.style.marginLeft = '2px';
@@ -220,6 +223,8 @@ const NumberAnimation: React.FC<NumberAnimationProps> = ({
   ]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const element = elementRef.current;
     if (!element) return;
 
