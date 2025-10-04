@@ -1,0 +1,13 @@
+{
+  "signal_id": 8,
+  "title": "Exhaustion at ATH — spotting reversals at extreme zones",
+  "title_ur": "اے ٹی ایچ پر تھکاوٹ — انتہائی زونز میں الٹ پھیر کی شناخت",
+  "description": "Case study + analytics: trading a rejection under major resistance on BTC/USD with defined invalidation and asymmetric target.",
+  "description_ur": "کیس اسٹڈی + تجزیات: بی ٹی سی/یو ایس ڈی میں بڑی مزاحمت کے تحت ردِ عمل کی تجارت، واضح ناکامی اور غیر متناسب ہدف کے ساتھ۔",
+  "type": "ANALYTICS",
+  "content": "# Concept\n\nA rejection at or just below an all-time high often shows long upper wicks, momentum rollover (RSI/MACD), and failure to hold above resistance.\n\n# Setup\n\nEnter short below 124.5k resistance once a bearish candle confirms rejection. SL: 124,800. TP: 121,200. RR ≈ 1:2.6.\n\n# Analytics\n\n- Entry: 123,800\n- Stop Loss: 124,800\n- Take Profit: 121,200\n- Risk: $1,000\n- Reward: $2,600\n- RR Ratio: 1:2.6\n\nTrack MFE/MAE during the trade; tighten SL only after strong momentum follows through.\n\n# Invalidation\n\nSustained close >124,800 or strong expansion above resistance cancels the short idea.\n\n# Review Checklist\n\n- Bearish confirmation candle printed?\n- Volume not supporting breakout?\n- Momentum (RSI/MACD) rolling over?\n- RR ≥ 1:2?\n\n# Quick Quiz\n\n1. What price action closes the setup? (Answer: sustained close >124,800.)\n2. If first move goes to 123,200 before bounce, do you partial out or hold per plan?\n3. What's the RR with SL=1,000 and TP=2,600? (Answer: 1:2.6.)",
+  "content_ur": "# تصور\n\nآل ٹائم ہائی پر یا اس کے بالکل نیچے ردِ عمل اکثر لمبی اوپری بتیاں، رفتار کا الٹ پھیر (آر ایس آئی/ایم اے سی ڈی)، اور مزاحمت سے اوپر برقرار رہنے میں ناکامی دکھاتا ہے۔\n\n# سیٹ اپ\n\nایک بار جب بیئرش موم بتی ردِ عمل کی تصدیق کر دے تو 124.5k مزاحمت کے نیچے شارٹ میں داخل ہوں۔ SL: 124,800۔ TP: 121,200۔ RR ≈ 1:2.6۔\n\n# تجزیات\n\n- انٹری: 123,800\n- سٹاپ لاس: 124,800\n- ٹیک پرافٹ: 121,200\n- رسک: $1,000\n- انعام: $2,600\n- RR تناسب: 1:2.6\n\nتجارت کے دوران MFE/MAE کو ٹریک کریں؛ صرف مضبوط رفتار کے بعد SL کو سخت کریں۔\n\n# ناکامی\n\n124,800 سے اوپر مسلسل بند یا مزاحمت سے اوپر مضبوط توسیع شارٹ خیال کو منسوخ کر دیتی ہے۔\n\n# جائزہ چیک لسٹ\n\n- بیئرش تصدیقی موم بتی چھپی؟\n- حجم بریک آؤٹ کی حمایت نہیں کر رہا؟\n- رفتار (RSI/MACD) الٹ رہا ہے؟\n- RR ≥ 1:2؟\n\n# فوری کوئز\n\n1. کون سی قیمت کی کارروائی سیٹ اپ کو بند کرتی ہے؟ (جواب: 124,800 سے اوپر مسلسل بند)\n2. اگر پہلی حرکت اچھال سے پہلے 123,200 تک جاتی ہے، تو کیا آپ جزوی طور پر باہر نکلتے ہیں یا منصوبے کے مطابق رکتے ہیں؟\n3. SL=1,000 اور TP=2,600 کے ساتھ RR کیا ہے؟ (جواب: 1:2.6)",
+  "order_index": 1,
+  "is_active": true,
+  "image_url": "/images/charts/btcusd/2025-10-04-signal-001-markups.png"
+}

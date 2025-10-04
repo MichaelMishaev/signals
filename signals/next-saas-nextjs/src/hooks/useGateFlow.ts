@@ -88,15 +88,28 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
    * Record drill view and check if gate should appear
    */
   const onDrillView = useCallback((signalId: number) => {
+    console.log('[useGateFlow] onDrillView called with signalId:', signalId);
+
     const newState = recordDrillView(signalId);
+    console.log('[useGateFlow] After recordDrillView, newState:', {
+      drillsViewed: newState.drillsViewed,
+      hasEmail: newState.hasEmail,
+      hasBroker: newState.hasBrokerAccount,
+    });
+
     setState(newState);
 
-    // Check if a gate should be shown
-    const drillNumber = newState.drillsViewed;
-    const gateToShow = getGateForDrill(drillNumber + 1); // +1 for next attempt
+    // Check if a gate should be shown based on CURRENT state
+    // After recording this drill view, check if we've hit a gate threshold
+    const gateToShow = getGateForDrill(newState.drillsViewed);
+
+    console.log('[useGateFlow] After drill view #', newState.drillsViewed, ', checking for gate. Result:', gateToShow);
 
     if (gateToShow) {
+      console.log('[useGateFlow] Setting active gate:', gateToShow);
       setActiveGate(gateToShow);
+    } else {
+      console.log('[useGateFlow] No gate needed');
     }
   }, []);
 

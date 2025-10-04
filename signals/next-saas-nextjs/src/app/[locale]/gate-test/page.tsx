@@ -29,6 +29,7 @@ interface ActivityLogEntry {
 }
 
 export default function GateFlowTestPage() {
+  const gateFlow = useGateFlow();
   const {
     hasEmail,
     hasBroker,
@@ -41,7 +42,7 @@ export default function GateFlowTestPage() {
     onEmailSubmit,
     onBrokerVerify,
     closeGate,
-  } = useGateFlow();
+  } = gateFlow;
 
   const [state, setState] = useState(getGateState());
   const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([]);
@@ -599,7 +600,7 @@ export default function GateFlowTestPage() {
       </div>
 
       {/* Render active gate */}
-      <GateManager />
+      <GateManager gateFlow={gateFlow} />
     </div>
   );
 }

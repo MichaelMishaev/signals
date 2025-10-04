@@ -32,67 +32,10 @@ const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName 
   return (
     <MobileMenuProvider>
       <header>
-        <div
-          className={cn(
-            'lp:!max-w-[1290px] bg-accent/10 dark:bg-background-7/40 fixed top-20 left-1/2 z-50 mx-auto flex w-full max-w-[360px] -translate-x-1/2 items-center justify-between rounded-full px-2.5 py-2.5 backdrop-blur-[25px] max-md:!top-24 min-[425px]:max-w-[380px] min-[500px]:max-w-[450px] sm:max-w-[540px] md:max-w-[720px] lg:max-w-[960px] xl:max-w-[1140px] xl:py-0',
-            className,
-            isScrolled && 'bg-background-7 top-10 transition-all duration-500 ease-in-out',
-          )}>
-          {/* logo */}
-          <LogoV2 />
-          {/* Language Switcher - always visible */}
-          <div className="ml-auto xl:ml-0 mr-4">
-            <LanguageSwitcher />
-          </div>
-          {/* navigation - hidden in production mode */}
-          {mounted && !isProductionMode && (
-            <nav className="hidden items-center xl:flex">
-              <ul className="flex items-center gap-6">
-                {navigationItems.map((item) => {
-                  const renderMegaMenu = () => {
-                    switch (item?.megaMenuComponent) {
-                      case 'HomeMegaMenu':
-                        return <HomeMegaMenu className={megaMenuColor} />;
-                      case 'PageMegaMenu':
-                        return <PageMegaMenu className={megaMenuColor} />;
-                      case 'AboutMenu':
-                        return <AboutMenu className={megaMenuColor} />;
-                      case 'ServicesMenu':
-                        return <ServicesMenu className={megaMenuColor} />;
-                      case 'BlogMenu':
-                        return <BlogMenu className={megaMenuColor} />;
-                      default:
-                        return null;
-                    }
-                  };
-
-                  // mega menu render
-                  return (
-                    <li
-                      key={item?.id}
-                      className={cn('py-5', item?.hasDropdown ? 'group/nav relative cursor-pointer' : '')}>
-                      <NavItemLink variant="white" item={item} />
-                      {item.hasDropdown && renderMegaMenu()}
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
-          )}
-          {/* CTA Button - hidden in production mode */}
-          {mounted && !isProductionMode && (
-            <NavCTAButton
-              href="/signup-01"
-              btnClassName={cn(isScrolled && 'btn-white', btnClassName)}
-              label="Get started"
-            />
-          )}
-          {/* mobile menu btn - hidden in production mode */}
-          {mounted && !isProductionMode && <MobileMenuButton />}
+        {/* Language Switcher - always visible */}
+        <div className="ml-auto xl:ml-0 mr-4">
+          <LanguageSwitcher />
         </div>
-
-        {/* Mobile menu - hidden in production mode */}
-        {mounted && !isProductionMode && <MobileMenu />}
       </header>
     </MobileMenuProvider>
   );

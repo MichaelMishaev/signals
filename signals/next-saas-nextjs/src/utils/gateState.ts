@@ -6,13 +6,29 @@
 import { GateFlowMechanism, GateState, GateType } from '@/mechanisms/gateFlowMechanism';
 import { GATE_CONFIG } from '@/config/gates';
 
-const STORAGE_KEY = GATE_CONFIG.timing.storageKey;
+const BASE_STORAGE_KEY = GATE_CONFIG.timing.storageKey;
+
+/**
+ * Get storage key for current user
+ * Uses email-based keys for multi-user separation
+ */
+const getStorageKey = (email?: string | null): string => {
+  if (email) {
+    // Sanitize email for use as localStorage key
+    const sanitizedEmail = email.toLowerCase().replace(/[^a-z0-9@._-]/g, '_');
+    return `${BASE_STORAGE_KEY}_${sanitizedEmail}`;
+  }
+  return `${BASE_STORAGE_KEY}_anonymous`;
+};
 
 // ============================================================================
 // EXTENDED STATE (includes metadata)
 // ============================================================================
 
 export interface ExtendedGateState extends GateState {
+  // User identification
+  userEmail: string | null;
+
   // Timestamps
   sessionStart: number;
   emailProvidedAt: number | null;
@@ -45,6 +61,9 @@ const createDefaultState = (): ExtendedGateState => {
     drillsViewed: 0,
     drillsViewedAfterEmail: 0,
 
+    // User identification
+    userEmail: null,
+
     // Timestamps
     sessionStart: Date.now(),
     emailProvidedAt: null,
@@ -66,40 +85,73 @@ const createDefaultState = (): ExtendedGateState => {
 
 /**
  * Get gate state from localStorage
+ * Auto-detects the user's state by checking all gate keys
  */
-export const getGateState = (): ExtendedGateState => {
+export const getGateState = (forceEmail?: string | null): ExtendedGateState => {
   if (typeof window === 'undefined') return createDefaultState();
 
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) return createDefaultState();
-
-    const state: ExtendedGateState = JSON.parse(stored);
-
-    // Check if session expired (24 hours)
-    const sessionAge = Date.now() - state.sessionStart;
-    if (sessionAge > GATE_CONFIG.timing.sessionExpiry) {
-      // Session expired - reset but keep user state
-      return {
-        ...createDefaultState(),
-        hasEmail: state.hasEmail,
-        hasBrokerAccount: state.hasBrokerAccount,
-        emailProvidedAt: state.emailProvidedAt,
-        brokerVerifiedAt: state.brokerVerifiedAt,
-      };
+    // Try to load from specified email first (if provided)
+    if (forceEmail) {
+      const emailKey = getStorageKey(forceEmail);
+      const emailStored = localStorage.getItem(emailKey);
+      if (emailStored) {
+        const state: ExtendedGateState = JSON.parse(emailStored);
+        return validateAndMaybeExpire(state);
+      }
     }
 
-    // Validate state
-    if (!GateFlowMechanism.validateState(state)) {
-      console.warn('Invalid gate state detected, resetting');
-      return createDefaultState();
+    // Auto-detect: Find any gate state key in localStorage
+    const allKeys = Object.keys(localStorage);
+    const gateKeys = allKeys.filter(key => key.startsWith(BASE_STORAGE_KEY));
+
+    if (gateKeys.length > 0) {
+      // Prefer email-based keys over anonymous
+      const emailKey = gateKeys.find(key => key !== `${BASE_STORAGE_KEY}_anonymous`);
+      const keyToUse = emailKey || gateKeys[0];
+
+      const stored = localStorage.getItem(keyToUse);
+      if (stored) {
+        const state: ExtendedGateState = JSON.parse(stored);
+        console.log('[GATE] 🔍 Auto-detected user state from key:', keyToUse);
+        return validateAndMaybeExpire(state);
+      }
     }
 
-    return state;
+    // No state found, return default
+    console.log('[GATE] 🆕 Creating new default state');
+    return createDefaultState();
   } catch (error) {
-    console.error('Error reading gate state:', error);
+    console.error('Error loading gate state:', error);
     return createDefaultState();
   }
+};
+
+/**
+ * Validate state and handle expiry
+ */
+const validateAndMaybeExpire = (state: ExtendedGateState): ExtendedGateState => {
+  // Check if session expired (24 hours)
+  const sessionAge = Date.now() - state.sessionStart;
+  if (sessionAge > GATE_CONFIG.timing.sessionExpiry) {
+    // Session expired - reset but keep user state
+    return {
+      ...createDefaultState(),
+      userEmail: state.userEmail,
+      hasEmail: state.hasEmail,
+      hasBrokerAccount: state.hasBrokerAccount,
+      emailProvidedAt: state.emailProvidedAt,
+      brokerVerifiedAt: state.brokerVerifiedAt,
+    };
+  }
+
+  // Validate state
+  if (!GateFlowMechanism.validateState(state)) {
+    console.warn('Invalid gate state detected, resetting');
+    return createDefaultState();
+  }
+
+  return state;
 };
 
 /**
@@ -109,7 +161,16 @@ export const saveGateState = (state: ExtendedGateState): void => {
   if (typeof window === 'undefined') return;
 
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const storageKey = getStorageKey(state.userEmail);
+    localStorage.setItem(storageKey, JSON.stringify(state));
+
+    console.log('[GATE] 💾 State saved', {
+      storageKey,
+      userEmail: state.userEmail || 'anonymous',
+      drillsViewed: state.drillsViewed,
+      hasEmail: state.hasEmail,
+      hasBroker: state.hasBrokerAccount,
+    });
   } catch (error) {
     console.error('Error saving gate state:', error);
   }
@@ -131,10 +192,31 @@ export const updateGateState = (updates: Partial<ExtendedGateState>): ExtendedGa
 /**
  * Reset all gate state
  */
-export const resetGateState = (): void => {
+export const resetGateState = (email?: string | null): void => {
   if (typeof window !== 'undefined') {
-    localStorage.removeItem(STORAGE_KEY);
+    const state = getGateState();
+    const emailToUse = email || state.userEmail;
+    const storageKey = getStorageKey(emailToUse);
+    localStorage.removeItem(storageKey);
+
+    console.log('[GATE] 🗑️ State reset', {
+      storageKey,
+      userEmail: emailToUse || 'anonymous',
+    });
   }
+};
+
+/**
+ * Switch to a different user's gate state
+ * Call this when user logs in/out
+ */
+export const switchUser = (newEmail: string | null): ExtendedGateState => {
+  console.log('[GATE] 🔄 Switching user', {
+    from: getGateState().userEmail || 'anonymous',
+    to: newEmail || 'anonymous',
+  });
+
+  return getGateState(newEmail);
 };
 
 // ============================================================================
@@ -147,12 +229,22 @@ export const resetGateState = (): void => {
 export const recordDrillView = (signalId: number): ExtendedGateState => {
   const state = getGateState();
 
+  console.log('[GATE] 🔍 recordDrillView called', {
+    signalId,
+    currentDrillsViewed: state.drillsViewed,
+    drillHistory: state.drillHistory.map(d => d.signalId),
+  });
+
   // Check if already viewed this signal in this session
   const alreadyViewed = state.drillHistory.some(
     (view) => view.signalId === signalId
   );
 
   if (alreadyViewed) {
+    console.log('[GATE] ⏭️  Drill view skipped (duplicate)', {
+      signalId: signalId,
+      drillsViewed: state.drillsViewed,
+    });
     // Don't count duplicate views
     return state;
   }
@@ -166,6 +258,14 @@ export const recordDrillView = (signalId: number): ExtendedGateState => {
 
   // Increment drill view using mechanism
   const newCoreState = GateFlowMechanism.incrementDrillView(state);
+
+  console.log('[GATE] 📊 Drill view recorded', {
+    timestamp: new Date().toISOString(),
+    signalId: signalId,
+    drillsViewed: newCoreState.drillsViewed,
+    beforeEmail: !state.hasEmail,
+    currentStage: state.hasEmail ? (state.hasBrokerAccount ? 'broker_user' : 'email_user') : 'anonymous',
+  });
 
   // Update extended state
   return updateGateState({
@@ -198,11 +298,25 @@ export const getDrillsViewedAfterEmail = (): number => {
 export const setEmailProvided = (email: string): ExtendedGateState => {
   const state = getGateState();
 
+  console.log('[GATE] ✉️ EMAIL GATE - Email submitted', {
+    timestamp: new Date().toISOString(),
+    email: email,
+    drillsViewedBefore: state.drillsViewed,
+    transition: 'anonymous → email_user',
+  });
+
   // Transition using mechanism
   const newCoreState = GateFlowMechanism.transitionToEmailUser(state);
 
+  // Delete old anonymous storage if exists
+  if (typeof window !== 'undefined') {
+    const anonKey = getStorageKey(null);
+    localStorage.removeItem(anonKey);
+  }
+
   return updateGateState({
     ...newCoreState,
+    userEmail: email,
     emailProvidedAt: Date.now(),
   });
 };
@@ -222,6 +336,12 @@ export const hasEmailProvided = (): boolean => {
  * Record broker link click
  */
 export const recordBrokerClick = (clickId: string): ExtendedGateState => {
+  console.log('[GATE] 🔗 Broker link clicked', {
+    timestamp: new Date().toISOString(),
+    clickId: clickId,
+    brokerUrl: GATE_CONFIG.brokerUrl,
+  });
+
   return updateGateState({
     brokerClickId: clickId,
   });
@@ -232,6 +352,13 @@ export const recordBrokerClick = (clickId: string): ExtendedGateState => {
  */
 export const setBrokerVerified = (): ExtendedGateState => {
   const state = getGateState();
+
+  console.log('[GATE] 💎 BROKER GATE - Broker account verified', {
+    timestamp: new Date().toISOString(),
+    drillsViewedBefore: state.drillsViewed,
+    drillsAfterEmail: state.drillsViewedAfterEmail,
+    transition: 'email_user → broker_user',
+  });
 
   // Transition using mechanism
   const newCoreState = GateFlowMechanism.transitionToBrokerUser(state);
@@ -258,6 +385,11 @@ export const hasBrokerAccount = (): boolean => {
  */
 export const recordBannerShown = (): ExtendedGateState => {
   const state = getGateState();
+  console.log('[GATE] 🎁 Broker Promotion Banner SHOWN', {
+    timestamp: new Date().toISOString(),
+    drillsViewedAfterEmail: state.drillsViewedAfterEmail,
+    lastShown: state.lastBannerShown ? new Date(state.lastBannerShown).toISOString() : 'never',
+  });
   return updateGateState({
     lastBannerShown: Date.now(),
   });
@@ -268,6 +400,10 @@ export const recordBannerShown = (): ExtendedGateState => {
  */
 export const recordBannerDismissed = (): ExtendedGateState => {
   const state = getGateState();
+  console.log('[GATE] ❌ Broker Promotion Banner DISMISSED', {
+    timestamp: new Date().toISOString(),
+    totalDismissals: state.bannerDismissCount + 1,
+  });
   return updateGateState({
     lastBannerShown: Date.now(),
     bannerDismissCount: state.bannerDismissCount + 1,
@@ -309,6 +445,16 @@ export const shouldShowBanner = (currentSignal?: { confidence: number; currentPr
 export const getGateForDrill = (drillNumber: number): GateType => {
   const state = getGateState();
   const decision = GateFlowMechanism.canAccessDrill(drillNumber, state);
+
+  if (decision.gateToShow) {
+    console.log(`[GATE] 🚪 ${decision.gateToShow.toUpperCase()} GATE TRIGGERED`, {
+      timestamp: new Date().toISOString(),
+      drillNumber: drillNumber,
+      drillsViewed: state.drillsViewed,
+      currentStage: decision.currentStage,
+      reason: decision.reason,
+    });
+  }
 
   return decision.gateToShow;
 };

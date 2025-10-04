@@ -6,25 +6,24 @@
 'use client';
 
 import React from 'react';
-import { useGateFlow } from '@/hooks/useGateFlow';
+import { UseGateFlowReturn } from '@/hooks/useGateFlow';
 import EmailGateModal from './EmailGateModal';
 import BrokerGateModal from './BrokerGateModal';
 
 interface GateManagerProps {
-  currentSignal?: {
-    confidence: number;
-    currentProfit: number;
-  };
+  gateFlow: UseGateFlowReturn;
 }
 
-export const GateManager: React.FC<GateManagerProps> = ({ currentSignal }) => {
+export const GateManager: React.FC<GateManagerProps> = ({ gateFlow }) => {
   const {
     activeGate,
     onEmailSubmit,
     onBrokerClick,
     onBrokerVerify,
     closeGate,
-  } = useGateFlow(currentSignal);
+  } = gateFlow;
+
+  console.log('[GateManager] Rendering with activeGate:', activeGate);
 
   return (
     <>

@@ -1,0 +1,45 @@
+{
+  "signal": {
+    "title": "BTC/USD: Rejection under key resistance — short opportunity",
+    "title_ur": "بی ٹی سی/یو ایس ڈی: اہم مزاحمت پر ردِ عمل — شارٹ کا موقع",
+    "content": "Bitcoin is showing exhaustion beneath the ~$124,500 resistance zone (ATH area). Plan: short below resistance with tight invalidation above recent highs. Risk ≈ $1,000, reward ≈ $2,600 (RR ≈ 1:2.6). Invalidate if price sustains above 124,800.",
+    "content_ur": "بی ٹی سی قیمت ~124,500 امریکی ڈالر کی مزاحمتی حد کے نیچے کمزوری دکھا رہی ہے۔ منصوبہ: مزاحمت کے نیچے شارٹ، اور حالیہ بلند ترین سطح سے اوپر اسٹوپ۔ متوقع رسک تقریباً $1,000 اور ہدف تقریباً $2,600 (ریشو 1:2.6)۔ اگر قیمت 124,800 سے اوپر ٹھہر جائے تو سیٹ اپ ناکام سمجھیں۔",
+    "pair": "BTCUSD",
+    "action": "SELL",
+    "entry": 123800.0,
+    "stop_loss": 124800.0,
+    "take_profit": 121200.0,
+    "current_price": 123800.0,
+    "confidence": 60,
+    "market": "CRYPTO",
+    "status": "ACTIVE",
+    "priority": "MEDIUM",
+    "author": "CryptoAnalyst1",
+    "author_ur": "کرپٹو اینالسٹ 1",
+    "author_image": "/images/analysts/cryptoanalyst1.jpg",
+    "chart_image": "/images/charts/btcusd/2025-10-04-signal-001.png",
+    "key_levels": {
+      "support": [123000.0, 121200.0],
+      "resistance": [124500.0, 125500.0],
+      "notes": "Watch for bearish rejection wicks near 124.5k; invalidate on strong close >124.8k."
+    },
+    "analyst_stats": {
+      "successRate": 55,
+      "totalSignals": 120,
+      "totalPips": 2280,
+      "avgRR": 1.9
+    },
+    "published_date": "2025-10-04T11:00:00+03:00"
+  },
+  "drills": [
+    {
+      "title": "Exhaustion at ATH — spotting reversals at extreme zones",
+      "description": "Case study + analytics: trading a rejection under major resistance on BTC/USD with defined invalidation and asymmetric target.",
+      "type": "ANALYTICS",
+      "content": "# Concept\n\nA rejection at or just below an all-time high often shows long upper wicks, momentum rollover (RSI/MACD), and failure to hold above resistance.\n\n# Setup\n\nEnter short below 124.5k resistance once a bearish candle confirms rejection. SL: 124,800. TP: 121,200. RR ≈ 1:2.6.\n\n# Analytics\n\n- Entry: 123,800\n- Stop Loss: 124,800\n- Take Profit: 121,200\n- Risk: $1,000\n- Reward: $2,600\n- RR Ratio: 1:2.6\n\nTrack MFE/MAE during the trade; tighten SL only after strong momentum follows through.\n\n# Invalidation\n\nSustained close >124,800 or strong expansion above resistance cancels the short idea.\n\n# Review Checklist\n\n- Bearish confirmation candle printed?\n- Volume not supporting breakout?\n- Momentum (RSI/MACD) rolling over?\n- RR ≥ 1:2?\n\n# Quick Quiz\n\n1. What price action closes the setup? (Answer: sustained close >124,800.)\n2. If first move goes to 123,200 before bounce, do you partial out or hold per plan?\n3. What's the RR with SL=1,000 and TP=2,600? (Answer: 1:2.6.)",
+      "order_index": 1,
+      "is_active": true,
+      "image_url": "/images/charts/btcusd/2025-10-04-signal-001-markups.png"
+    }
+  ]
+}

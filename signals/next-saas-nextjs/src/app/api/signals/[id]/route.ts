@@ -106,6 +106,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     if (body.key_levels !== undefined) updateData.key_levels = body.key_levels;
     if (body.analyst_stats !== undefined) updateData.analyst_stats = body.analyst_stats;
 
+    // Urdu translations
+    if (body.title_ur !== undefined) updateData.title_ur = body.title_ur;
+    if (body.content_ur !== undefined) updateData.content_ur = body.content_ur;
+    if (body.author_ur !== undefined) updateData.author_ur = body.author_ur;
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await supabase.from('signals').update(updateData as any).eq('id', signalId).select().single();
 

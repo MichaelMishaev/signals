@@ -179,26 +179,52 @@ const ChangelogContent = () => {
         const data = await response.json();
 
         // Convert API signals to SignalUpdate format
-        const formattedSignals: SignalUpdate[] = data.signals.map((signal: SignalData, index: number) => ({
-          id: signal.id,
-          type: 'SIGNAL' as const,
-          timestamp: index === 0 ? 'Today' : `${index} days ago`,
-          title: signal.title,
-          content: signal.content,
-          pair: signal.pair,
-          action: signal.action as 'BUY' | 'SELL',
-          entry: signal.entry,
-          stopLoss: signal.stop_loss,
-          takeProfit: signal.take_profit,
-          confidence: signal.confidence,
-          market: signal.market as 'FOREX' | 'CRYPTO' | 'PSX' | 'COMMODITIES',
-          status: signal.status as 'ACTIVE' | 'CLOSED' | 'CANCELLED',
-          pips: signal.pips,
-          author: signal.author,
-          priority: signal.priority as 'HIGH' | 'MEDIUM' | 'LOW',
-          // Check if drill data is available
-          hasDrillData: !!(signal.key_levels && signal.analyst_stats && signal.current_price),
-        }));
+        const formattedSignals: SignalUpdate[] = data.signals.map((signal: SignalData, index: number) => {
+          // Calculate time ago from created_at or published_date
+          const signalDate = new Date(signal.created_at || signal.published_date);
+          const now = new Date();
+          const diffMs = now.getTime() - signalDate.getTime();
+          const diffMins = Math.floor(diffMs / 60000);
+          const diffHours = Math.floor(diffMs / 3600000);
+          const diffDays = Math.floor(diffMs / 86400000);
+
+          let timestamp: string;
+          if (diffMins < 1) {
+            timestamp = 'Just now';
+          } else if (diffMins < 60) {
+            timestamp = `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
+          } else if (diffHours < 24) {
+            timestamp = `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+          } else if (diffDays === 1) {
+            timestamp = '1 day ago';
+          } else if (diffDays < 7) {
+            timestamp = `${diffDays} days ago`;
+          } else {
+            const weeks = Math.floor(diffDays / 7);
+            timestamp = `${weeks} week${weeks !== 1 ? 's' : ''} ago`;
+          }
+
+          return {
+            id: signal.id,
+            type: 'SIGNAL' as const,
+            timestamp,
+            title: signal.title,
+            content: signal.content,
+            pair: signal.pair,
+            action: signal.action as 'BUY' | 'SELL',
+            entry: signal.entry,
+            stopLoss: signal.stop_loss,
+            takeProfit: signal.take_profit,
+            confidence: signal.confidence,
+            market: signal.market as 'FOREX' | 'CRYPTO' | 'PSX' | 'COMMODITIES',
+            status: signal.status as 'ACTIVE' | 'CLOSED' | 'CANCELLED',
+            pips: signal.pips,
+            author: signal.author,
+            priority: signal.priority as 'HIGH' | 'MEDIUM' | 'LOW',
+            // Check if drill data is available
+            hasDrillData: !!(signal.key_levels && signal.analyst_stats && signal.current_price),
+          };
+        });
 
         setSignalsData(formattedSignals);
       } catch (error) {

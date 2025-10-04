@@ -29,10 +29,26 @@ export async function PUT(
       .single();
 
     if (existingDrill) {
+      // Build update object with only provided fields
+      const updateData: Record<string, unknown> = {};
+
+      if (body.title !== undefined) updateData.title = body.title;
+      if (body.description !== undefined) updateData.description = body.description;
+      if (body.content !== undefined) updateData.content = body.content;
+      if (body.type !== undefined) updateData.type = body.type;
+      if (body.order_index !== undefined) updateData.order_index = body.order_index;
+      if (body.is_active !== undefined) updateData.is_active = body.is_active;
+      if (body.image_url !== undefined) updateData.image_url = body.image_url;
+
+      // Urdu translations
+      if (body.title_ur !== undefined) updateData.title_ur = body.title_ur;
+      if (body.description_ur !== undefined) updateData.description_ur = body.description_ur;
+      if (body.content_ur !== undefined) updateData.content_ur = body.content_ur;
+
       // Update in database
       const { data: drill, error } = await supabase
         .from('drills')
-        .update(body)
+        .update(updateData)
         .eq('id', drillId)
         .select()
         .single();

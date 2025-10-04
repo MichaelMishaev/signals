@@ -1,46 +1,10 @@
 /**
  * GATE FLOW MECHANISM
- * Pure logic for email and broker gates - platform agnostic
+ * Pure logic for email and broker gates - reads from config dynamically
  * Perfect for visualization, testing, and documentation
- *
- * Visual Flow:
- * ┌─────────────────────────────────────────┐
- * │ Homepage (Signal List) - FREE           │
- * └──────────────┬──────────────────────────┘
- *                ↓
- * ┌─────────────────────────────────────────┐
- * │ Drill 1, 2, 3 - FREE                    │
- * │ (View full signal details)              │
- * └──────────────┬──────────────────────────┘
- *                ↓
- * ┌─────────────────────────────────────────┐
- * │ Drill 4 Attempt                         │
- * │ ⚠️  TRIGGER: Email Gate                 │
- * └──────────────┬──────────────────────────┘
- *                ↓
- *       ┌────────┴────────┐
- *       │  Email Provided? │
- *       └────────┬────────┘
- *          NO ←──┤ YES
- *          ↓     └──→ Continue
- *     BLOCKED         ↓
- *                ┌────────────────────┐
- *                │ Drills 5-9 - FREE  │
- *                │ (6 more signals)   │
- *                └──────┬─────────────┘
- *                       ↓
- *                ┌────────────────────┐
- *                │ Drill 10 Attempt   │
- *                │ ⚠️  TRIGGER: Broker │
- *                └──────┬─────────────┘
- *                       ↓
- *              ┌────────┴────────┐
- *              │ Broker Account?  │
- *              └────────┬────────┘
- *                 NO ←──┤ YES
- *                 ↓     └──→ Unlimited
- *            BLOCKED         Access ✅
  */
+
+import { GATE_CONFIG } from '@/config/gates';
 
 // ============================================================================
 // TYPES
@@ -64,8 +28,25 @@ export interface GateDecision {
 }
 
 // ============================================================================
-// CONSTANTS
+// DYNAMIC CONSTANTS (from config)
 // ============================================================================
+
+/**
+ * Get thresholds from config (not hardcoded)
+ */
+const getThresholds = () => ({
+  EMAIL_GATE: GATE_CONFIG.emailGate.triggerAfterDrills,
+  BROKER_GATE: GATE_CONFIG.emailGate.triggerAfterDrills + GATE_CONFIG.brokerGate.triggerAfterEmailDrills,
+});
+
+/**
+ * Get access limits from config
+ */
+const getLimits = () => ({
+  ANONYMOUS_MAX_DRILLS: GATE_CONFIG.emailGate.triggerAfterDrills,
+  EMAIL_USER_MAX_DRILLS: GATE_CONFIG.emailGate.triggerAfterDrills + GATE_CONFIG.brokerGate.triggerAfterEmailDrills,
+  BROKER_USER_MAX_DRILLS: Infinity,
+});
 
 export const GATE_CONSTANTS = {
   // Gate identifiers
@@ -81,17 +62,14 @@ export const GATE_CONSTANTS = {
     BROKER_USER: 'broker_user' as const,
   },
 
-  // Thresholds (when gates appear)
-  THRESHOLDS: {
-    EMAIL_GATE: 3,      // Show email gate on 4th drill attempt
-    BROKER_GATE: 9,     // Show broker gate on 10th drill attempt (6th after email)
+  // Dynamic thresholds (from config)
+  get THRESHOLDS() {
+    return getThresholds();
   },
 
-  // Access limits
-  LIMITS: {
-    ANONYMOUS_MAX_DRILLS: 3,        // Anonymous: 3 drills
-    EMAIL_USER_MAX_DRILLS: 9,       // Email user: 9 drills total (3 + 6)
-    BROKER_USER_MAX_DRILLS: Infinity, // Broker user: unlimited
+  // Dynamic access limits (from config)
+  get LIMITS() {
+    return getLimits();
   },
 } as const;
 
@@ -136,10 +114,17 @@ export const getMaxDrillsAllowed = (stage: UserStage): number => {
  * Check if email gate should be shown
  */
 export const shouldShowEmailGate = (state: GateState): boolean => {
-  return (
-    !state.hasEmail && // User hasn't provided email
-    state.drillsViewed >= GATE_CONSTANTS.THRESHOLDS.EMAIL_GATE // Viewed 3+ drills
-  );
+  const threshold = GATE_CONSTANTS.THRESHOLDS.EMAIL_GATE;
+  const shouldShow = !state.hasEmail && state.drillsViewed >= threshold;
+
+  console.log('[MECHANISM] shouldShowEmailGate check:', {
+    hasEmail: state.hasEmail,
+    drillsViewed: state.drillsViewed,
+    threshold,
+    shouldShow,
+  });
+
+  return shouldShow;
 };
 
 /**

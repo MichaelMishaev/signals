@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import RevealAnimation from '@/components/animation/RevealAnimation';
@@ -12,15 +15,15 @@ interface SignalData {
   entry: number;
   stopLoss: number;
   takeProfit: number;
-  currentPrice: number;
+  currentPrice?: number; // Optional - may not exist for all signals
   confidence: number;
   market: string;
   status: string;
   pips: number;
   author: string;
-  authorImage: string;
+  authorImage?: string; // Optional - may be missing
   publishDate: string;
-  keyLevels: {
+  keyLevels?: { // Optional - may not exist
     resistance: number[];
     support: number[];
   };
@@ -30,7 +33,7 @@ interface SignalData {
   analystStats?: {
     successRate: number;
     totalSignals: number;
-    totalPips: number;
+    totalPips?: number; // Optional - may be null for some analysts
   };
 }
 
@@ -39,8 +42,29 @@ interface SignalDetailAnalyticsProps {
 }
 
 const SignalDetailAnalytics = ({ signal }: SignalDetailAnalyticsProps) => {
+  // Track if chart image loaded successfully
+  const [chartImageLoaded, setChartImageLoaded] = useState(false);
+  const [chartImageError, setChartImageError] = useState(false);
+
+  // Safe calculations with null checks
   const profitLoss = signal.currentPrice ? (signal.currentPrice - signal.entry) * (signal.action === 'BUY' ? 1 : -1) : 0;
-  const riskRewardRatio = Math.abs((signal.takeProfit - signal.entry) / (signal.entry - signal.stopLoss));
+
+  // Prevent division by zero
+  const riskRewardRatio = signal.stopLoss !== signal.entry
+    ? Math.abs((signal.takeProfit - signal.entry) / (signal.entry - signal.stopLoss))
+    : 0;
+
+  // Check if we have key levels data
+  const hasKeyLevels = signal.keyLevels && (
+    (signal.keyLevels.support && signal.keyLevels.support.length > 0) ||
+    (signal.keyLevels.resistance && signal.keyLevels.resistance.length > 0)
+  );
+
+  // Only show chart if we have image path AND it loads successfully (or hasn't errored yet)
+  const shouldShowChart = signal.chartImage && !chartImageError;
+
+  // Default avatar fallback
+  const avatarImage = signal.authorImage || '/images/avatar/avatar-1.png';
 
   return (
     <section className="pt-[70px] pb-[100px] analytics">
@@ -110,171 +134,73 @@ const SignalDetailAnalytics = ({ signal }: SignalDetailAnalyticsProps) => {
         {/* Main Analytics Dashboard */}
         <div className="space-y-12">
           {/* Price Analytics */}
-          <RevealAnimation delay={0.3}>
-            <div className="bg-white dark:bg-background-6 rounded-xl p-8">
-              <h2 className="text-2xl font-bold mb-6">Price Movement Analytics</h2>
+          {(shouldShowChart || hasKeyLevels) && (
+            <RevealAnimation delay={0.3}>
+              <div className="bg-white dark:bg-background-6 rounded-xl p-8">
+                {/* Only show heading if we have chart or key levels */}
+                {(shouldShowChart || hasKeyLevels) && (
+                  <h2 className="text-2xl font-bold mb-6">Price Movement Analytics</h2>
+                )}
 
-              {/* Chart Area - Now supports both image and placeholder */}
-              <div className="bg-gray-900 rounded-lg p-6 mb-6 min-h-[400px] flex items-center justify-center">
-                {signal.chartImage ? (
-                  <div className="w-full h-full relative">
-                    <Image
-                      src={signal.chartImage}
-                      alt={`${signal.pair} Trading Chart`}
-                      fill
-                      className="object-contain rounded"
-                      priority
-                    />
-                  </div>
-                ) : (
-                  <div className="text-center text-white">
-                    <h3 className="text-3xl font-bold mb-4">{signal.pair} Real-Time Chart</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-4">
-                      <div>
-                        <p className="text-xs text-gray-400">Entry Point</p>
-                        <p className="text-xl font-bold">{signal.entry.toFixed(4)}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-400">Current Price</p>
-                        <p className="text-xl font-bold text-ns-green">{signal.currentPrice ? signal.currentPrice.toFixed(4) : 'N/A'}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-400">Price Change</p>
-                        <p className={`text-xl font-bold ${profitLoss > 0 ? 'text-ns-green' : 'text-red-400'}`}>
-                          {profitLoss > 0 ? '+' : ''}
-                          {(profitLoss * 10000).toFixed(0)} pips
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-400">Distance to Target</p>
-                        <p className="text-xl font-bold text-ns-yellow">
-                          {signal.currentPrice ? ((signal.takeProfit - signal.currentPrice) * 10000).toFixed(0) : 'N/A'} pips
-                        </p>
-                      </div>
+                {/* Chart Area - Only show if chartImage exists and loads successfully */}
+                {shouldShowChart && (
+                  <div className="bg-gray-900 rounded-lg p-6 mb-6 min-h-[400px] flex items-center justify-center">
+                    <div className="w-full h-full relative">
+                      <Image
+                        src={signal.chartImage!}
+                        alt={`${signal.pair} Trading Chart`}
+                        fill
+                        className="object-contain rounded"
+                        priority
+                        onLoad={() => setChartImageLoaded(true)}
+                        onError={() => {
+                          console.warn(`Chart image failed to load: ${signal.chartImage}`);
+                          setChartImageError(true);
+                        }}
+                      />
                     </div>
-                    <p className="text-sm text-gray-400">Interactive candlestick chart with technical indicators</p>
+                  </div>
+                )}
+
+                {/* Key Levels Table - Only show if hasKeyLevels */}
+                {hasKeyLevels && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Support Levels */}
+                    {signal.keyLevels?.support && signal.keyLevels.support.length > 0 && (
+                      <div>
+                        <h4 className="text-lg font-semibold mb-3">Support Levels</h4>
+                        <div className="space-y-2">
+                          {signal.keyLevels.support.map((level, index) => (
+                            <div key={index} className="flex justify-between p-2 bg-red-50 dark:bg-red-900/20 rounded">
+                              <span>Support {index + 1}</span>
+                              <span className="font-mono">{level.toFixed(4)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {/* Resistance Levels */}
+                    {signal.keyLevels?.resistance && signal.keyLevels.resistance.length > 0 && (
+                      <div>
+                        <h4 className="text-lg font-semibold mb-3">Resistance Levels</h4>
+                        <div className="space-y-2">
+                          {signal.keyLevels.resistance.map((level, index) => (
+                            <div key={index} className="flex justify-between p-2 bg-green-50 dark:bg-green-900/20 rounded">
+                              <span>Resistance {index + 1}</span>
+                              <span className="font-mono">{level.toFixed(4)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
+            </RevealAnimation>
+          )}
 
-              {/* Key Levels Table */}
-              {signal.keyLevels ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="text-lg font-semibold mb-3">Support Levels</h4>
-                    <div className="space-y-2">
-                      {signal.keyLevels.support?.map((level, index) => (
-                        <div key={index} className="flex justify-between p-2 bg-red-50 dark:bg-red-900/20 rounded">
-                          <span>Support {index + 1}</span>
-                          <span className="font-mono">{level.toFixed(4)}</span>
-                        </div>
-                      )) || (
-                        <div className="p-2 text-secondary/60 text-center">No support levels available</div>
-                      )}
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold mb-3">Resistance Levels</h4>
-                    <div className="space-y-2">
-                      {signal.keyLevels.resistance?.map((level, index) => (
-                        <div key={index} className="flex justify-between p-2 bg-green-50 dark:bg-green-900/20 rounded">
-                          <span>Resistance {index + 1}</span>
-                          <span className="font-mono">{level.toFixed(4)}</span>
-                        </div>
-                      )) || (
-                        <div className="p-2 text-secondary/60 text-center">No resistance levels available</div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-secondary/60">Key levels analysis not available for this signal</p>
-                </div>
-              )}
-            </div>
-          </RevealAnimation>
-
-          {/* Performance Metrics */}
-          <RevealAnimation delay={0.4}>
-            <div className="bg-white dark:bg-background-6 rounded-xl p-8">
-              <h2 className="text-2xl font-bold mb-6">Performance Analytics</h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Signal Quality Score */}
-                <div className="text-center">
-                  <div className="relative w-24 h-24 mx-auto mb-4">
-                    <svg className="w-24 h-24" viewBox="0 0 100 100">
-                      <circle cx="50" cy="50" r="40" stroke="#e5e7eb" strokeWidth="8" fill="none" />
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="40"
-                        stroke="#10b981"
-                        strokeWidth="8"
-                        fill="none"
-                        strokeDasharray={`${signal.confidence * 2.51}, 251`}
-                        transform="rotate(-90 50 50)"
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-lg font-bold">{signal.confidence}%</span>
-                    </div>
-                  </div>
-                  <h4 className="font-semibold">Signal Quality</h4>
-                  <p className="text-sm text-secondary/60">Confidence Score</p>
-                </div>
-
-                {/* Risk Assessment */}
-                <div className="text-center">
-                  <div className="relative w-24 h-24 mx-auto mb-4">
-                    <svg className="w-24 h-24" viewBox="0 0 100 100">
-                      <circle cx="50" cy="50" r="40" stroke="#e5e7eb" strokeWidth="8" fill="none" />
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="40"
-                        stroke="#f59e0b"
-                        strokeWidth="8"
-                        fill="none"
-                        strokeDasharray="188, 251"
-                        transform="rotate(-90 50 50)"
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-lg font-bold">75%</span>
-                    </div>
-                  </div>
-                  <h4 className="font-semibold">Risk Level</h4>
-                  <p className="text-sm text-secondary/60">Medium Risk</p>
-                </div>
-
-                {/* Profit Potential */}
-                <div className="text-center">
-                  <div className="relative w-24 h-24 mx-auto mb-4">
-                    <svg className="w-24 h-24" viewBox="0 0 100 100">
-                      <circle cx="50" cy="50" r="40" stroke="#e5e7eb" strokeWidth="8" fill="none" />
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="40"
-                        stroke="#3b82f6"
-                        strokeWidth="8"
-                        fill="none"
-                        strokeDasharray="226, 251"
-                        transform="rotate(-90 50 50)"
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-lg font-bold">90%</span>
-                    </div>
-                  </div>
-                  <h4 className="font-semibold">Profit Potential</h4>
-                  <p className="text-sm text-secondary/60">High Probability</p>
-                </div>
-              </div>
-            </div>
-          </RevealAnimation>
+          {/* Performance Metrics - REMOVED: Contained fake hardcoded data (75% risk, 90% profit)
+              Only real confidence score remains in KPI dashboard above */}
 
           {/* Signal Breakdown */}
           <RevealAnimation delay={0.5}>
@@ -309,10 +235,12 @@ const SignalDetailAnalytics = ({ signal }: SignalDetailAnalyticsProps) => {
                 <div>
                   <h4 className="text-lg font-semibold mb-4">Live Status</h4>
                   <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-secondary/60">Current Price</span>
-                      <span className="font-mono font-bold">{signal.currentPrice ? signal.currentPrice.toFixed(4) : 'N/A'}</span>
-                    </div>
+                    {signal.currentPrice && (
+                      <div className="flex justify-between">
+                        <span className="text-secondary/60">Current Price</span>
+                        <span className="font-mono font-bold">{signal.currentPrice.toFixed(4)}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span className="text-secondary/60">Unrealized P&L</span>
                       <span className={`font-semibold ${signal.pips > 0 ? 'text-ns-green' : 'text-red-600'}`}>
@@ -320,14 +248,13 @@ const SignalDetailAnalytics = ({ signal }: SignalDetailAnalyticsProps) => {
                         {signal.pips} pips
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-secondary/60">Time Active</span>
-                      <span>4h 23m</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-secondary/60">Progress to Target</span>
-                      <span>{((signal.pips / ((signal.takeProfit - signal.entry) * 10000)) * 100).toFixed(1)}%</span>
-                    </div>
+                    {/* Time Active - REMOVED: Was hardcoded fake data */}
+                    {signal.currentPrice && signal.takeProfit !== signal.entry && (
+                      <div className="flex justify-between">
+                        <span className="text-secondary/60">Progress to Target</span>
+                        <span>{((signal.pips / ((signal.takeProfit - signal.entry) * 10000)) * 100).toFixed(1)}%</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -338,7 +265,13 @@ const SignalDetailAnalytics = ({ signal }: SignalDetailAnalyticsProps) => {
           <RevealAnimation delay={0.6}>
             <div className="bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900 dark:to-primary-800 rounded-xl p-8">
               <div className="flex items-center gap-4">
-                <Image src={signal.authorImage} alt={signal.author} width={64} height={64} className="rounded-full" />
+                <Image
+                  src={avatarImage}
+                  alt={signal.author}
+                  width={64}
+                  height={64}
+                  className="rounded-full"
+                />
                 <div>
                   <h3 className="text-xl font-bold">{signal.author}</h3>
                   <p className="text-secondary/60">Senior Trading Analyst</p>
@@ -356,10 +289,12 @@ const SignalDetailAnalytics = ({ signal }: SignalDetailAnalyticsProps) => {
                     <p className="text-2xl font-bold">{signal.analystStats.totalSignals}</p>
                     <p className="text-sm text-secondary/60">Signals Published</p>
                   </div>
-                  <div>
-                    <p className="text-2xl font-bold">+{signal.analystStats.totalPips}</p>
-                    <p className="text-sm text-secondary/60">Total Pips</p>
-                  </div>
+                  {signal.analystStats.totalPips != null && (
+                    <div>
+                      <p className="text-2xl font-bold">+{signal.analystStats.totalPips}</p>
+                      <p className="text-sm text-secondary/60">Total Pips</p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

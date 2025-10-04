@@ -41,7 +41,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
-      <body className={`${interTight.variable} antialiased`}>
+      <body className={`${interTight.variable} antialiased`} suppressHydrationWarning>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <SessionProvider>
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>

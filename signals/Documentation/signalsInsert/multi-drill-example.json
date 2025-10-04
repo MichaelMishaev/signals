@@ -1,0 +1,93 @@
+{
+  "instructions": "This file demonstrates how to create ONE signal with MULTIPLE drills (tabs)",
+  "workflow": [
+    "1. POST signal to /api/signals → Get signal.id",
+    "2. POST drill 1 to /api/drills (using signal.id)",
+    "3. POST drill 2 to /api/drills (using same signal.id)",
+    "4. POST drill 3 to /api/drills (using same signal.id)",
+    "Result: Signal page shows 3 tabs"
+  ],
+
+  "signal": {
+    "title": "BTC/USD: Major Resistance Test — Critical Setup",
+    "title_ur": "بی ٹی سی/یو ایس ڈی: اہم مزاحمت ٹیسٹ — نازک سیٹ اپ",
+    "content": "Bitcoin testing critical resistance zone at $125,000. Multiple timeframe analysis suggests potential reversal. High-probability short setup with defined risk parameters.",
+    "content_ur": "بٹ کوائن $125,000 پر اہم مزاحمتی زون ٹیسٹ کر رہا ہے۔ متعدد ٹائم فریم تجزیہ ممکنہ الٹ پھیر کی نشاندہی کرتا ہے۔ متعین رسک پیرامیٹرز کے ساتھ اعلیٰ امکانی شارٹ سیٹ اپ۔",
+    "pair": "BTCUSD",
+    "action": "SELL",
+    "entry": 124800,
+    "stop_loss": 126200,
+    "take_profit": 119000,
+    "current_price": 125100,
+    "confidence": 72,
+    "market": "CRYPTO",
+    "status": "ACTIVE",
+    "priority": "HIGH",
+    "author": "LiveCryptoAnalyst",
+    "author_ur": "لائیو کرپٹو اینالسٹ",
+    "author_image": "/images/analysts/crypto-expert.jpg",
+    "chart_image": "/images/charts/btcusd/resistance-test-2025.png",
+    "key_levels": {
+      "support": [119000, 116500, 114200],
+      "resistance": [125000, 126200, 128000],
+      "notes": "Critical zone 124k-126k; invalidation above 126.5k"
+    },
+    "analyst_stats": {
+      "successRate": 68,
+      "totalSignals": 245,
+      "totalPips": 3200
+    },
+    "published_date": "2025-10-04T14:00:00+00:00"
+  },
+
+  "drills": [
+    {
+      "comment": "DRILL 1 - TAB 1: CASE_STUDY",
+      "signal_id": "<<USE_SIGNAL_ID_FROM_RESPONSE>>",
+      "title": "Resistance Rejection Strategy — Multi-Timeframe Confirmation",
+      "title_ur": "مزاحمت ردِ عمل حکمت عملی — متعدد ٹائم فریم تصدیق",
+      "description": "Complete technical breakdown: how to identify and trade resistance rejections with high probability setups",
+      "description_ur": "مکمل تکنیکی تجزیہ: اعلیٰ امکانی سیٹ اپ کے ساتھ مزاحمت کے ردِ عمل کی شناخت اور تجارت کیسے کریں",
+      "type": "CASE_STUDY",
+      "content": "# Case Study: BTC Resistance Rejection\n\n## Market Context\n\nBitcoin has rallied over 15% in the past week, approaching the psychological $125,000 level. This zone has acted as resistance 3 times in the past 30 days.\n\n## Technical Setup\n\n### Entry Criteria\n1. **Price Action**: Long upper wicks forming at resistance\n2. **Volume**: Declining on upward moves\n3. **Momentum**: RSI divergence on 4H chart\n4. **Structure**: Failed breakout pattern\n\n### Trade Parameters\n- **Entry Zone**: 124,500 - 124,900\n- **Stop Loss**: 126,200 (above recent high)\n- **Take Profit**: 119,000 (previous support)\n- **Risk**: 1,400 points\n- **Reward**: 5,800 points\n- **Risk/Reward**: 1:4.14\n\n## Multi-Timeframe Analysis\n\n### Daily Chart\n- Bearish engulfing pattern forming\n- Resistance confluence at 125k\n- Moving averages flattening\n\n### 4-Hour Chart\n- Lower highs forming\n- RSI bearish divergence\n- Volume declining\n\n### 1-Hour Chart\n- Rejection wicks at resistance\n- Momentum slowing\n- Bear flag pattern developing\n\n## Key Levels to Watch\n\n**Resistance Levels:**\n- R1: 125,000 (current)\n- R2: 126,200 (invalidation)\n- R3: 128,000 (major)\n\n**Support Levels:**\n- S1: 122,000 (minor)\n- S2: 119,000 (TP1)\n- S3: 116,500 (TP2)\n- S4: 114,200 (extended target)\n\n## Invalidation Rules\n\n❌ **Exit if:**\n- Price closes above 126,200 on 1H chart\n- Strong volume breakout above resistance\n- Fundamental news changes market structure\n\n✅ **Confirm if:**\n- Bearish engulfing forms at resistance\n- Volume increases on downward moves\n- Lower highs continue to form\n\n## Risk Management\n\n1. **Position Sizing**: Risk 1-2% of capital\n2. **Partial Profits**: Take 50% at 121,000\n3. **Trailing Stop**: Move to breakeven at 122,000\n4. **Scale Out**: Exit in 3 tranches (50%, 30%, 20%)\n\n## Learning Points\n\n📚 **Key Takeaways:**\n- Multiple timeframe confluence increases probability\n- Volume analysis confirms price action\n- Risk/reward must justify the trade\n- Always have clear invalidation criteria\n- Never risk more than you can afford to lose",
+      "content_ur": "# کیس اسٹڈی: BTC مزاحمت ردِ عمل\n\n## مارکیٹ کا تناظر\n\nبٹ کوائن گزشتہ ہفتے 15% سے زیادہ بڑھا ہے، نفسیاتی $125,000 سطح کے قریب پہنچ رہا ہے۔ یہ زون گزشتہ 30 دنوں میں 3 بار مزاحمت کے طور پر کام کر چکا ہے۔\n\n## تکنیکی سیٹ اپ\n\n### داخلے کے معیار\n1. **قیمت کی حرکت**: مزاحمت پر لمبی اوپری بتیاں بن رہی ہیں\n2. **حجم**: اوپر کی حرکت پر کم ہو رہا ہے\n3. **رفتار**: 4H چارٹ پر RSI divergence\n4. **ساخت**: ناکام بریک آؤٹ پیٹرن\n\n### تجارتی پیرامیٹرز\n- **داخلہ زون**: 124,500 - 124,900\n- **سٹاپ لاس**: 126,200 (حالیہ بلند سے اوپر)\n- **ٹیک پرافٹ**: 119,000 (سابقہ سپورٹ)\n- **رسک**: 1,400 پوائنٹس\n- **انعام**: 5,800 پوائنٹس\n- **رسک/انعام**: 1:4.14",
+      "order_index": 1,
+      "is_active": true,
+      "image_url": "/images/drills/btc-resistance-analysis.png"
+    },
+    {
+      "comment": "DRILL 2 - TAB 2: ANALYTICS",
+      "signal_id": "<<USE_SIGNAL_ID_FROM_RESPONSE>>",
+      "title": "Real-Time Trade Metrics Dashboard",
+      "title_ur": "حقیقی وقت تجارتی میٹرکس ڈیش بورڈ",
+      "description": "Live performance tracking: MFE, MAE, R:R ratio, and advanced trade analytics",
+      "description_ur": "لائیو کارکردگی ٹریکنگ: MFE، MAE، R:R تناسب، اور جدید تجارتی تجزیات",
+      "type": "ANALYTICS",
+      "content": "# Live Analytics Dashboard\n\n## Current Trade Status\n\n**Signal ID**: 3001  \n**Status**: 🟢 ACTIVE  \n**Entry**: 124,800  \n**Current Price**: 125,100  \n**Unrealized P&L**: -300 points (-0.24%)\n\n---\n\n## Key Performance Metrics\n\n### Maximum Favorable Excursion (MFE)\n- **Peak Profit**: $0 (signal just activated)\n- **MFE %**: 0%\n- **Best Price**: N/A\n\n### Maximum Adverse Excursion (MAE)\n- **Max Drawdown**: -300 points\n- **MAE %**: 0.24%\n- **Worst Price**: 125,100\n\n### Risk/Reward Analysis\n- **Risk (to SL)**: 1,400 points\n- **Reward (to TP)**: 5,800 points\n- **R:R Ratio**: 1:4.14 ⭐\n- **Win Probability**: 72%\n- **Expected Value**: +2.51 (positive edge)\n\n---\n\n## Trade Progression Timeline\n\n```\n[●━━━━━━━━━━━━━━━━━━━━━━━━━━━] 0% to Target\n\nEntry: 124,800\nCurrent: 125,100 (-300 pts)\nTarget: 119,000 (5,800 pts away)\n```\n\n**Time in Trade**: Just entered  \n**Expected Duration**: 2-5 days  \n**Invalidation Level**: 126,200 (1,100 pts away)\n\n---\n\n## Volume & Momentum Analysis\n\n### Volume Profile\n- **Current Volume**: Declining ⚠️\n- **Volume Trend**: -15% from peak\n- **Breakout Volume**: Low (bearish signal)\n\n### Momentum Indicators\n- **RSI (4H)**: 68 (bearish divergence)\n- **MACD**: Negative crossover forming\n- **Stochastic**: Overbought (82)\n- **ADX**: 45 (strong trend, but weakening)\n\n---\n\n## Probability Analysis\n\n### Success Scenarios (72% probability)\n1. **Scenario A** (40%): Direct move to 119k (-4.6%)\n2. **Scenario B** (20%): Retest 125k then drop to 119k\n3. **Scenario C** (12%): Slow grind down over 3-5 days\n\n### Failure Scenarios (28% probability)\n1. **Scenario D** (15%): Breakout above 126.2k\n2. **Scenario E** (8%): Consolidation, then rally\n3. **Scenario F** (5%): Gap up on news\n\n---\n\n## Historical Performance\n\n### Similar Setups (Last 90 Days)\n- **Total Signals**: 8\n- **Winners**: 6 (75%)\n- **Losers**: 2 (25%)\n- **Avg Win**: +4,200 pts\n- **Avg Loss**: -1,100 pts\n- **Expectancy**: +2,850 pts\n\n### This Analyst's Stats\n- **Success Rate**: 68%\n- **Total Signals**: 245\n- **Total Pips**: +3,200\n- **Best Trade**: +12,000 pts (BTC)\n- **Worst Trade**: -2,500 pts (ETH)\n\n---\n\n## Real-Time Alerts\n\n🔔 **Active Alerts**:\n- ✅ Price enters entry zone (124,500-124,900)\n- ⏰ Price approaches TP1 at 121,000\n- ❌ Price hits invalidation at 126,200\n- 📊 Volume spike detected\n- 📈 Momentum divergence confirmed\n\n---\n\n## Action Items\n\n### Immediate Actions\n1. ✅ Signal activated - position opened\n2. ⏳ Wait for bearish confirmation\n3. 📊 Monitor volume for increase on down moves\n\n### Next 24 Hours\n1. Watch for rejection at 125k\n2. Look for volume increase on drops\n3. Monitor for lower highs formation\n\n### Risk Management Checklist\n- [x] Stop loss set at 126,200\n- [x] Position size: 1.5% of capital\n- [ ] TP1 order at 121,000 (50% exit)\n- [ ] Breakeven stop at 122,000\n- [ ] TP2 order at 119,000 (30% exit)\n- [ ] Final exit at 116,500 (20%)\n\n---\n\n## Advanced Metrics\n\n### Kelly Criterion\n- **Optimal Position Size**: 2.1% of capital\n- **Current Position**: 1.5% (conservative) ✅\n\n### Sharpe Ratio (Historical)\n- **This Setup Type**: 1.85\n- **Analyst Average**: 1.62\n\n### Sortino Ratio\n- **Downside Risk Adjusted**: 2.31\n\n---\n\n*Dashboard updates every 5 minutes. Last update: Just now*",
+      "content_ur": "# لائیو تجزیات ڈیش بورڈ\n\n## موجودہ تجارتی حالت\n\n**سگنل ID**: 3001  \n**حالت**: 🟢 فعال  \n**داخلہ**: 124,800  \n**موجودہ قیمت**: 125,100  \n**غیر حقیقی P&L**: -300 پوائنٹس (-0.24%)\n\n---\n\n## کلیدی کارکردگی میٹرکس\n\n### زیادہ سے زیادہ سازگار حرکت (MFE)\n- **چوٹی منافع**: $0 (سگنل ابھی فعال ہوا)\n- **MFE %**: 0%\n\n### زیادہ سے زیادہ نقصان (MAE)\n- **زیادہ سے زیادہ نقصان**: -300 پوائنٹس\n- **MAE %**: 0.24%\n\n### رسک/انعام تجزیہ\n- **رسک (SL تک)**: 1,400 پوائنٹس\n- **انعام (TP تک)**: 5,800 پوائنٹس\n- **R:R تناسب**: 1:4.14 ⭐\n- **جیت کا امکان**: 72%",
+      "order_index": 2,
+      "is_active": true,
+      "image_url": "/images/drills/btc-analytics-dashboard.png"
+    },
+    {
+      "comment": "DRILL 3 - TAB 3: BLOG/INSIGHTS",
+      "signal_id": "<<USE_SIGNAL_ID_FROM_RESPONSE>>",
+      "title": "Market Psychology at Resistance — Why Traders Fail Here",
+      "title_ur": "مزاحمت پر مارکیٹ نفسیات — تاجر یہاں کیوں ناکام ہوتے ہیں",
+      "description": "Deep dive into behavioral finance: understanding crowd psychology and emotional traps at major resistance levels",
+      "description_ur": "طرز عمل کی مالیات میں گہرائی: اہم مزاحمت کی سطحوں پر ہجوم کی نفسیات اور جذباتی جالوں کو سمجھنا",
+      "type": "BLOG",
+      "content": "# The Psychology of Resistance Trading\n\n## Why $125,000 Matters\n\nRound numbers aren't just psychological barriers—they're battlegrounds where market psychology collides with price action.\n\n### The Crowd Mentality\n\nWhen Bitcoin approaches $125,000, three distinct groups emerge:\n\n1. **The Euphoric Bulls** 🐂\n   - \"This time is different!\"\n   - FOMO-driven buying\n   - Overleveraged positions\n   - Buying at resistance (worst entry)\n\n2. **The Fearful Bears** 🐻\n   - Waiting for \"the top\"\n   - Shorting too early\n   - Getting stopped out repeatedly\n   - Missing the real opportunity\n\n3. **The Strategic Traders** 🎯\n   - Waiting for confirmation\n   - Using defined risk parameters\n   - Patient for optimal entry\n   - Following the plan (this signal!)\n\n---\n\n## The Emotional Rollercoaster\n\n### Phase 1: Hope (Current)\n\"Maybe it breaks through this time...\"\n- Retail buying increases\n- Leverage ratios spike\n- Social media buzzing\n- Volume declining (red flag!)\n\n### Phase 2: Greed (If breakout fakes)\n\"I'm going to get rich!\"\n- Late entries pile in\n- Stop losses ignored\n- Risk management forgotten\n- Smart money distributing\n\n### Phase 3: Denial (Resistance holds)\n\"It's just a pullback...\"\n- Refuse to exit\n- Averaging down\n- Hoping for reversal\n- Smart money already positioned short\n\n### Phase 4: Capitulation (Drop begins)\n\"I should have sold at 125k!\"\n- Panic selling\n- Stop losses cascade\n- Volume explodes\n- Target zones hit rapidly\n\n---\n\n## Historical Context\n\nBitcoin has tested major psychological levels 3 times in 2025:\n\n### Test 1: $100,000 (January)\n- **First Test**: Failed, dropped -8%\n- **Lesson**: Early shorts won\n\n### Test 2: $115,000 (February)\n- **Second Test**: Failed, dropped -12%\n- **Lesson**: Confluence levels hold\n\n### Test 3: $125,000 (Now)\n- **Third Test**: In progress\n- **Pattern**: Similar setup to previous failures\n- **Probability**: History suggests rejection\n\n---\n\n## Why Smart Money is Watching\n\n### Institutional Behavior\n\n📊 **What the data shows:**\n- Coinbase premium turning negative\n- Funding rates at 2-month highs (overleveraged)\n- Open interest at resistance (liquidation fuel)\n- Whale wallets distributing (on-chain data)\n\n### The Setup They See\n\n1. **Retail trapped long** at resistance\n2. **Weak hands** will sell on drop\n3. **Stop losses** clustered below (liquidity)\n4. **Risk/reward** favorable for shorts\n\n---\n\n## The Contrarian Opportunity\n\nWhen everyone expects a breakout, often the opposite happens.\n\n### Why This Signal Works\n\n✅ **Confluence Factors:**\n- Technical: Resistance + divergence\n- Sentiment: Extreme greed (fear & greed index: 82)\n- On-chain: Whale distribution\n- Historical: Pattern recognition\n- Volume: Declining on approach\n\n❌ **What Would Invalidate:**\n- Breakout above 126.2k with volume\n- Fundamental catalyst (ETF approval, etc.)\n- Whale accumulation resumes\n- Momentum divergence reverses\n\n---\n\n## Practical Trading Psychology\n\n### The Winning Mindset\n\n1. **Accept uncertainty** - Even 72% probability means 28% failure\n2. **Manage emotions** - Follow the plan, not feelings\n3. **Respect the stop** - It's there for protection\n4. **Take profits** - Don't get greedy\n5. **Learn from losses** - They're tuition, not failure\n\n### Common Mistakes to Avoid\n\n🚫 **Don't:**\n- Move stop loss further away\n- Average into losing position\n- Ignore invalidation signals\n- Let emotions override plan\n- Risk more than you can lose\n\n✅ **Do:**\n- Stick to position sizing rules\n- Take partial profits at TP1\n- Move stop to breakeven when safe\n- Accept small losses quickly\n- Follow the plan mechanically\n\n---\n\n## The Bigger Picture\n\n### What This Means for Bitcoin\n\n**Bearish Scenario (72% probability)**:\n- Rejection at 125k\n- Drop to 119k (-4.6%)\n- Possible continuation to 116k (-7.2%)\n- Consolidation before next leg\n\n**Bullish Scenario (28% probability)**:\n- Breakout above 126.2k\n- Rally to 130k (+4.1%)\n- New ATH territory\n- Signal invalidated (take loss)\n\n### Long-Term View\n\nEven if this short works, Bitcoin's long-term trend remains bullish. This is a **tactical short**, not a trend reversal.\n\n**Remember**: The trend is your friend, but resistance is where friends take profits.\n\n---\n\n## Final Thoughts\n\nTrading at major resistance levels is about:\n- **Patience**: Wait for confirmation\n- **Discipline**: Follow the plan\n- **Psychology**: Control emotions\n- **Probability**: Play the odds\n- **Protection**: Manage risk\n\nThis signal represents a high-probability setup at a critical level. Whether it wins or loses, following proper risk management ensures long-term profitability.\n\n**The goal isn't to be right—it's to make money by managing risk.**\n\n---\n\n*Written by LiveCryptoAnalyst | 4 Oct 2025*\n\n**Disclaimer**: This is educational content. Trade at your own risk. Past performance doesn't guarantee future results.",
+      "content_ur": "# مزاحمت کی تجارت کی نفسیات\n\n## $125,000 کیوں اہم ہے\n\nگول نمبر صرف نفسیاتی رکاوٹیں نہیں ہیں—یہ میدان جنگ ہیں جہاں مارکیٹ کی نفسیات قیمت کی حرکت سے ٹکراتی ہے۔\n\n### ہجوم کی ذہنیت\n\nجب بٹ کوائن $125,000 کے قریب پہنچتا ہے، تین الگ گروپ سامنے آتے ہیں:\n\n1. **خوش فہم بُلز** 🐂\n   - \"اس بار مختلف ہے!\"\n   - FOMO سے چلنے والی خریداری\n   - زیادہ لیوریج والی پوزیشنز\n\n2. **خوف زدہ بیئرز** 🐻\n   - \"چوٹی\" کا انتظار\n   - بہت جلد شارٹ کرنا\n   - بار بار سٹاپ آؤٹ ہونا\n\n3. **حکمت عملی والے تاجر** 🎯\n   - تصدیق کا انتظار\n   - متعین رسک پیرامیٹرز استعمال کرنا\n   - بہترین انٹری کے لیے صبر",
+      "order_index": 3,
+      "is_active": true,
+      "image_url": "/images/drills/psychology-resistance.png"
+    }
+  ],
+
+  "ai_summary": {
+    "workflow": "1. POST signal → 2. POST drill[0] → 3. POST drill[1] → 4. POST drill[2]",
+    "result": "One signal with 3 tabs: CASE_STUDY | ANALYTICS | BLOG",
+    "key_point": "Each drill = separate tab, same signal_id, different order_index"
+  }
+}

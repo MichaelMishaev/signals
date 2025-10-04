@@ -14,7 +14,7 @@ export const GATE_CONFIG = {
   // ============================================================================
   emailGate: {
     // Trigger settings
-    triggerAfterDrills: 3, // Show on 4th drill attempt
+    triggerAfterDrills: 1, // Show on 2nd drill attempt
     blocking: true, // Cannot be dismissed
     required: true, // Must provide email to continue
 
@@ -41,13 +41,13 @@ export const GATE_CONFIG = {
   // ============================================================================
   brokerGate: {
     // Trigger settings
-    triggerAfterEmailDrills: 6, // Show on 10th drill (6th after email)
+    triggerAfterEmailDrills: 8, // Show on 10th drill (8th after email)
     blocking: true, // Cannot be dismissed
     required: true, // Must open broker account to continue
 
     // UI content
     title: 'Upgrade to Premium Access',
-    subtitle: "You've viewed 9 signals. Open a broker account for unlimited access.",
+    subtitle: "You've viewed 9 drills. Open a broker account for unlimited access.",
 
     // Pricing tiers
     tiers: [
@@ -88,7 +88,7 @@ export const GATE_CONFIG = {
   // BROKER PROMOTION BANNER (Optional - Soft Promotion)
   // ============================================================================
   brokerPromotion: {
-    enabled: true, // Set to false to disable soft promotion
+    enabled: false, // Set to false to disable soft promotion
 
     // Trigger settings
     minSignalsAfterEmail: 6, // Show after 6 signals with email
