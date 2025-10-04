@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from '@/utils/cn';
 import Image from 'next/image';
 import feature1 from '../../../public/images/home-page-31/feature-1.png';

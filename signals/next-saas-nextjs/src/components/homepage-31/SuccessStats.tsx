@@ -1,3 +1,5 @@
+'use client';
+
 import NumberAnimation from '../animation/NumberAnimation';
 import RevealAnimation from '../animation/RevealAnimation';
 

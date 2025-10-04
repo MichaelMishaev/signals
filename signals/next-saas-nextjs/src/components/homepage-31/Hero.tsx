@@ -1,3 +1,5 @@
+'use client';
+
 import { CheckIcon } from '@/icons';
 import RevealAnimation from '../animation/RevealAnimation';
 import LinkButton from '../ui/button/LinkButton';

@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from '@/utils/cn';
 import Image from 'next/image';
 import gradient11 from '../../../public/images/gradient/gradient-11.png';
