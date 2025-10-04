@@ -52,9 +52,11 @@ const BlogList = ({ blogs: allBlogs }: BlogListProps) => {
 
     const newURL = params.toString() ? `?${params.toString()}` : '';
 
-    // Use window.history.replaceState for more reliable URL updates
-    const fullURL = window.location.pathname + (newURL ? newURL : '');
-    window.history.replaceState({}, '', fullURL);
+    // Use window.history.replaceState for more reliable URL updates (only on client)
+    if (typeof window !== 'undefined') {
+      const fullURL = window.location.pathname + (newURL ? newURL : '');
+      window.history.replaceState({}, '', fullURL);
+    }
 
     // Also update the router state
     router.replace(newURL, { scroll: false });
@@ -110,7 +112,9 @@ const BlogList = ({ blogs: allBlogs }: BlogListProps) => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     updateURL({ page: page.toString() });
-    window.scrollTo({ top: 210, behavior: 'smooth' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 210, behavior: 'smooth' });
+    }
   };
 
   const handleSearch = (query: string) => {

@@ -17,7 +17,7 @@ const ScrollExpand = ({ image }: { image: StaticImageData }) => {
       const element = scrollExpandRef.current;
       if (!element) return;
 
-      const isMobile = window.innerWidth < 768;
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
       if (isMobile) {
         gsap.set(element, { minWidth: 'auto' });
