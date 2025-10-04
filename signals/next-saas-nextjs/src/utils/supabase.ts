@@ -51,13 +51,21 @@ export function getSupabaseAdmin(): ReturnType<typeof createClient> | null {
 // For backward compatibility
 export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
   get(target, prop) {
-    return getSupabase()[prop as keyof ReturnType<typeof createClient>];
+    const client = getSupabase();
+    if (!client) {
+      throw new Error('Supabase client not initialized - check environment variables');
+    }
+    return client[prop as keyof ReturnType<typeof createClient>];
   }
 });
 
 export const supabaseAdmin = new Proxy({} as ReturnType<typeof createClient>, {
   get(target, prop) {
-    return getSupabaseAdmin()[prop as keyof ReturnType<typeof createClient>];
+    const client = getSupabaseAdmin();
+    if (!client) {
+      throw new Error('Supabase admin client not initialized - check environment variables');
+    }
+    return client[prop as keyof ReturnType<typeof createClient>];
   }
 });
 
