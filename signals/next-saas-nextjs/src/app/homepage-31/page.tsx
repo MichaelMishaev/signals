@@ -7,12 +7,17 @@ import CTAV1 from '@/components/shared/cta/CTAV1';
 import FooterOne from '@/components/shared/footer/FooterOne';
 import NavbarTwo from '@/components/shared/header/NavbarTwo';
 import ReviewsV1 from '@/components/shared/reviews/ReviewsV1';
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 import { Fragment } from 'react';
 
 export const metadata: Metadata = {
   title: 'Time Tracking Software - NextSaaS',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 const Homepage31 = () => {
