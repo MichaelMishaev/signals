@@ -49,6 +49,7 @@ export default function AdminDashboard() {
     { path: '/admin', name: 'Admin Dashboard', description: 'Main admin control panel', category: 'admin', visibleInProduction: false, requiresAuth: true },
     { path: '/admin/feature-flags', name: 'Feature Flags', description: 'Manage feature flags and toggles', category: 'admin', visibleInProduction: false, requiresAuth: true },
     { path: '/admin/signals', name: 'Signals & Drills', description: 'Create and manage trading signals and educational drills', category: 'admin', visibleInProduction: false, requiresAuth: true },
+    { path: '/admin/translations', name: 'Translations', description: 'Manage English and Urdu translations', category: 'admin', visibleInProduction: false, requiresAuth: true },
 
     // Development/Test routes (hidden in production)
     { path: '/drill-test', name: 'Drill Test', description: 'Development testing for drill functionality', category: 'drill', visibleInProduction: false, requiresAuth: false },

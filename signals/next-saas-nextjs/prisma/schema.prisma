@@ -14,12 +14,16 @@ model User {
   password      String?
   emailVerified DateTime?
   image         String?
+  role          String    @default("user") // user, content_manager, admin
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   accounts      Account[]
   sessions      Session[]
   drillProgress DrillProgress[]
+  translationsUpdated TranslationDynamic[] @relation("translator")
+  translationsApproved TranslationDynamic[] @relation("approver")
+  translationHistory TranslationHistory[]
 
   @@map("users")
 }
@@ -133,7 +137,9 @@ enum FeatureFlagState {
 model Signal {
   id            Int      @id @default(autoincrement())
   title         String
+  title_ur      String?  // Urdu title
   content       String   @db.Text
+  content_ur    String?  @db.Text // Urdu content
   pair          String
   action        String   // BUY or SELL
   entry         Float
@@ -145,6 +151,7 @@ model Signal {
   status        String   @default("ACTIVE") // ACTIVE, CLOSED, CANCELLED
   priority      String   @default("MEDIUM") // HIGH, MEDIUM, LOW
   author        String
+  author_ur     String?  // Urdu author name
   author_image  String?
   chart_image   String?
   published_date String
@@ -163,9 +170,12 @@ model Drill {
   id          Int      @id @default(autoincrement())
   signal_id   Int
   title       String
+  title_ur    String?  // Urdu title
   description String
+  description_ur String? @db.Text // Urdu description
   type        String   // CASE_STUDY, BLOG, ANALYTICS
   content     String   @db.Text
+  content_ur  String?  @db.Text // Urdu content
   order_index Int      @default(1)
   is_active   Boolean  @default(true)
   image_url   String?
@@ -174,4 +184,48 @@ model Drill {
   signal      Signal   @relation(fields: [signal_id], references: [id], onDelete: Cascade)
 
   @@map("drills")
+}
+
+model TranslationDynamic {
+  id              Int      @id @default(autoincrement())
+  content_type    String   // 'signal_title', 'signal_description', 'news', 'analysis'
+  content_id      String?  // Reference to original content (e.g., signal ID)
+  key             String   @unique // Unique identifier: "signal_123_title"
+  en_value        String   @db.Text // English (always exists)
+  ur_value        String?  @db.Text // Urdu translation
+  ur_status       String   @default("pending") // pending|approved|rejected
+  ur_updated_by   String?
+  ur_approved_by  String?
+  ur_updated_at   DateTime?
+  ur_approved_at  DateTime?
+  namespace       String?  // signals|news|analysis
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  translator      User?    @relation("translator", fields: [ur_updated_by], references: [id])
+  approver        User?    @relation("approver", fields: [ur_approved_by], references: [id])
+  history         TranslationHistory[]
+
+  @@index([key])
+  @@index([ur_status])
+  @@index([content_type])
+  @@index([ur_status, ur_value])
+  @@map("translations_dynamic")
+}
+
+model TranslationHistory {
+  id              Int      @id @default(autoincrement())
+  translation_id  Int
+  user_id         String
+  action          String   // created|updated|approved|rejected
+  old_value       String?  @db.Text
+  new_value       String?  @db.Text
+  timestamp       DateTime @default(now())
+
+  translation     TranslationDynamic @relation(fields: [translation_id], references: [id], onDelete: Cascade)
+  user            User     @relation(fields: [user_id], references: [id])
+
+  @@index([translation_id])
+  @@index([user_id])
+  @@map("translation_history")
 }

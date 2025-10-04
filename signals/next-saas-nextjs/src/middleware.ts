@@ -1,12 +1,22 @@
+import createIntlMiddleware from 'next-intl/middleware';
 import { withAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export default withAuth(
+const locales = ['en', 'ur'];
+const defaultLocale = 'en';
+
+const intlMiddleware = createIntlMiddleware({
+  locales,
+  defaultLocale,
+  localePrefix: 'always'
+});
+
+const authMiddleware = withAuth(
   function middleware(req) {
     const token = req.nextauth.token;
     const isAuth = !!token;
-    const isAuthPage = req.nextUrl.pathname.startsWith("/auth");
-    const isDrillPage = req.nextUrl.pathname.startsWith("/drill");
+    const isAuthPage = req.nextUrl.pathname.includes("/auth");
+    const isDrillPage = req.nextUrl.pathname.includes("/drill");
     const isApiAuthRoute = req.nextUrl.pathname.startsWith("/api/auth");
 
     // Allow API auth routes
@@ -16,24 +26,24 @@ export default withAuth(
 
     // Redirect authenticated users from auth pages to drill
     if (isAuthPage && isAuth) {
-      return NextResponse.redirect(new URL("/drill", req.url));
+      const locale = req.nextUrl.pathname.split('/')[1];
+      return NextResponse.redirect(new URL(`/${locale}/drill`, req.url));
     }
 
     // Redirect unauthenticated users from drill to signin
     if (isDrillPage && !isAuth) {
+      const locale = req.nextUrl.pathname.split('/')[1];
       const from = req.nextUrl.pathname + req.nextUrl.search;
       return NextResponse.redirect(
-        new URL(`/auth/signin?from=${encodeURIComponent(from)}`, req.url)
+        new URL(`/${locale}/auth/signin?from=${encodeURIComponent(from)}`, req.url)
       );
     }
 
-    return NextResponse.next();
+    return intlMiddleware(req as NextRequest);
   },
   {
     callbacks: {
       authorized: ({ token }) => {
-        // This function is called to check if the user is authorized
-        // We return true to let the middleware function handle the logic
         return true;
       },
     },
@@ -44,11 +54,16 @@ export default withAuth(
   }
 );
 
+export default function middleware(req: NextRequest) {
+  const isAuthProtectedPath = req.nextUrl.pathname.match(/\/(en|ur)\/(drill|auth)/);
+
+  if (isAuthProtectedPath) {
+    return (authMiddleware as any)(req);
+  }
+
+  return intlMiddleware(req);
+}
+
 export const config = {
-  matcher: [
-    "/drill/:path*",
-    "/auth/:path*",
-    "/api/drill/:path*",
-    // Add other protected routes here
-  ],
+  matcher: ['/', '/(en|ur)/:path*', '/((?!api|_next|_vercel|.*\\..*).*)'],
 };

@@ -1,0 +1,70 @@
+{
+  "section": {
+    "title": "Live Trading Signals & Market News",
+    "subtitle": "Real-time signals, market analysis, and trading alerts from our expert team",
+    "liveBadge": "🔴 LIVE • Updated every minute"
+  },
+  "types": {
+    "signal": "SIGNAL",
+    "marketNews": "MARKET NEWS",
+    "analysis": "ANALYSIS",
+    "alert": "ALERT"
+  },
+  "drillAvailability": {
+    "available": "📊 DRILL AVAILABLE",
+    "basic": "📋 BASIC SIGNAL"
+  },
+  "sidebar": {
+    "title": "Latest Trading Signals",
+    "subtitle": "Real-time signals with entry, SL & TP levels",
+    "badge": "LIVE SIGNALS",
+    "refreshTooltip": "Refresh signals",
+    "loading": "Loading signals...",
+    "noSignals": "No signals available",
+    "labels": {
+      "entry": "Entry",
+      "sl": "SL",
+      "tp": "TP",
+      "confidence": "Confidence"
+    },
+    "actions": {
+      "buyNow": "BUY NOW",
+      "sellNow": "SELL NOW"
+    },
+    "status": {
+      "active": "ACTIVE",
+      "closed": "CLOSED",
+      "cancelled": "CANCELLED"
+    },
+    "filters": {
+      "all": "ALL",
+      "forex": "FOREX",
+      "crypto": "CRYPTO",
+      "psx": "PSX",
+      "test": "TEST"
+    },
+    "premium": {
+      "title": "For Subscribers Only",
+      "features": {
+        "analysis": "Advanced Technical Analysis",
+        "sentiment": "Market Sentiment Reports",
+        "notifications": "Real-time Push Notifications",
+        "history": "Unlimited Signal History",
+        "support": "Premium Support Channel"
+      },
+      "modal": {
+        "title": "Upgrade to Premium",
+        "benefits": {
+          "unlimited": "Unlimited daily signals",
+          "history": "Full signal history & analytics",
+          "notifications": "Real-time push notifications",
+          "chat": "Premium chat access"
+        },
+        "maybeLater": "Maybe Later",
+        "viewPlans": "View Plans"
+      },
+      "upgradeCta": "Upgrade to Premium",
+      "viewAllCta": "View All Signals"
+    }
+  }
+}

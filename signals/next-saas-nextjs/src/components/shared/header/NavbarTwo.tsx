@@ -17,6 +17,7 @@ import LogoV2 from './LogoV2';
 import MobileMenuButton from './MobileMenuButton';
 import NavCTAButton from './NavCTAButton';
 import NavItemLink from './NavItemLink';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 interface NavbarTwoProps {
   className?: string;
@@ -39,6 +40,10 @@ const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName 
           )}>
           {/* logo */}
           <LogoV2 />
+          {/* Language Switcher - always visible */}
+          <div className="ml-auto xl:ml-0 mr-4">
+            <LanguageSwitcher />
+          </div>
           {/* navigation - hidden in production mode */}
           {mounted && !isProductionMode && (
             <nav className="hidden items-center xl:flex">

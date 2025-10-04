@@ -1,0 +1,48 @@
+{
+  "actions": {
+    "buy": "Buy",
+    "sell": "Sell",
+    "buyNow": "Buy Now",
+    "sellNow": "Sell Now",
+    "viewAll": "View All Signals",
+    "viewDetails": "View Details",
+    "refresh": "Refresh",
+    "buyOrder": "BUY ORDER",
+    "sellOrder": "SELL ORDER"
+  },
+  "labels": {
+    "entry": "Entry",
+    "stopLoss": "Stop Loss",
+    "takeProfit": "Take Profit",
+    "confidence": "Confidence",
+    "status": "Status",
+    "market": "Market",
+    "priority": "Priority",
+    "riskReward": "Risk/Reward"
+  },
+  "status": {
+    "active": "Active",
+    "closed": "Closed",
+    "cancelled": "Cancelled",
+    "pending": "Pending",
+    "win": "WIN",
+    "loss": "LOSS",
+    "breakEven": "BREAK EVEN"
+  },
+  "markets": {
+    "forex": "Forex",
+    "crypto": "Crypto",
+    "psx": "PSX",
+    "commodities": "Commodities",
+    "test": "TEST"
+  },
+  "priority": {
+    "high": "HIGH",
+    "medium": "MEDIUM",
+    "low": "LOW"
+  },
+  "loading": {
+    "loadingSignals": "Loading signals...",
+    "noSignalsAvailable": "No signals available"
+  }
+}

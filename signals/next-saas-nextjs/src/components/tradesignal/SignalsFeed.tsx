@@ -1,11 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 import RevealAnimation from '../animation/RevealAnimation';
 import { SignalData } from '@/utils/supabase';
 import { ActionButton } from '@/components/shared/sharedbuttons';
 
 const SignalsFeed = () => {
+  const t = useTranslations('signals.sidebar');
+  const locale = useLocale(); // Get current locale
   const [signals, setSignals] = useState<SignalData[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -16,7 +19,7 @@ const SignalsFeed = () => {
   useEffect(() => {
     const fetchSignals = async () => {
       try {
-        const response = await fetch('/api/signals?limit=5&status=ACTIVE');
+        const response = await fetch(`/api/signals?limit=5&status=ACTIVE&locale=${locale}`);
         const data = await response.json();
         setSignals(data.signals || []);
       } catch (error) {
@@ -31,13 +34,13 @@ const SignalsFeed = () => {
     // Set up automatic refresh every 30 seconds to catch new signals
     const interval = setInterval(fetchSignals, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [locale]);
 
   // Manual refresh function
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      const response = await fetch('/api/signals?limit=5&status=ACTIVE');
+      const response = await fetch(`/api/signals?limit=5&status=ACTIVE&locale=${locale}`);
       const data = await response.json();
       setSignals(data.signals || []);
     } catch (error) {
@@ -87,16 +90,16 @@ const SignalsFeed = () => {
       {/* Header */}
       <div className="text-center space-y-2 mb-6">
         <RevealAnimation delay={0.1}>
-          <span className="badge badge-primary text-xs">LIVE SIGNALS</span>
+          <span className="badge badge-primary text-xs">{t('badge')}</span>
         </RevealAnimation>
         <RevealAnimation delay={0.2}>
           <div className="flex items-center justify-center gap-3">
-            <h3 className="text-lg font-bold">Latest Trading Signals</h3>
+            <h3 className="text-lg font-bold">{t('title')}</h3>
             <button
               onClick={handleRefresh}
               disabled={refreshing}
               className="p-1.5 rounded-lg bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 hover:bg-primary-200 dark:hover:bg-primary-800 transition-colors disabled:opacity-50"
-              title="Refresh signals"
+              title={t('refreshTooltip')}
             >
               <svg
                 className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`}
@@ -115,7 +118,7 @@ const SignalsFeed = () => {
           </div>
         </RevealAnimation>
         <RevealAnimation delay={0.3}>
-          <p className="text-xs text-secondary/70">Real-time signals with entry, SL & TP levels</p>
+          <p className="text-xs text-secondary/70">{t('subtitle')}</p>
         </RevealAnimation>
       </div>
 
@@ -131,7 +134,7 @@ const SignalsFeed = () => {
                   ? 'bg-primary-600 text-white'
                   : 'bg-gray-100 dark:bg-background-5 text-secondary dark:text-accent/70 hover:bg-background-3 dark:hover:bg-background-5'
               }`}>
-              {market === 'PSX' ? 'PSX' : market}
+              {t(`filters.${market.toLowerCase()}`)}
             </button>
           ))}
         </div>
@@ -142,11 +145,11 @@ const SignalsFeed = () => {
         {loading ? (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
-            <p className="text-sm text-secondary/60 mt-2">Loading signals...</p>
+            <p className="text-sm text-secondary/60 mt-2">{t('loading')}</p>
           </div>
         ) : filteredSignals.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-sm text-secondary/60">No signals available</p>
+            <p className="text-sm text-secondary/60">{t('noSignals')}</p>
           </div>
         ) : (
           filteredSignals.slice(0, 5).map((signal, index) => (
@@ -161,7 +164,7 @@ const SignalsFeed = () => {
                     </p>
                   </div>
                   <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusBadge(signal.status)}`}>
-                    {signal.status}
+                    {t(`status.${signal.status.toLowerCase()}`)}
                   </span>
                 </div>
 
@@ -174,19 +177,19 @@ const SignalsFeed = () => {
                 {/* Entry, SL, TP */}
                 <div className="space-y-1 text-xs">
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Entry</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('labels.entry')}</span>
                     <span className="font-semibold text-gray-900 dark:text-white">
                       {signal.entry.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">SL</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('labels.sl')}</span>
                     <span className="font-semibold text-red-600 dark:text-ns-red">
                       {signal.stop_loss.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">TP</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('labels.tp')}</span>
                     <span className="font-semibold text-primary-600 dark:text-ns-green">
                       {signal.take_profit.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
                     </span>
@@ -197,10 +200,10 @@ const SignalsFeed = () => {
                 <div className="mt-2">
                   <ActionButton
                     variant={getRandomButtonVariant(index)}
-                    onClick={() => handleTradeAction(signal.id, signal.action)}
+                    onClick={() => handleTradeAction(String(signal.id), signal.action)}
                     fullWidth
                     size="sm"
-                    customText={signal.action === 'BUY' ? 'BUY NOW' : 'SELL NOW'}
+                    customText={signal.action === 'BUY' ? t('actions.buyNow') : t('actions.sellNow')}
                     className="!py-2 !text-xs sm:!text-sm"
                   />
                 </div>
@@ -222,7 +225,7 @@ const SignalsFeed = () => {
                   clipRule="evenodd"
                 />
               </svg>
-              For Subscribers Only
+              {t('premium.title')}
             </div>
           </div>
 
@@ -230,29 +233,29 @@ const SignalsFeed = () => {
           <div className="space-y-2 text-xs">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
-              <span className="text-primary-700 dark:text-primary-300">Advanced Technical Analysis</span>
+              <span className="text-primary-700 dark:text-primary-300">{t('premium.features.analysis')}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
-              <span className="text-primary-700 dark:text-primary-300">Market Sentiment Reports</span>
+              <span className="text-primary-700 dark:text-primary-300">{t('premium.features.sentiment')}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
-              <span className="text-primary-700 dark:text-primary-300">Real-time Push Notifications</span>
+              <span className="text-primary-700 dark:text-primary-300">{t('premium.features.notifications')}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
-              <span className="text-primary-700 dark:text-primary-300">Unlimited Signal History</span>
+              <span className="text-primary-700 dark:text-primary-300">{t('premium.features.history')}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
-              <span className="text-primary-700 dark:text-primary-300">Premium Support Channel</span>
+              <span className="text-primary-700 dark:text-primary-300">{t('premium.features.support')}</span>
             </div>
           </div>
 
           {/* Upgrade Button */}
           <button onClick={() => setShowPremiumModal(true)} className="btn btn-primary btn-sm w-full text-xs mt-4">
-            Upgrade to Premium
+            {t('premium.upgradeCta')}
           </button>
         </div>
       </RevealAnimation>
@@ -261,7 +264,7 @@ const SignalsFeed = () => {
       <RevealAnimation delay={0.8}>
         <div className="text-center mt-4">
           <button onClick={() => setShowPremiumModal(true)} className="btn btn-secondary btn-sm w-full text-xs">
-            View All Signals
+            {t('premium.viewAllCta')}
           </button>
         </div>
       </RevealAnimation>
@@ -270,31 +273,31 @@ const SignalsFeed = () => {
       {showPremiumModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white dark:bg-background-6 rounded-xl p-6 max-w-md w-full">
-            <h3 className="text-2xl font-bold mb-4">Upgrade to Premium</h3>
+            <h3 className="text-2xl font-bold mb-4">{t('premium.modal.title')}</h3>
             <ul className="space-y-3 mb-6">
               <li className="flex items-center gap-2">
                 <CheckIcon className="w-5 h-5 text-primary-500" />
-                <span>Unlimited daily signals</span>
+                <span>{t('premium.modal.benefits.unlimited')}</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckIcon className="w-5 h-5 text-primary-500" />
-                <span>Full signal history & analytics</span>
+                <span>{t('premium.modal.benefits.history')}</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckIcon className="w-5 h-5 text-primary-500" />
-                <span>Real-time push notifications</span>
+                <span>{t('premium.modal.benefits.notifications')}</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckIcon className="w-5 h-5 text-primary-500" />
-                <span>Premium chat access</span>
+                <span>{t('premium.modal.benefits.chat')}</span>
               </li>
             </ul>
             <div className="flex gap-3">
               <button onClick={() => setShowPremiumModal(false)} className="btn btn-secondary flex-1">
-                Maybe Later
+                {t('premium.modal.maybeLater')}
               </button>
               <a href="/pricing-01" className="btn btn-primary flex-1">
-                View Plans
+                {t('premium.modal.viewPlans')}
               </a>
             </div>
           </div>

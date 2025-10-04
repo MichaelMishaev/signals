@@ -194,6 +194,7 @@ export async function GET(request: NextRequest) {
     const author = searchParams.get('author');
     const limit = searchParams.get('limit') || '10';
     const offset = searchParams.get('offset') || '0';
+    const locale = searchParams.get('locale') || 'en'; // Get locale from query params
 
     const supabaseAdmin = getSupabaseAdmin();
 
@@ -252,8 +253,21 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch signals' }, { status: 500 });
     }
 
+    // Transform data based on locale
+    const localizedSignals = data?.map(signal => {
+      if (locale === 'ur') {
+        return {
+          ...signal,
+          title: signal.title_ur || signal.title,
+          content: signal.content_ur || signal.content,
+          author: signal.author_ur || signal.author,
+        };
+      }
+      return signal;
+    });
+
     return NextResponse.json({
-      signals: data,
+      signals: localizedSignals,
       total: count,
       limit: parseInt(limit),
       offset: parseInt(offset),

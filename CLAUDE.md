@@ -1,1 +1,2 @@
 - use only ports 5000 - 6000
+- add the pop documentation must be in '/Users/michaelmishayev/Desktop/signals/signals/Documentation/popups'

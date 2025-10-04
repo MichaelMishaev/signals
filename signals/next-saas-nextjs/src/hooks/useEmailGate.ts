@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useSession } from 'next-auth/react';
+import { setEmailSubscribed } from '@/utils/popupState';
 
 // Helper function to get cookie value
 const getCookie = (name: string): string | null => {
@@ -44,6 +45,9 @@ export const useEmailGate = () => {
         setHasSubmittedEmail(true);
         setIsLoading(false);
 
+        // Track email subscription for popup system
+        setEmailSubscribed(true);
+
         // Store in localStorage for consistency
         const gateData: EmailGateData = {
           email: verifiedEmail,
@@ -60,6 +64,9 @@ export const useEmailGate = () => {
         // Authenticated users always have access
         setHasSubmittedEmail(true);
         setIsLoading(false);
+
+        // Track email subscription for popup system
+        setEmailSubscribed(true);
 
         // Store in localStorage for consistency
         const gateData: EmailGateData = {
@@ -93,11 +100,13 @@ export const useEmailGate = () => {
         // Check if email is verified or within grace period
         if (data.verified) {
           setHasSubmittedEmail(true);
+          setEmailSubscribed(true); // Track for popup system
         } else {
           // Allow 30-day grace period for unverified emails
           const daysSinceSubmission = (Date.now() - data.timestamp) / (1000 * 60 * 60 * 24);
           if (daysSinceSubmission <= 30) {
             setHasSubmittedEmail(true);
+            setEmailSubscribed(true); // Track for popup system
           }
         }
       }
@@ -145,6 +154,9 @@ export const useEmailGate = () => {
         if (data.success) {
           setEmailVerificationSent(true);
           console.log('Magic link sent to:', email);
+
+          // DO NOT track email subscription yet - wait for verification
+          // setEmailSubscribed(true); // REMOVED - only set after verification
 
           // DO NOT set hasSubmittedEmail = true yet
           // User must verify email first

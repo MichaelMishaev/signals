@@ -173,7 +173,9 @@ const ChangelogContent = () => {
   useEffect(() => {
     const fetchSignals = async () => {
       try {
-        const response = await fetch('/api/signals?limit=10&status=ACTIVE');
+        // Get current locale from the URL or use default
+        const locale = window.location.pathname.split('/')[1] || 'en';
+        const response = await fetch(`/api/signals?limit=10&status=ACTIVE&locale=${locale}`);
         const data = await response.json();
 
         // Convert API signals to SignalUpdate format

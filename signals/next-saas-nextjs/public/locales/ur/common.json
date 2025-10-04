@@ -1,0 +1,48 @@
+{
+  "actions": {
+    "buy": "خریدیں",
+    "sell": "بیچیں",
+    "buyNow": "ابھی خریدیں",
+    "sellNow": "ابھی بیچیں",
+    "viewAll": "تمام سگنل دیکھیں",
+    "viewDetails": "تفصیلات دیکھیں",
+    "refresh": "تازہ کریں",
+    "buyOrder": "آرڈر خریدیں",
+    "sellOrder": "آرڈر بیچیں"
+  },
+  "labels": {
+    "entry": "داخلہ",
+    "stopLoss": "نقصان روکیں",
+    "takeProfit": "منافع لیں",
+    "confidence": "اعتماد",
+    "status": "حیثیت",
+    "market": "مارکیٹ",
+    "priority": "ترجیح",
+    "riskReward": "خطرہ/انعام"
+  },
+  "status": {
+    "active": "فعال",
+    "closed": "بند",
+    "cancelled": "منسوخ",
+    "pending": "زیر التواء",
+    "win": "جیت",
+    "loss": "نقصان",
+    "breakEven": "برابر"
+  },
+  "markets": {
+    "forex": "فاریکس",
+    "crypto": "کرپٹو",
+    "psx": "پی ایس ایکس",
+    "commodities": "اجناس",
+    "test": "ٹیسٹ"
+  },
+  "priority": {
+    "high": "اعلیٰ",
+    "medium": "درمیانہ",
+    "low": "کم"
+  },
+  "loading": {
+    "loadingSignals": "سگنل لوڈ ہو رہے ہیں...",
+    "noSignalsAvailable": "کوئی سگنل دستیاب نہیں"
+  }
+}

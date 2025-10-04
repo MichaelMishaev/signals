@@ -5,7 +5,7 @@ import Link from 'next/link';
 import EmailGateWrapper from '@/components/shared/emailGate/EmailGateWrapper';
 import SignalDetailAnalytics from '@/components/shared/signalDrill/SignalDetailAnalytics';
 import { ActionButton } from '@/components/shared/sharedbuttons';
-import { LiveSignalToast, useLiveSignalToast } from '@/components/shared/popups';
+import { useRandomPopup } from '@/components/shared/popups';
 
 interface Signal {
   id: number;
@@ -58,15 +58,17 @@ interface SignalPageClientProps {
 
 export default function SignalPageClient({ signal, drills, signalId }: SignalPageClientProps) {
   const [activeTab, setActiveTab] = useState<string>(drills.length > 0 ? drills[0].type : 'overview');
+  const [buttonPressed, setButtonPressed] = useState<boolean>(false);
 
-  // Live Signal Toast Hook
-  const {
-    showToast,
-    hideToast,
-    handleStartTrading,
-    buttonPressed,
-    clickCount
-  } = useLiveSignalToast();
+  // Random Popup Hook
+  const { showPopup: showRandomPopup, PopupComponent: RandomPopup } = useRandomPopup();
+
+  // Handler to start the trading flow
+  const handleStartTrading = () => {
+    const now = Date.now();
+    localStorage.setItem('tradingStartTime', now.toString());
+    setButtonPressed(true);
+  };
 
   // Check if user has email in localStorage (from EmailGateWrapper)
   useEffect(() => {
@@ -79,6 +81,24 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
       handleStartTrading();
     }
   }, [handleStartTrading]);
+
+  // Show random popup after delay
+  useEffect(() => {
+    // Show random popup after 5 seconds on page
+    const timer = setTimeout(() => {
+      showRandomPopup();
+    }, 5000);
+
+    // Optional: Show another popup after 30 seconds
+    const timer2 = setTimeout(() => {
+      showRandomPopup();
+    }, 30000);
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(timer2);
+    };
+  }, [showRandomPopup]);
 
   // If no drills available, show the legacy analytics view
   if (!drills || drills.length === 0) {
@@ -122,17 +142,9 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
           </div>
         </div>
 
-        {/* Live Signal Toast */}
-        {showToast && (
-          <LiveSignalToast
-            onClose={hideToast}
-            onAction={() => {
-              // Navigate to analysis page
-              window.open('https://platform.example.com/analysis', '_blank');
-              hideToast();
-            }}
-          />
-        )}
+
+        {/* Random Educational Popup */}
+        <RandomPopup />
       </EmailGateWrapper>
     );
   }
@@ -327,17 +339,9 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
         </div>
       </div>
 
-      {/* Live Signal Toast */}
-      {showToast && (
-        <LiveSignalToast
-          onClose={hideToast}
-          onAction={() => {
-            // Navigate to analysis page
-            window.open('https://platform.example.com/analysis', '_blank');
-            hideToast();
-          }}
-        />
-      )}
+
+      {/* Random Educational Popup */}
+      <RandomPopup />
     </EmailGateWrapper>
   );
 }

@@ -1,5 +1,7 @@
 # Local Development Commands
 
+http://localhost:5001/admin
+6262
 ## Quick Start
 
 ### 1. Launch Site Locally

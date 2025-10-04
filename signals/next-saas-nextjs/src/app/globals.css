@@ -1,6 +1,10 @@
 @import 'tailwindcss';
 /* vendors css will be added here */
 
+/* RTL Support Configuration */
+@custom-variant rtl (&:where([dir="rtl"], [dir="rtl"] *));
+@custom-variant ltr (&:where([dir="ltr"], [dir="ltr"] *));
+
 @import '../styles/variables.css';
 @import '../styles/icon-font.css';
 @import '../styles/typography.css';
