@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function DrillTestPage() {
+function DrillTestContent() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -181,5 +181,13 @@ export default function DrillTestPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DrillTestPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 p-8 flex items-center justify-center">Loading...</div>}>
+      <DrillTestContent />
+    </Suspense>
   );
 }
