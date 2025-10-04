@@ -1,3 +1,5 @@
+'use client';
+
 import RevealAnimation from '@/components/animation/RevealAnimation';
 import { CheckIcon } from '@/icons';
 import { cn } from '@/utils/cn';
