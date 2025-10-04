@@ -1,3 +1,5 @@
+'use client';
+
 import testimonials from '@/data/json/testimonials/testimonials.json';
 import gradient22Img from '@public/images/gradient/gradient-22.png';
 import xIconImg from '@public/images/icons/x.svg';

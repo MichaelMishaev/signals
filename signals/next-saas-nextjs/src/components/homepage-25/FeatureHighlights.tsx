@@ -1,3 +1,5 @@
+'use client';
+
 import building from '@public/images/home-page-25/building.png';
 import transactionChartDark from '@public/images/home-page-25/transaction-chart-dark.svg';
 import transactionChart from '@public/images/home-page-25/transaction-chart.svg';

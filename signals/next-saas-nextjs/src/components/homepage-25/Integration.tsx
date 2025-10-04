@@ -1,3 +1,5 @@
+'use client';
+
 import edgeIcon from '@public/images/icons/edge.svg';
 import figmaIcon from '@public/images/icons/figma.svg';
 import framerIcon from '@public/images/icons/framer.svg';

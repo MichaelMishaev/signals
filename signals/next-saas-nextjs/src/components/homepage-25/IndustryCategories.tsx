@@ -1,3 +1,5 @@
+'use client';
+
 import industry1Img from '@public/images/home-page-25/industry-1.png';
 import industry2Img from '@public/images/home-page-25/industry-2.png';
 import industry3Img from '@public/images/home-page-25/industry-3.png';

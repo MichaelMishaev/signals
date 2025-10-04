@@ -1,3 +1,5 @@
+'use client';
+
 import avatar1Img from '@public/images/avatar/avatar-1.png';
 import avatar11Img from '@public/images/avatar/avatar-11.png';
 import avatar12Img from '@public/images/avatar/avatar-12.png';

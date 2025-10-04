@@ -1,3 +1,5 @@
+'use client';
+
 import clientLogo1 from '@public/images/icons/client-logo-1.svg';
 import clientLogo2 from '@public/images/icons/client-logo-2.svg';
 import clientLogo3 from '@public/images/icons/client-logo-3.svg';
