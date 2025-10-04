@@ -25,9 +25,9 @@ export function useFeatureFlags(options: UseFeatureFlagsOptions = {}) {
   const [flags, setFlags] = useState<Record<string, FeatureFlag>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { data: session } = useSession();
+  const session = useSession();
 
-  const isAdmin = session?.user?.email?.includes('@admin');
+  const isAdmin = session?.data?.user?.email?.includes('@admin');
 
   const fetchFlags = useCallback(async () => {
     try {
@@ -104,8 +104,8 @@ export function useFeatureFlags(options: UseFeatureFlagsOptions = {}) {
 
 // Hook for managing feature flags (admin only)
 export function useFeatureFlagManagement() {
-  const { data: session } = useSession();
-  const isAdmin = session?.user?.email?.includes('@admin');
+  const session = useSession();
+  const isAdmin = session?.data?.user?.email?.includes('@admin');
 
   const createFlag = useCallback(async (flag: Omit<FeatureFlag, 'id'>) => {
     if (!isAdmin) {

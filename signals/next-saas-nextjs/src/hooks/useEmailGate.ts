@@ -26,7 +26,9 @@ export const useEmailGate = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [emailVerificationSent, setEmailVerificationSent] = useState(false);
   const supabase = createClient();
-  const { data: session, status } = useSession();
+  const sessionData = useSession();
+  const session = sessionData?.data;
+  const status = sessionData?.status || 'loading';
 
   // Check if Supabase is configured
   const isSupabaseConfigured = Boolean(supabase);
