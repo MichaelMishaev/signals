@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from '@/utils/cn';
 import { ComponentType } from 'react';
 import NumberAnimation from '../animation/NumberAnimation';

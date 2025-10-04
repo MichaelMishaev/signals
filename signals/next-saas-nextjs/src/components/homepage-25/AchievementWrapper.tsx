@@ -1,3 +1,5 @@
+'use client';
+
 import { businessAchievements } from '@/data/achievements';
 import OurAchievements from '../shared/OurAchievements';
 
