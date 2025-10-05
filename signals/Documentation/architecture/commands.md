@@ -2,6 +2,20 @@
 
 http://localhost:5001/admin
 6262
+
+commands:
+imitate railway build:
+
+cd /Users/michaelmishayev/Desktop/signals && docker build -t railway-test -f Dockerfile .
+
+build:
+cd signals/next-saas-nextjs          
+npm run dev
+
+
+run:
+cd signals/next-saas-nextjs          
+npm run build
 ## Quick Start
 
 ### 1. Launch Site Locally
