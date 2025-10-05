@@ -1,5 +1,6 @@
 import ChangelogContent from '../changelog/ChangelogContent';
 import SignalsFeed from '../tradesignal/SignalsFeed';
+import ExnessBanner from '../shared/ExnessBanner';
 
 const TimelineSidebarLayout = () => {
   return (
@@ -15,7 +16,10 @@ const TimelineSidebarLayout = () => {
 
           {/* Sidebar - Signals Feed */}
           <div className="lg:col-span-1">
-            <div className="sticky top-8">
+            <div className="sticky top-8 space-y-6">
+              {/* Banner at the top */}
+              <ExnessBanner />
+              {/* Signals Feed below */}
               <SignalsFeed />
             </div>
           </div>
