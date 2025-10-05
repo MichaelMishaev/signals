@@ -4,6 +4,7 @@ import FooterOne from '@/components/shared/footer/FooterOne';
 import NavbarTwo from '@/components/shared/header/NavbarTwo';
 import ReviewsV1 from '@/components/shared/reviews/ReviewsV1';
 import TimelineSidebarLayout from '@/components/layout/TimelineSidebarLayout';
+import AdBanner from '@/components/shared/banners/AdBanner';
 import { Metadata, Viewport } from 'next';
 import { Fragment } from 'react';
 
@@ -26,7 +27,7 @@ const TradeSignalHomepage = () => {
         className="bg-accent/10 dark:bg-background-7/40 backdrop-blur-[25px] max-md:!top-8"
         btnClassName="btn-green hover:btn-white dark:hover:btn-white-dark"
       />
-      <main className="bg-background-2 dark:bg-background-6">
+      <main className="bg-background-2 dark:bg-background-6 relative">
         <Hero />
         <TimelineSidebarLayout />
         <ReviewsV1
@@ -34,6 +35,10 @@ const TradeSignalHomepage = () => {
           badgeColor="badge-green-v2"
           background="bg-background-4 dark:bg-background-6 pt-16 md:pt-20 lg:pt-[90px] xl:pt-[100px] pb-20 md:pb-28 lg:pb-36 xl:pb-[200px]"
         />
+
+        {/* Footer Banner - Above Risk Disclaimer - Auto-detects platform */}
+        <AdBanner position="footer" />
+
         <RiskDisclaimer />
       </main>
       <FooterOne />
