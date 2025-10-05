@@ -20,16 +20,16 @@ COPY signals/next-saas-nextjs .
 # Generate Prisma client (required for build)
 RUN npx prisma generate
 
-# Accept build arguments from Railway
-ARG NEXT_PUBLIC_SUPABASE_URL
-ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
-ARG SUPABASE_SERVICE_ROLE_KEY
-ARG RESEND_API_KEY
-ARG NEXTAUTH_SECRET
-ARG NEXTAUTH_URL
-ARG EMAIL_FROM
+# Accept build arguments from Railway (with fallback values for build)
+ARG NEXT_PUBLIC_SUPABASE_URL=""
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY=""
+ARG SUPABASE_SERVICE_ROLE_KEY=""
+ARG RESEND_API_KEY=""
+ARG NEXTAUTH_SECRET="build_placeholder"
+ARG NEXTAUTH_URL="http://localhost:3000"
+ARG EMAIL_FROM="noreply@example.com"
 
-# Set environment variables for build
+# Set environment variables for build (will be overridden at runtime by Railway)
 ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
 ENV SUPABASE_SERVICE_ROLE_KEY=$SUPABASE_SERVICE_ROLE_KEY
@@ -38,6 +38,7 @@ ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 ENV NEXTAUTH_URL=$NEXTAUTH_URL
 ENV EMAIL_FROM=$EMAIL_FROM
 ENV NODE_ENV=production
+ENV SKIP_ENV_VALIDATION=true
 
 # Build the application (needs TypeScript and other dev deps)
 RUN npm run build

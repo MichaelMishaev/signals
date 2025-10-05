@@ -9,17 +9,18 @@ function initSupabaseClients() {
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!supabaseUrl) {
+  // Check for empty strings as well as undefined
+  if (!supabaseUrl || supabaseUrl.trim() === '') {
     console.warn('Missing NEXT_PUBLIC_SUPABASE_URL environment variable - using demo mode');
     return null;
   }
 
-  if (!supabaseAnonKey) {
+  if (!supabaseAnonKey || supabaseAnonKey.trim() === '') {
     console.warn('Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable - using demo mode');
     return null;
   }
 
-  if (!supabaseServiceKey) {
+  if (!supabaseServiceKey || supabaseServiceKey.trim() === '') {
     console.warn('Missing SUPABASE_SERVICE_ROLE_KEY environment variable - using demo mode');
     return null;
   }
