@@ -1,8 +1,18 @@
 import { Resend } from "resend";
 import { magicLinkCache, verificationCache } from "./redis";
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialize Resend client to avoid build-time errors
+let resend: Resend | null = null;
+const getResendClient = () => {
+  if (!resend) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      throw new Error("RESEND_API_KEY is not configured");
+    }
+    resend = new Resend(apiKey);
+  }
+  return resend;
+};
 
 // Generate 6-digit verification code
 export const generateVerificationCode = (): string => {
@@ -107,7 +117,7 @@ export const sendMagicLinkEmail = async (email: string, baseUrl: string, returnU
   };
 
   try {
-    const { data, error } = await resend.emails.send(emailData);
+    const { data, error } = await getResendClient().emails.send(emailData);
 
     if (error) {
       console.error("Resend error:", error);
@@ -181,7 +191,7 @@ export const sendVerificationCodeEmail = async (email: string) => {
   };
 
   try {
-    const { data, error } = await resend.emails.send(emailData);
+    const { data, error } = await getResendClient().emails.send(emailData);
 
     if (error) {
       console.error("Resend error:", error);
