@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { prisma } from '@/lib/prisma';
+import { getPrisma } from '@/lib/prisma';
 import { authOptions } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
+    const prisma = getPrisma();
+
+    // Return empty flags if Prisma is not available
+    if (!prisma) {
+      console.warn('Feature flags disabled - DATABASE_URL not configured');
+      return NextResponse.json({ flags: [] });
+    }
+
     const session = await getServerSession(authOptions);
 
     // Get query parameters
@@ -69,6 +77,15 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const prisma = getPrisma();
+
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Feature flags disabled - DATABASE_URL not configured' },
+        { status: 503 }
+      );
+    }
+
     const session = await getServerSession(authOptions);
 
     // Allow admin access with password or email check
@@ -125,6 +142,15 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    const prisma = getPrisma();
+
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Feature flags disabled - DATABASE_URL not configured' },
+        { status: 503 }
+      );
+    }
+
     const session = await getServerSession(authOptions);
 
     // Allow admin access with password or email check
@@ -174,6 +200,15 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    const prisma = getPrisma();
+
+    if (!prisma) {
+      return NextResponse.json(
+        { error: 'Feature flags disabled - DATABASE_URL not configured' },
+        { status: 503 }
+      );
+    }
+
     const session = await getServerSession(authOptions);
 
     // Allow admin access with password or email check
