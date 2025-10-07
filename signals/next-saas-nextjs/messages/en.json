@@ -1,0 +1,7 @@
+{
+  "gate": {
+    "emailSent": "Magic link sent! Check your email to verify.",
+    "emailFailed": "Failed to send verification email.",
+    "emailError": "Failed to send verification email. Please try again."
+  }
+}

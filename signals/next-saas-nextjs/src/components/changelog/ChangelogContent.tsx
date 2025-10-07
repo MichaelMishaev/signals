@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import gradient16 from '@public/images/gradient/gradient-16.png';
 import gradient27 from '@public/images/gradient/gradient-27.png';
 import gradient6 from '@public/images/gradient/gradient-6.png';
@@ -9,6 +9,7 @@ import Link from 'next/link';
 import RevealAnimation from '../animation/RevealAnimation';
 import { SignalData } from '@/utils/supabase';
 import { ActionButton } from '@/components/shared/sharedbuttons';
+import AdBanner from '@/components/shared/banners/AdBanner';
 
 interface SignalUpdate {
   id: number;
@@ -344,7 +345,8 @@ const ChangelogContent = () => {
               </div>
             ) : (
               signalsData.map((signal, index) => (
-              <RevealAnimation key={`${signal.id}-${index}`} delay={0.6 + index * 0.1}>
+              <React.Fragment key={`${signal.id}-${index}`}>
+              <RevealAnimation delay={0.6 + index * 0.1}>
                 <div className="relative max-w-[850px] mx-auto">
                   {/* Timeline dot with priority indicator */}
                   <div
@@ -610,6 +612,14 @@ const ChangelogContent = () => {
                   )}
                 </div>
               </RevealAnimation>
+
+              {/* Insert banner after every 3rd signal */}
+              {(index + 1) % 3 === 0 && index < signalsData.length - 1 && (
+                <RevealAnimation delay={0.6 + index * 0.1 + 0.05}>
+                  <AdBanner position="between-signals" />
+                </RevealAnimation>
+              )}
+              </React.Fragment>
             )))}
           </div>
         </div>

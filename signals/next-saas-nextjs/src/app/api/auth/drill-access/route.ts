@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { sendMagicLinkEmail, sendVerificationCodeEmail } from "@/lib/email";
 import { magicLinkCache } from "@/lib/redis";
+import { normalizeEmail, isValidEmail } from "@/utils/email";
 
 const prisma = new PrismaClient();
 
@@ -10,25 +11,33 @@ export async function POST(request: NextRequest) {
     const { email, name, source, action, returnUrl } = await request.json();
 
     // Validate email
-    if (!email || !email.includes("@")) {
+    if (!email || !isValidEmail(email)) {
       return NextResponse.json(
         { error: "Valid email is required" },
         { status: 400 }
       );
     }
 
+    // Normalize email for consistent database storage and lookup
+    const normalizedEmail = normalizeEmail(email);
+
     // Rate limiting for email actions
     if (action === "send-magic-link" || action === "resend-verification") {
+      // Whitelist test emails (skip rate limiting)
+      const whitelistedEmails = ["345287@gmail.com"];
+      const isWhitelisted = whitelistedEmails.includes(normalizedEmail);
+
       const clientIP = request.headers.get("x-forwarded-for") ||
                       request.headers.get("x-real-ip") ||
                       "unknown";
 
-      // Check rate limits
-      const now = Date.now();
-      const emailKey = `rate_limit_email:${email}`;
-      const ipKey = `rate_limit_ip:${clientIP}`;
+      // Check rate limits (skip for whitelisted emails)
+      if (!isWhitelisted) {
+        const now = Date.now();
+        const emailKey = `rate_limit_email:${normalizedEmail}`;
+        const ipKey = `rate_limit_ip:${clientIP}`;
 
-      try {
+        try {
         // Get current counts from Redis
         const [emailCount, ipCount] = await Promise.all([
           magicLinkCache.get(emailKey),
@@ -81,22 +90,23 @@ export async function POST(request: NextRequest) {
           magicLinkCache.set(ipKey, JSON.stringify(ipData), 3600) // 1 hour
         ]);
 
-      } catch (redisError) {
-        console.warn("Redis rate limiting failed, proceeding:", redisError);
-        // Continue without rate limiting if Redis fails
+        } catch (redisError) {
+          console.warn("Redis rate limiting failed, proceeding:", redisError);
+          // Continue without rate limiting if Redis fails
+        }
       }
     }
 
-    // Check if user exists
+    // Check if user exists (using normalized email)
     let user = await prisma.user.findUnique({
-      where: { email },
+      where: { email: normalizedEmail },
     });
 
     // If user doesn't exist, create one
     if (!user) {
       user = await prisma.user.create({
         data: {
-          email,
+          email: normalizedEmail,
           name: name || undefined,
           // No password for drill-only users (magic link only)
         },
@@ -107,9 +117,9 @@ export async function POST(request: NextRequest) {
     switch (action) {
       case "send-magic-link":
       case "resend-verification": {
-        // Send magic link for drill access
+        // Send magic link for drill access (use normalized email)
         const baseUrl = request.headers.get("origin") || process.env.NEXTAUTH_URL || "";
-        const result = await sendMagicLinkEmail(email, baseUrl, returnUrl);
+        const result = await sendMagicLinkEmail(normalizedEmail, baseUrl, returnUrl);
 
         if (!result.success) {
           return NextResponse.json(
@@ -160,8 +170,8 @@ export async function POST(request: NextRequest) {
       }
 
       case "send-code": {
-        // Send verification code as fallback
-        const result = await sendVerificationCodeEmail(email);
+        // Send verification code as fallback (use normalized email)
+        const result = await sendVerificationCodeEmail(normalizedEmail);
 
         if (!result.success) {
           return NextResponse.json(
@@ -178,9 +188,9 @@ export async function POST(request: NextRequest) {
       }
 
       case "verify-access": {
-        // Check if user has verified email
+        // Check if user has verified email (use normalized email)
         const verifiedUser = await prisma.user.findUnique({
-          where: { email },
+          where: { email: normalizedEmail },
           select: {
             id: true,
             email: true,

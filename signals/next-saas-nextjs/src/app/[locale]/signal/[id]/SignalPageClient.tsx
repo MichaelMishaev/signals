@@ -6,6 +6,8 @@ import SignalDetailAnalytics from '@/components/shared/signalDrill/SignalDetailA
 import { ActionButton } from '@/components/shared/sharedbuttons';
 import { GateManager } from '@/components/shared/gates';
 import { useGateFlow } from '@/hooks/useGateFlow';
+import ExnessBanner from '@/components/shared/ExnessBanner';
+import ExnessFooterBanner from '@/components/shared/ExnessFooterBanner';
 
 interface Signal {
   id: number;
@@ -71,11 +73,13 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
     setButtonPressed(true);
   };
 
-  // Record drill view when component mounts
+  // Track drill view when first drill tab is shown
   useEffect(() => {
-    console.log('[SignalPageClient] Recording drill view for signal:', signal.id);
-    onDrillView(signal.id);
-  }, [signal.id, onDrillView]);
+    if (drills.length > 0 && activeTab === drills[0].type) {
+      console.log('[SignalPageClient] Recording initial drill view:', drills[0].id);
+      onDrillView(drills[0].id);
+    }
+  }, []); // Only run once on mount
 
   // If no drills available, show the legacy analytics view
   if (!drills || drills.length === 0) {
@@ -271,15 +275,30 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
           </div>
         </div>
 
-        {/* Drill Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
-          {drills
-            .filter(drill => drill.type === activeTab)
-            .map(drill => (
-              <div key={drill.id}>
-                {renderDrillContent(drill)}
-              </div>
-            ))}
+        {/* Drill Content with Sidebar */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* Main Content */}
+            <div className="lg:col-span-9">
+              {drills
+                .filter(drill => drill.type === activeTab)
+                .map(drill => (
+                  <div key={drill.id}>
+                    {renderDrillContent(drill)}
+                  </div>
+                ))}
+            </div>
+
+            {/* Sidebar - Banner */}
+            <aside className="lg:col-span-3">
+              <ExnessBanner />
+            </aside>
+          </div>
+        </div>
+
+        {/* Footer Banner - Above sticky button */}
+        <div className="pb-24 lg:pb-28">
+          <ExnessFooterBanner />
         </div>
 
         {/* Sticky Action Button */}

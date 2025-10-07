@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:5001',
     trace: 'on-first-retry',
     extraHTTPHeaders: {
       'X-Test-Environment': 'playwright',
@@ -31,8 +31,8 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npx next dev --turbopack -p 3000',
-    url: 'http://localhost:3000',
+    command: 'npx next dev --turbopack -p 5001',
+    url: 'http://localhost:5001',
     reuseExistingServer: !process.env.CI,
   },
 });

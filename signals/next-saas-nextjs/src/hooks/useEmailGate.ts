@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useSession } from 'next-auth/react';
 import { setEmailSubscribed } from '@/utils/popupState';
+import { normalizeEmail } from '@/utils/email';
 
 // Helper function to get cookie value
 const getCookie = (name: string): string | null => {
@@ -99,17 +100,11 @@ export const useEmailGate = () => {
       if (stored) {
         const data: EmailGateData = JSON.parse(stored);
 
-        // Check if email is verified or within grace period
+        // ONLY grant access if email is verified
+        // No grace period - users must verify their email to continue
         if (data.verified) {
           setHasSubmittedEmail(true);
           setEmailSubscribed(true); // Track for popup system
-        } else {
-          // Allow 30-day grace period for unverified emails
-          const daysSinceSubmission = (Date.now() - data.timestamp) / (1000 * 60 * 60 * 24);
-          if (daysSinceSubmission <= 30) {
-            setHasSubmittedEmail(true);
-            setEmailSubscribed(true); // Track for popup system
-          }
         }
       }
     } catch (error) {
@@ -119,8 +114,8 @@ export const useEmailGate = () => {
       if (stored) {
         try {
           const data: EmailGateData = JSON.parse(stored);
-          const daysSinceSubmission = (Date.now() - data.timestamp) / (1000 * 60 * 60 * 24);
-          if (data.verified || daysSinceSubmission <= 30) {
+          // ONLY grant access if verified
+          if (data.verified) {
             setHasSubmittedEmail(true);
           }
         } catch (parseError) {
@@ -132,8 +127,60 @@ export const useEmailGate = () => {
     }
   };
 
+  /**
+   * Check if email is already verified in database
+   * Enables cross-browser verification
+   */
+  const checkEmailInDatabase = async (email: string) => {
+    try {
+      const response = await fetch('/api/auth/check-email-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: normalizeEmail(email) }),
+      });
+
+      if (!response.ok) {
+        return { verified: false, exists: false };
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error checking email in database:', error);
+      return { verified: false, exists: false };
+    }
+  };
+
   const submitEmail = async (email: string, name: string, source: string = 'drill_popup') => {
     try {
+      // First, check if this email is already verified in the database
+      // This enables cross-browser verification
+      const dbStatus = await checkEmailInDatabase(email);
+
+      if (dbStatus.verified) {
+        console.log('[useEmailGate] Email already verified in database - granting access');
+
+        // Email is verified! Set cookies and localStorage immediately
+        const gateData: EmailGateData = {
+          email: dbStatus.email,
+          timestamp: Date.now(),
+          source: 'db_verified',
+          verified: true,
+        };
+
+        localStorage.setItem('emailGate', JSON.stringify(gateData));
+        setEmailSubscribed(true);
+        setHasSubmittedEmail(true);
+
+        return {
+          success: true,
+          emailSent: false,
+          message: 'Welcome back! Your email is already verified.',
+          alreadyVerified: true,
+        };
+      }
+
+      // Email not verified yet - proceed with sending magic link
       // Don't save to localStorage yet - wait for verification
       const currentUrl = typeof window !== 'undefined' ? window.location.href : '/';
 

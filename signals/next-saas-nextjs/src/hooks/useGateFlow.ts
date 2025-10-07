@@ -36,6 +36,10 @@ export interface UseGateFlowReturn {
   activeGate: GateType;
   showBanner: boolean;
 
+  // Verification state
+  pendingVerification: boolean;
+  pendingEmail: string | null;
+
   // Actions
   onDrillView: (signalId: number) => void;
   onEmailSubmit: (email: string) => void;
@@ -43,6 +47,8 @@ export interface UseGateFlowReturn {
   onBrokerClick: (clickId: string) => void;
   closeGate: () => void;
   dismissBanner: () => void;
+  resendVerification: () => Promise<void>;
+  closeVerificationModal: () => void;
 
   // Helpers
   canAccessDrill: (drillNumber: number) => boolean;
@@ -53,6 +59,8 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
   const [activeGate, setActiveGate] = useState<GateType>(null);
   const [showBanner, setShowBanner] = useState(false);
   const [state, setState] = useState(() => getGateState());
+  const [pendingVerification, setPendingVerification] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
 
   // Refresh state from localStorage
   const refreshState = useCallback(() => {
@@ -63,6 +71,31 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
   useEffect(() => {
     refreshState();
 
+    // Check for email verification cookie
+    const checkVerificationCookie = () => {
+      const getCookie = (name: string): string | null => {
+        if (typeof document === 'undefined') return null;
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+        return null;
+      };
+
+      const verifiedEmail = getCookie('gate_email_verified');
+      if (verifiedEmail && !state.hasEmail) {
+        console.log('[useGateFlow] Email verification detected, updating gate state');
+
+        // Update gate state to grant access
+        const newState = setEmailProvided(verifiedEmail);
+        setState(newState);
+
+        // Clear the cookie
+        document.cookie = 'gate_email_verified=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      }
+    };
+
+    checkVerificationCookie();
+
     // Listen for storage changes (cross-tab sync)
     const handleStorage = (e: StorageEvent) => {
       if (e.key === 'gate_flow_state') {
@@ -72,7 +105,7 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
 
     window.addEventListener('storage', handleStorage);
     return () => window.removeEventListener('storage', handleStorage);
-  }, [refreshState]);
+  }, [refreshState, state.hasEmail]);
 
   // Update banner visibility
   useEffect(() => {
@@ -116,10 +149,113 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
   /**
    * Handle email submission
    */
-  const onEmailSubmit = useCallback((email: string) => {
-    const newState = setEmailProvided(email);
-    setState(newState);
-    setActiveGate(null); // Close gate
+  const onEmailSubmit = useCallback(async (email: string) => {
+    try {
+      // FIRST: Check if email is already verified in database (cross-browser verification)
+      const dbCheckResponse = await fetch('/api/auth/check-email-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (dbCheckResponse.ok) {
+        const dbStatus = await dbCheckResponse.json();
+
+        if (dbStatus.verified) {
+          console.log('[useGateFlow] Email already verified in database - granting immediate access!');
+
+          // Email is verified! Grant access immediately
+          const newState = setEmailProvided(email);
+          setState(newState);
+
+          // Close gate
+          setActiveGate(null);
+
+          // Show success message
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('show-toast', {
+              detail: {
+                message: 'Welcome back! Your email is already verified.',
+                type: 'success'
+              }
+            }));
+          }
+
+          return; // Exit - user now has access!
+        }
+      }
+
+      // Email not verified - proceed with sending magic link
+      const currentUrl = typeof window !== 'undefined' ? window.location.href : '/';
+
+      const response = await fetch('/api/auth/drill-access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          name: '',
+          source: 'gate_flow',
+          action: 'send-magic-link',
+          returnUrl: currentUrl
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        console.log('[useGateFlow] Magic link sent to:', email);
+
+        // Store email temporarily (not verified yet)
+        localStorage.setItem('pending_email_verification', JSON.stringify({
+          email,
+          timestamp: Date.now()
+        }));
+
+        // Set pending verification state
+        setPendingEmail(email);
+        setPendingVerification(true);
+
+        // Close gate
+        setActiveGate(null);
+
+        // Trigger toast notification
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('show-toast', {
+            detail: {
+              message: 'gate.emailSent',
+              type: 'success',
+              translate: true
+            }
+          }));
+        }
+      } else {
+        console.error('[useGateFlow] Failed to send magic link:', data.error);
+
+        // Show error toast
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('show-toast', {
+            detail: {
+              message: data.message || 'gate.emailFailed',
+              type: 'error',
+              translate: !data.message // Only translate if using default message
+            }
+          }));
+        }
+      }
+    } catch (error) {
+      console.error('[useGateFlow] Error sending magic link:', error);
+
+      // Show error toast
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('show-toast', {
+          detail: {
+            message: 'gate.emailError',
+            type: 'error',
+            translate: true
+          }
+        }));
+      }
+    }
   }, []);
 
   /**
@@ -154,6 +290,21 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
     setShowBanner(false);
   }, []);
 
+  /**
+   * Resend verification email
+   */
+  const resendVerification = useCallback(async () => {
+    if (!pendingEmail) return;
+    await onEmailSubmit(pendingEmail);
+  }, [pendingEmail, onEmailSubmit]);
+
+  /**
+   * Close verification modal
+   */
+  const closeVerificationModal = useCallback(() => {
+    setPendingVerification(false);
+  }, []);
+
   // ============================================================================
   // HELPERS
   // ============================================================================
@@ -183,6 +334,10 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
     activeGate,
     showBanner,
 
+    // Verification state
+    pendingVerification,
+    pendingEmail,
+
     // Actions
     onDrillView,
     onEmailSubmit,
@@ -190,6 +345,8 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
     onBrokerClick,
     closeGate,
     dismissBanner,
+    resendVerification,
+    closeVerificationModal,
 
     // Helpers
     canAccessDrill,

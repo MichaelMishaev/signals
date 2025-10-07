@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { magicLinkCache } from "@/lib/redis";
 import { signIn } from "next-auth/react";
+import { normalizeEmail } from "@/utils/email";
 
 const prisma = new PrismaClient();
 
@@ -36,12 +37,15 @@ export async function GET(request: NextRequest) {
 
     const { email, returnUrl } = tokenData;
 
+    // Normalize email for database lookup
+    const normalizedEmail = normalizeEmail(email);
+
     // Delete token after use
     await magicLinkCache.delete(token);
 
     // Update user's email verification status
     await prisma.user.update({
-      where: { email },
+      where: { email: normalizedEmail },
       data: {
         emailVerified: new Date(),
       },
@@ -50,8 +54,8 @@ export async function GET(request: NextRequest) {
     // Create a session token for automatic sign-in and redirect to original drill
     const response = NextResponse.redirect(new URL(returnUrl || "/", request.url));
 
-    // Set verification cookie that lasts 30 days
-    response.cookies.set("email_verified", email, {
+    // Set verification cookie that lasts 30 days (use normalized email)
+    response.cookies.set("email_verified", normalizedEmail, {
       httpOnly: false, // Need to read from client-side
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
@@ -63,6 +67,14 @@ export async function GET(request: NextRequest) {
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 60, // 1 minute (just for showing message)
+    });
+
+    // Set flag to update gate state on client (use normalized email)
+    response.cookies.set("gate_email_verified", normalizedEmail, {
+      httpOnly: false,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60, // 1 minute (just for updating gate state)
     });
 
     return response;

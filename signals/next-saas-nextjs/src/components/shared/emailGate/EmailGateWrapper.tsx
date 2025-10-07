@@ -128,6 +128,22 @@ export default function EmailGateWrapper({
 
     if (result.success) {
       emailGate.closeEmailGate();
+
+      // Check if email was already verified (cross-browser verification)
+      if (result.alreadyVerified) {
+        // Email already verified - grant immediate access!
+        // Don't set emailSubmitted or show verification notice
+        // The useEmailGate hook already set hasSubmittedEmail = true
+        console.log('[EmailGateWrapper] Email already verified - granting immediate access');
+
+        // Clear any pending verification notices
+        setEmailSubmitted(false);
+        setShowVerificationNotice(false);
+        setRecentSubmission(null);
+        return; // Exit - user now has access to content
+      }
+
+      // Email not yet verified - proceed with normal flow
       setEmailSubmitted(true);
 
       // Store submission data for rate limiting

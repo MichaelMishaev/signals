@@ -17,8 +17,15 @@ export default function DevEmailDebugBar() {
   }, [emailGate.hasSubmittedEmail]);
 
   const clearEmail = () => {
-    // Clear localStorage
+    // Clear localStorage - emailGate
     localStorage.removeItem('emailGate');
+
+    // Clear gate flow state (all variations)
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('gate_flow_state')) {
+        localStorage.removeItem(key);
+      }
+    });
 
     // Clear rate limiting data from localStorage
     Object.keys(localStorage).forEach(key => {
@@ -43,8 +50,11 @@ export default function DevEmailDebugBar() {
     window.location.reload();
   };
 
-  // Only show in development and after hydration
-  if (process.env.NODE_ENV !== 'development' || !mounted) return null;
+  // Show in development OR when explicitly enabled via localStorage flag
+  const isDebugEnabled = typeof window !== 'undefined' && localStorage.getItem('enable_email_debug') === 'true';
+  const shouldHide = (process.env.NODE_ENV !== 'development' && !isDebugEnabled) || !mounted;
+
+  if (shouldHide) return null;
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[99999] bg-yellow-400/95 text-black px-4 py-2 text-xs font-mono">
