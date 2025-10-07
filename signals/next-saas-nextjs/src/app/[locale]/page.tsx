@@ -2,7 +2,6 @@ import Hero from '@/components/tradesignal/Hero';
 import RiskDisclaimer from '@/components/tradesignal/RiskDisclaimer';
 import FooterOne from '@/components/shared/footer/FooterOne';
 import NavbarTwo from '@/components/shared/header/NavbarTwo';
-import ReviewsV1 from '@/components/shared/reviews/ReviewsV1';
 import TimelineSidebarLayout from '@/components/layout/TimelineSidebarLayout';
 import AdBanner from '@/components/shared/banners/AdBanner';
 import { Metadata, Viewport } from 'next';
@@ -30,11 +29,6 @@ const TradeSignalHomepage = () => {
       <main className="bg-background-2 dark:bg-background-6 relative">
         <Hero />
         <TimelineSidebarLayout />
-        <ReviewsV1
-          btnClassName="btn btn-secondary btn-lg md:btn-xl dark:btn-transparent hover:btn-green block md:inline-block w-[90%] md:w-auto mx-auto"
-          badgeColor="badge-green-v2"
-          background="bg-background-4 dark:bg-background-6 pt-16 md:pt-20 lg:pt-[90px] xl:pt-[100px] pb-20 md:pb-28 lg:pb-36 xl:pb-[200px]"
-        />
 
         {/* Footer Banner - Above Risk Disclaimer - Auto-detects platform */}
         <AdBanner position="footer" />
