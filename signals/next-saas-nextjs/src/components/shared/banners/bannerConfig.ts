@@ -120,18 +120,13 @@ export const bannerConfig: BannerConfig = {
     ],
 
     // Between signals banner variants (inline in content)
+    // ONLY small horizontal banners for good mobile UX
     'between-signals': [
       {
         src: 'https://d3dpet1g0ty5ed.cloudfront.net/UR_The_best_pricing_on_gold_300x250_GOOGLE.png',
         width: 300,
         height: 250,
         alt: 'Exness - Best Pricing on Gold',
-      },
-      {
-        src: 'https://d3dpet1g0ty5ed.cloudfront.net/UR_Take_control_1200x1500.png',
-        width: 1200,
-        height: 1500,
-        alt: 'Take Control with Exness',
       },
       {
         src: 'https://d3dpet1g0ty5ed.cloudfront.net/UR_625k_traders_choose_Exness_300x250.png',
