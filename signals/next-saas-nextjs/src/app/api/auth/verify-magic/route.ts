@@ -59,6 +59,7 @@ export async function GET(request: NextRequest) {
       httpOnly: false, // Need to read from client-side
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
+      path: "/", // Ensure cookie is available across all paths
       maxAge: 30 * 24 * 60 * 60, // 30 days
     });
 
@@ -66,6 +67,7 @@ export async function GET(request: NextRequest) {
       httpOnly: false,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
+      path: "/", // Ensure cookie is available across all paths
       maxAge: 60, // 1 minute (just for showing message)
     });
 
@@ -74,6 +76,7 @@ export async function GET(request: NextRequest) {
       httpOnly: false,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
+      path: "/", // Ensure cookie is available across all paths
       maxAge: 60, // 1 minute (just for updating gate state)
     });
 

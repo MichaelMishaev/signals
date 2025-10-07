@@ -33,6 +33,16 @@ export default function EmailGateWrapper({
   const [canResend, setCanResend] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // STEP 1: Add state to track if user dismissed the modal
+  const [userDismissedModal, setUserDismissedModal] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const dismissedUntil = localStorage.getItem('email-modal-dismissed-until');
+    if (dismissedUntil) {
+      return Date.now() < parseInt(dismissedUntil);
+    }
+    return false;
+  });
+
   // Check for recent email submissions IMMEDIATELY on component initialization
   const [initialRecentCheck] = useState(() => {
     if (typeof window === 'undefined') {
@@ -113,7 +123,7 @@ export default function EmailGateWrapper({
     }
 
     // Check if we need to show the email gate
-    if (!emailGate.isLoading && !emailGate.hasSubmittedEmail && !emailGate.isAuthenticated && !emailSubmitted && !recentSubmission) {
+    if (!emailGate.isLoading && !emailGate.hasSubmittedEmail && !emailGate.isAuthenticated && !emailSubmitted && !recentSubmission && !userDismissedModal) {
       // Small delay to ensure smooth page load
       const timer = setTimeout(() => {
         emailGate.openEmailGate();
@@ -121,7 +131,7 @@ export default function EmailGateWrapper({
 
       return () => clearTimeout(timer);
     }
-  }, [emailGate.isLoading, emailGate.hasSubmittedEmail, emailGate.isAuthenticated, emailGate, emailSubmitted, recentSubmission]);
+  }, [emailGate.isLoading, emailGate.hasSubmittedEmail, emailGate.isAuthenticated, emailGate, emailSubmitted, recentSubmission, userDismissedModal]);
 
   const handleEmailSubmit = async (data: { name: string; email: string }) => {
     const result = await emailGate.submitEmail(data.email, data.name, source);
@@ -239,10 +249,10 @@ export default function EmailGateWrapper({
         {emailGate.hasSubmittedEmail ? (
           children
         ) : emailSubmitted || showVerificationNotice || recentSubmission ? (
-          <section className="lg:pt-[180px] pt-[120px] lg:pb-[100px] pb-[70px]">
+          <section className="min-h-screen lg:pt-[180px] pt-[120px] lg:pb-[100px] pb-[70px]">
             <div className="main-container">
               <RevealAnimation delay={0.1}>
-                <div className="max-w-[400px] mx-auto bg-background-1 dark:bg-background-6 rounded-[20px] py-14 px-8 text-center">
+                <div className="max-w-[500px] mx-auto bg-background-1 dark:bg-background-6 rounded-[20px] py-14 px-8 text-center">
                   {/* Email Icon */}
                   <div className="mb-8">
                     <div className="w-16 h-16 mx-auto bg-primary-500 rounded-full flex items-center justify-center">
@@ -263,17 +273,21 @@ export default function EmailGateWrapper({
                   </h2>
 
                   {/* Description */}
-                  <p className="text-tagline-2 text-secondary dark:text-accent mb-6">
+                  <p className="text-tagline-2 text-secondary dark:text-accent mb-4">
                     We've sent a magic link to{' '}
                     <span className="font-semibold text-primary-500">
                       {recentSubmission?.email}
                     </span>
-                    . Click the link to verify your account and unlock this drill content.
                   </p>
 
-                  <p className="text-tagline-3 text-secondary/70 dark:text-accent/70 mb-6">
-                    Don't see the email? Check your spam folder or wait a few minutes.
-                  </p>
+                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+                    <p className="text-sm text-blue-800 dark:text-blue-200 font-medium mb-2">
+                      ✅ Click the link in your email to verify and unlock content
+                    </p>
+                    <p className="text-xs text-blue-700 dark:text-blue-300">
+                      Don't see the email? Check your spam folder or wait a few minutes.
+                    </p>
+                  </div>
 
                   {/* Error message display */}
                   {errorMessage && (
@@ -303,14 +317,14 @@ export default function EmailGateWrapper({
                     </div>
                   )}
 
-                  {/* Back to Home Button */}
+                  {/* Back to Home Button - ALWAYS ALLOW NAVIGATION */}
                   <div className="mb-4">
-                    <button
-                      onClick={() => window.location.href = '/'}
-                      className="btn btn-md btn-outline hover:btn-primary dark:hover:btn-accent before:content-none w-full"
+                    <a
+                      href="/"
+                      className="btn btn-md btn-outline hover:btn-primary dark:hover:btn-accent before:content-none w-full inline-block text-center"
                     >
                       ← Back to Home
-                    </button>
+                    </a>
                   </div>
 
                   {/* Help text */}
@@ -328,7 +342,13 @@ export default function EmailGateWrapper({
 
       <EmailCardPopup
         isOpen={emailGate.isOpen}
-        onClose={emailGate.closeEmailGate}
+        onClose={() => {
+          // STEP 1: When user closes modal, remember for 24 hours
+          const dismissUntil = Date.now() + (24 * 60 * 60 * 1000); // 24 hours
+          localStorage.setItem('email-modal-dismissed-until', dismissUntil.toString());
+          setUserDismissedModal(true);
+          emailGate.closeEmailGate();
+        }}
         onSubmit={handleEmailSubmit}
         title={title}
         subtitle={subtitle}
