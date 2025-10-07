@@ -5,6 +5,7 @@ import { FeatureFlagProvider } from '@/context/FeatureFlagContext';
 import { SessionProvider } from '@/components/auth/SessionProvider';
 import VerificationToast from '@/components/shared/VerificationToast';
 import DevProductionToggle from '@/components/shared/DevProductionToggle';
+import DevEmailDebugBar from '@/components/shared/emailGate/DevEmailDebugBar';
 import PopupManager from '@/components/shared/popups/PopupManager';
 import { interTight } from '@/utils/font';
 import { NextIntlClientProvider } from 'next-intl';
@@ -41,12 +42,18 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
+      <head>
+        {/* Preconnect to banner CDN for faster loading (Pakistan slow internet optimization) */}
+        <link rel="preconnect" href="https://d3dpet1g0ty5ed.cloudfront.net" />
+        <link rel="dns-prefetch" href="https://d3dpet1g0ty5ed.cloudfront.net" />
+      </head>
       <body className={`${interTight.variable} antialiased`} suppressHydrationWarning>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <SessionProvider>
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
               <FeatureFlagProvider>
                 <ModalProvider>
+                  <DevEmailDebugBar />
                   <Suspense fallback={<div>Loading...</div>}>
                     <SmoothScrollProvider>{children}</SmoothScrollProvider>
                   </Suspense>

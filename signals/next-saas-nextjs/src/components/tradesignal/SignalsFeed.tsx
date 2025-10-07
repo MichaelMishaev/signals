@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import RevealAnimation from '../animation/RevealAnimation';
 import { SignalData } from '@/utils/supabase';
 import { ActionButton } from '@/components/shared/sharedbuttons';
+import AdBanner from '@/components/shared/banners/AdBanner';
 
 const SignalsFeed = () => {
   const t = useTranslations('signals.sidebar');
@@ -152,64 +153,75 @@ const SignalsFeed = () => {
             <p className="text-sm text-secondary/60">{t('noSignals')}</p>
           </div>
         ) : (
-          filteredSignals.slice(0, 5).map((signal, index) => (
-            <RevealAnimation key={signal.id} delay={0.5 + index * 0.1}>
-              <div className="bg-gray-50 dark:bg-background-5 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-                {/* Signal Header */}
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h4 className="text-sm font-bold text-gray-900 dark:text-white">{signal.pair}</h4>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {new Date(signal.created_at).toLocaleString()}
-                    </p>
-                  </div>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusBadge(signal.status)}`}>
-                    {t(`status.${signal.status.toLowerCase()}`)}
-                  </span>
-                </div>
+          <>
+            {filteredSignals.slice(0, 5).map((signal, index) => (
+              <div key={signal.id}>
+                <RevealAnimation delay={0.5 + index * 0.1}>
+                  <div className="bg-gray-50 dark:bg-background-5 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                    {/* Signal Header */}
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="text-sm font-bold text-gray-900 dark:text-white">{signal.pair}</h4>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          {new Date(signal.created_at).toLocaleString()}
+                        </p>
+                      </div>
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusBadge(signal.status)}`}>
+                        {t(`status.${signal.status.toLowerCase()}`)}
+                      </span>
+                    </div>
 
-                {/* Signal Type & Confidence */}
-                <div className="flex justify-between items-center mb-2">
-                  <span className={`text-lg ${getSignalTypeStyles(signal.action)}`}>{signal.action}</span>
-                  <span className="text-xs font-bold text-gray-900 dark:text-white">{signal.confidence}%</span>
-                </div>
+                    {/* Signal Type & Confidence */}
+                    <div className="flex justify-between items-center mb-2">
+                      <span className={`text-lg ${getSignalTypeStyles(signal.action)}`}>{signal.action}</span>
+                      <span className="text-xs font-bold text-gray-900 dark:text-white">{signal.confidence}%</span>
+                    </div>
 
-                {/* Entry, SL, TP */}
-                <div className="space-y-1 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">{t('labels.entry')}</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      {signal.entry.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">{t('labels.sl')}</span>
-                    <span className="font-semibold text-red-600 dark:text-ns-red">
-                      {signal.stop_loss.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">{t('labels.tp')}</span>
-                    <span className="font-semibold text-primary-600 dark:text-ns-green">
-                      {signal.take_profit.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
-                    </span>
-                  </div>
-                </div>
+                    {/* Entry, SL, TP */}
+                    <div className="space-y-1 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600 dark:text-gray-400">{t('labels.entry')}</span>
+                        <span className="font-semibold text-gray-900 dark:text-white">
+                          {signal.entry.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600 dark:text-gray-400">{t('labels.sl')}</span>
+                        <span className="font-semibold text-red-600 dark:text-ns-red">
+                          {signal.stop_loss.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600 dark:text-gray-400">{t('labels.tp')}</span>
+                        <span className="font-semibold text-primary-600 dark:text-ns-green">
+                          {signal.take_profit.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
+                        </span>
+                      </div>
+                    </div>
 
-                {/* Action Button - Smaller for sidebar */}
-                <div className="mt-2">
-                  <ActionButton
-                    variant={getRandomButtonVariant(index)}
-                    onClick={() => handleTradeAction(String(signal.id), signal.action)}
-                    fullWidth
-                    size="sm"
-                    customText={signal.action === 'BUY' ? t('actions.buyNow') : t('actions.sellNow')}
-                    className="!py-2 !text-xs sm:!text-sm"
-                  />
-                </div>
+                    {/* Action Button - Smaller for sidebar */}
+                    <div className="mt-2">
+                      <ActionButton
+                        variant={getRandomButtonVariant(index)}
+                        onClick={() => handleTradeAction(String(signal.id), signal.action)}
+                        fullWidth
+                        size="sm"
+                        customText={signal.action === 'BUY' ? t('actions.buyNow') : t('actions.sellNow')}
+                        className="!py-2 !text-xs sm:!text-sm"
+                      />
+                    </div>
+                  </div>
+                </RevealAnimation>
+
+                {/* Insert banner after 3rd signal */}
+                {index === 2 && filteredSignals.length > 3 && (
+                  <RevealAnimation delay={0.85}>
+                    <AdBanner position="between-signals" />
+                  </RevealAnimation>
+                )}
               </div>
-            </RevealAnimation>
-          ))
+            ))}
+          </>
         )}
       </div>
 
