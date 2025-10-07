@@ -64,16 +64,16 @@ export const BrokerPopup: React.FC<BrokerPopupProps> = ({ type, isOpen, onClose 
         />
         <div
           className={cn(
-            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md mx-4',
+            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-2rem)] max-w-md',
             'transition-all duration-300',
             isVisible ? 'animate-scaleIn' : 'opacity-0 scale-95'
           )}
         >
           <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-1">
-            <div className="bg-gray-900 rounded-2xl p-6 sm:p-8">
+            <div className="bg-gray-900 rounded-2xl p-6 sm:p-8 relative">
               <button
                 onClick={handleClose}
-                className="absolute top-4 right-4 w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+                className="absolute top-4 right-4 w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors z-10"
               >
                 <span className="text-white text-xl">×</span>
               </button>
@@ -121,15 +121,15 @@ export const BrokerPopup: React.FC<BrokerPopupProps> = ({ type, isOpen, onClose 
         />
         <div
           className={cn(
-            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md mx-4',
+            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-2rem)] max-w-md',
             'transition-all duration-300',
             isVisible ? 'animate-scaleIn' : 'opacity-0 scale-95'
           )}
         >
-          <div className="bg-gray-800 rounded-2xl p-6 sm:p-8 border border-cyan-500/30">
+          <div className="bg-gray-800 rounded-2xl p-6 sm:p-8 border border-cyan-500/30 relative">
             <button
               onClick={handleClose}
-              className="absolute top-4 right-4 w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+              className="absolute top-4 right-4 w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors z-10"
             >
               <span className="text-white text-xl">×</span>
             </button>
@@ -180,16 +180,16 @@ export const BrokerPopup: React.FC<BrokerPopupProps> = ({ type, isOpen, onClose 
         />
         <div
           className={cn(
-            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-lg mx-4',
+            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-2rem)] max-w-lg',
             'transition-all duration-300',
             isVisible ? 'animate-scaleIn' : 'opacity-0 scale-95'
           )}
         >
           <div className="bg-gradient-to-br from-amber-600 to-orange-600 rounded-2xl p-1">
-            <div className="bg-gray-900 rounded-2xl p-6 sm:p-8">
+            <div className="bg-gray-900 rounded-2xl p-6 sm:p-8 relative">
               <button
                 onClick={handleClose}
-                className="absolute top-4 right-4 w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+                className="absolute top-4 right-4 w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors z-10"
               >
                 <span className="text-white text-xl">×</span>
               </button>
@@ -262,15 +262,15 @@ export const BrokerPopup: React.FC<BrokerPopupProps> = ({ type, isOpen, onClose 
         />
         <div
           className={cn(
-            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md mx-4',
+            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-2rem)] max-w-md',
             'transition-all duration-300',
             isVisible ? 'animate-scaleIn' : 'opacity-0 scale-95'
           )}
         >
-          <div className="bg-gray-900 rounded-2xl p-6 sm:p-8 border-2 border-red-500">
+          <div className="bg-gray-900 rounded-2xl p-6 sm:p-8 border-2 border-red-500 relative">
             <button
               onClick={handleClose}
-              className="absolute top-4 right-4 w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+              className="absolute top-4 right-4 w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors z-10"
             >
               <span className="text-white text-xl">×</span>
             </button>
