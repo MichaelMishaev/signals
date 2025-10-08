@@ -1,12 +1,71 @@
 'use client';
 
 import { CheckIcon } from '@/icons';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { useRouter, usePathname } from 'next/navigation';
 import RevealAnimation from '../animation/RevealAnimation';
 import LinkButton from '../ui/button/LinkButton';
+import { useState } from 'react';
+import SignalSummaryModal from './SignalSummaryModal';
 
 const Hero = () => {
   const t = useTranslations('hero');
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [urduRequestSent, setUrduRequestSent] = useState(false);
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
+
+  const switchLanguage = (newLocale: string) => {
+    const pathWithoutLocale = pathname.replace(/^\/(en|ur)/, '');
+    const newPath = `/${newLocale}${pathWithoutLocale || ''}`;
+    router.push(newPath);
+  };
+
+  const handleUrduInterest = async () => {
+    try {
+      // Track interest in Urdu translation
+      await fetch('/api/analytics/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event: 'urdu_interest_clicked',
+          timestamp: new Date().toISOString(),
+          page_path: window.location.pathname
+        })
+      });
+
+      setUrduRequestSent(true);
+
+      // Show feedback message
+      alert('شکریہ! Thank you for your interest!\n\nWe\'re evaluating Urdu language support. Your feedback helps us prioritize features.');
+
+      // Reset after 5 seconds
+      setTimeout(() => setUrduRequestSent(false), 5000);
+    } catch (error) {
+      console.error('Failed to track Urdu interest:', error);
+      // Still show message even if tracking fails
+      alert('شکریہ! Thank you for your interest!');
+    }
+  };
+
+  const scrollToLastSignal = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // Try to find the last signal card in the signals feed
+    const signalCards = document.querySelectorAll('[data-signal-card]');
+    const lastSignal = signalCards[signalCards.length - 1];
+
+    if (lastSignal) {
+      lastSignal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      // Fallback: scroll to timeline section if no signals found
+      const timelineElement = document.querySelector('.bg-background-3.dark\\:bg-background-7');
+      if (timelineElement) {
+        timelineElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
+
   return (
     <section className="md:mt-4 lg:mt-6 xl:mt-[30px]">
       <div className="max-w-[1860px] mx-auto pt-[170px] sm:pt-[190px] md:pt-[210px] lg:pt-[220px] pb-[80px] sm:pb-[100px] lg:pb-[200px] min-h-[600px] md:max-h-[940px] md:rounded-[30px] xl:rounded-[50px] relative overflow-hidden bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 dark:from-primary-700 dark:via-primary-600 dark:to-primary-500">
@@ -36,9 +95,35 @@ const Hero = () => {
         <div className="main-container relative z-10">
           <div className="space-y-3 md:space-y-5 text-center md:text-left max-w-full md:max-w-[800px]">
             <RevealAnimation delay={0.1}>
-              <span className="inline-block text-xs sm:text-tagline-2 font-medium backdrop-blur-[18px] rounded-full px-3 sm:px-5 py-1.5 bg-ns-yellow/20 text-ns-yellow-light badge-yellow-v2">
-                {t('badge')}
-              </span>
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <span className="inline-block text-xs sm:text-tagline-2 font-medium backdrop-blur-[18px] rounded-full px-3 sm:px-5 py-1.5 bg-ns-yellow/20 text-ns-yellow-light badge-yellow-v2">
+                  {t('badge')}
+                </span>
+
+                {/* Language Pills - Enhanced Visibility */}
+                <div className="flex gap-2 p-1 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+                  <button
+                    onClick={() => switchLanguage('en')}
+                    className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 ${
+                      locale === 'en'
+                        ? 'bg-white text-primary-600 shadow-lg scale-105'
+                        : 'bg-transparent text-white hover:bg-white/20 hover:scale-105'
+                    }`}
+                  >
+                    🇬🇧 English
+                  </button>
+                  <button
+                    onClick={() => switchLanguage('ur')}
+                    className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 ${
+                      locale === 'ur'
+                        ? 'bg-white text-primary-600 shadow-lg scale-105'
+                        : 'bg-transparent text-white hover:bg-white/20 hover:scale-105'
+                    }`}
+                  >
+                    🇵🇰 اردو
+                  </button>
+                </div>
+              </div>
             </RevealAnimation>
             <div className="space-y-2.5 md:space-y-4">
               <RevealAnimation delay={0.2}>
@@ -83,28 +168,51 @@ const Hero = () => {
           <ul className="flex flex-col sm:flex-row items-center sm:items-start gap-y-4 gap-x-4 justify-center sm:justify-start mt-12 md:mt-14 lg:mb-[100px] px-4 sm:px-0">
             <RevealAnimation delay={0.7} direction="left" offset={50}>
               <li className="w-full sm:w-auto">
-                <LinkButton
-                  href="/signup-01"
+                <button
+                  onClick={() => setShowSummaryModal(true)}
                   className="btn btn-primary hover:btn-white dark:hover:btn-white-dark mx-auto sm:mx-0 block md:inline-block w-[90%] md:w-auto btn-lg md:btn-xl border-0 font-bold">
                   {t('cta.startTrial')}
-                </LinkButton>
+                </button>
               </li>
             </RevealAnimation>
             <RevealAnimation delay={0.9} direction="left" offset={50}>
               <li className="w-full sm:w-auto">
-                <LinkButton
-                  href="/login-01"
+                <button
+                  onClick={scrollToLastSignal}
                   className="btn btn-lg md:btn-xl btn-dark bg-white/20 backdrop-blur-sm mx-auto sm:mx-0 block md:inline-block w-[90%] md:w-auto hover:bg-white/30 text-white border-white/30">
                   {t('cta.viewLiveSignals')}
-                </LinkButton>
+                </button>
               </li>
             </RevealAnimation>
           </ul>
 
+          {/* Phase 0: Urdu Interest Tracker - Only show on English pages */}
+          {locale === 'en' && (
+            <RevealAnimation delay={1.1}>
+              <div className="mt-6 px-4 sm:px-0">
+                <button
+                  onClick={handleUrduInterest}
+                  disabled={urduRequestSent}
+                  className={`text-sm flex items-center gap-2 ${
+                    urduRequestSent
+                      ? 'text-white/50 cursor-not-allowed'
+                      : 'text-white/90 hover:text-white hover:underline cursor-pointer'
+                  } transition-colors`}
+                  aria-label="Request Urdu language support"
+                >
+                  <span className="text-lg">🇵🇰</span>
+                  <span className="font-medium">
+                    {urduRequestSent ? '✓ شکریہ Thanks!' : 'اردو میں دیکھیں؟ (View in Urdu?)'}
+                  </span>
+                </button>
+              </div>
+            </RevealAnimation>
+          )}
+
           {/* Live Signal Notification */}
           <RevealAnimation delay={1.0}>
-            <div className="mt-8 md:mt-0 md:absolute md:bottom-10 md:right-10 bg-white/95 dark:bg-black/80 backdrop-blur-md rounded-xl p-4 max-w-sm mx-auto md:mx-0 shadow-2xl animate-pulse-soft">
-              <div className="flex items-center gap-3 mb-2">
+            <div className={`mt-8 md:mt-0 md:absolute md:bottom-10 ${locale === 'ur' ? 'md:left-10' : 'md:right-10'} bg-white/95 dark:bg-black/80 backdrop-blur-md rounded-xl p-4 max-w-sm mx-auto md:mx-0 shadow-2xl animate-pulse-soft ${locale === 'ur' ? 'text-right' : 'text-left'}`} dir={locale === 'ur' ? 'rtl' : 'ltr'}>
+              <div className={`flex items-center gap-3 mb-2 ${locale === 'ur' ? 'flex-row-reverse' : ''}`}>
                 <span className="inline-flex size-3 bg-ns-green rounded-full animate-ping"></span>
                 <span className="text-xs font-semibold text-primary-600 dark:text-primary-400">
                   {t('liveNotification.title')}
@@ -119,6 +227,12 @@ const Hero = () => {
           </RevealAnimation>
         </div>
       </div>
+
+      {/* Signal Summary Modal */}
+      <SignalSummaryModal
+        isOpen={showSummaryModal}
+        onClose={() => setShowSummaryModal(false)}
+      />
     </section>
   );
 };

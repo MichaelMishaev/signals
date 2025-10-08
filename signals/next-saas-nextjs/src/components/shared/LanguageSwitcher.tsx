@@ -1,18 +1,19 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 const LanguageSwitcher = () => {
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale();
+  const t = useTranslations('navigation.language');
   const [isOpen, setIsOpen] = useState(false);
 
   const languages = [
-    { code: 'en', name: 'English', flag: '🇬🇧' },
-    { code: 'ur', name: 'اردو', flag: '🇵🇰' },
+    { code: 'en', name: t('english'), flag: '🇬🇧' },
+    { code: 'ur', name: t('urdu'), flag: '🇵🇰' },
   ];
 
   const currentLanguage = languages.find((lang) => lang.code === locale);
@@ -36,7 +37,7 @@ const LanguageSwitcher = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-lg bg-background-3 dark:bg-background-7 hover:bg-background-4 dark:hover:bg-background-8 transition-colors"
-        aria-label="Switch language"
+        aria-label={t('switch')}
       >
         <span className="text-lg">{currentLanguage?.flag}</span>
         <span className="text-sm font-medium">{currentLanguage?.name}</span>
@@ -52,19 +53,25 @@ const LanguageSwitcher = () => {
 
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop - Click to close */}
           <div
-            className="fixed inset-0 z-40"
-            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 z-[9998]"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen(false);
+            }}
             aria-hidden="true"
           />
 
-          {/* Dropdown */}
-          <div className="absolute right-0 mt-2 w-48 rounded-lg bg-background-2 dark:bg-background-7 shadow-lg border border-neutral-300 dark:border-neutral-700 z-50">
+          {/* Dropdown Menu */}
+          <div className="absolute right-0 mt-2 w-48 rounded-lg bg-background-2 dark:bg-background-7 shadow-xl border border-neutral-300 dark:border-neutral-700 z-[9999]">
             {languages.map((lang) => (
               <button
                 key={lang.code}
-                onClick={() => switchLanguage(lang.code)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  switchLanguage(lang.code);
+                }}
                 className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-background-3 dark:hover:bg-background-8 transition-colors first:rounded-t-lg last:rounded-b-lg ${
                   lang.code === locale ? 'bg-accent/10 dark:bg-accent/20' : ''
                 }`}

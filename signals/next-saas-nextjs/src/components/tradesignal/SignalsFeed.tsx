@@ -157,7 +157,7 @@ const SignalsFeed = () => {
             {filteredSignals.slice(0, 5).map((signal, index) => (
               <div key={signal.id}>
                 <RevealAnimation delay={0.5 + index * 0.1}>
-                  <div className="bg-gray-50 dark:bg-background-5 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                  <div data-signal-card className="bg-gray-50 dark:bg-background-5 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
                     {/* Signal Header */}
                     <div className="flex justify-between items-start mb-2">
                       <div>

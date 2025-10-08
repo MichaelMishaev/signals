@@ -7,7 +7,7 @@ import VerificationToast from '@/components/shared/VerificationToast';
 import DevProductionToggle from '@/components/shared/DevProductionToggle';
 import DevEmailDebugBar from '@/components/shared/emailGate/DevEmailDebugBar';
 import PopupManager from '@/components/shared/popups/PopupManager';
-import { interTight } from '@/utils/font';
+import { interTight, notoNastaliqUrdu } from '@/utils/font';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -47,7 +47,7 @@ export default async function LocaleLayout({
         <link rel="preconnect" href="https://d3dpet1g0ty5ed.cloudfront.net" />
         <link rel="dns-prefetch" href="https://d3dpet1g0ty5ed.cloudfront.net" />
       </head>
-      <body className={`${interTight.variable} antialiased`} suppressHydrationWarning>
+      <body className={`${interTight.variable} ${notoNastaliqUrdu.variable} antialiased`} suppressHydrationWarning>
         {/* STEP 3: Skip to main content - for keyboard users */}
         <a
           href="#main-content"

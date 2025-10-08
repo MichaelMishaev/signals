@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useModalContext } from '@/context/ModalContext';
 
 interface DrillAccessModalProps {
@@ -8,6 +9,8 @@ interface DrillAccessModalProps {
 }
 
 const DrillAccessModal = ({ onSubmit }: DrillAccessModalProps) => {
+  const t = useTranslations('modals.drillAccess');
+  const tCommon = useTranslations('modals.common');
   const { drillAccessModal } = useModalContext();
   const [formData, setFormData] = useState({ name: '', email: '' });
 
@@ -45,10 +48,10 @@ const DrillAccessModal = ({ onSubmit }: DrillAccessModalProps) => {
         className="modal-content fixed top-1/2 left-1/2 w-full max-w-md -translate-x-1/2 -translate-y-1/2 bg-background-1 dark:bg-background-8 rounded-[20px] p-8 shadow-2">
         <div className="text-center space-y-6">
           <div className="space-y-3">
-            <span className="badge badge-cyan">Access Required</span>
-            <h2 className="text-heading-5 text-secondary dark:text-accent">Continue to Drill Content</h2>
+            <span className="badge badge-cyan">{t('locked')}</span>
+            <h2 className="text-heading-5 text-secondary dark:text-accent">{t('title')}</h2>
             <p className="text-tagline-1 text-secondary/70 dark:text-accent/70">
-              Please provide your details to access premium drill materials.
+              {t('subtitle')}
             </p>
           </div>
 
@@ -90,10 +93,10 @@ const DrillAccessModal = ({ onSubmit }: DrillAccessModalProps) => {
                 type="button"
                 onClick={drillAccessModal.closeModal}
                 className="flex-1 btn btn-white dark:btn-white-dark btn-md">
-                <span>Cancel</span>
+                <span>{tCommon('cancel')}</span>
               </button>
               <button type="submit" className="flex-1 btn btn-primary btn-md">
-                <span>Access Now</span>
+                <span>{t('verifyButton')}</span>
               </button>
             </div>
           </form>

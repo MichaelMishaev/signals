@@ -44,5 +44,17 @@
   "loading": {
     "loadingSignals": "Loading signals...",
     "noSignalsAvailable": "No signals available"
+  },
+  "badges": {
+    "live": "LIVE",
+    "new": "NEW",
+    "hot": "HOT",
+    "updated": "UPDATED"
+  },
+  "time": {
+    "daysAgo": "days ago",
+    "hoursAgo": "hours ago",
+    "minutesAgo": "minutes ago",
+    "justNow": "just now"
   }
 }

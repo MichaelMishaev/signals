@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import SignalDetailAnalytics from '@/components/shared/signalDrill/SignalDetailAnalytics';
 import { ActionButton } from '@/components/shared/sharedbuttons';
 import { GateManager } from '@/components/shared/gates';
@@ -59,6 +60,8 @@ interface SignalPageClientProps {
 }
 
 export default function SignalPageClient({ signal, drills, signalId }: SignalPageClientProps) {
+  const t = useTranslations('signals.sidebar');
+  const tCommon = useTranslations('common');
   const [activeTab, setActiveTab] = useState<string>(drills.length > 0 ? drills[0].type : 'overview');
   const [buttonPressed, setButtonPressed] = useState<boolean>(false);
 
@@ -242,7 +245,7 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
                   {signal.action} {signal.pair}
                 </span>
                 <span className="text-sm text-secondary/60">
-                  Entry: {signal.entry.toFixed(4)} | Confidence: {signal.confidence}%
+                  {t('labels.entry')}: {signal.entry.toFixed(4)} | {t('labels.confidence')}: {signal.confidence}%
                 </span>
               </div>
             </div>

@@ -1,0 +1,58 @@
+{
+  "actions": {
+    "buy": "Buy",
+    "sell": "Sell",
+    "openTrade": "Open Trade",
+    "viewDetails": "View Details",
+    "learnMore": "Learn More",
+    "getStarted": "Get Started",
+    "signUp": "Sign Up",
+    "login": "Login",
+    "logout": "Logout",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "close": "Close",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "share": "Share",
+    "copy": "Copy",
+    "download": "Download"
+  },
+  "trading": {
+    "startTrading": "Start Trading",
+    "openPosition": "Open Position",
+    "closePosition": "Close Position",
+    "setStopLoss": "Set Stop Loss",
+    "setTakeProfit": "Set Take Profit",
+    "modifyOrder": "Modify Order",
+    "cancelOrder": "Cancel Order",
+    "viewChart": "View Chart",
+    "addToWatchlist": "Add to Watchlist"
+  },
+  "navigation": {
+    "home": "Home",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "goToTop": "Go to Top",
+    "menu": "Menu",
+    "search": "Search"
+  },
+  "social": {
+    "followUs": "Follow Us",
+    "shareOnTwitter": "Share on Twitter",
+    "shareOnFacebook": "Share on Facebook",
+    "shareOnLinkedIn": "Share on LinkedIn",
+    "copyLink": "Copy Link"
+  },
+  "states": {
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "submitting": "Submitting...",
+    "processing": "Processing...",
+    "sending": "Sending...",
+    "updating": "Updating...",
+    "deleting": "Deleting..."
+  }
+}

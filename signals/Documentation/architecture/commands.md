@@ -34,10 +34,35 @@ Site will be available at: `http://localhost:5001`
    - Authentication requirements
    - Route categories (public, auth, admin, drill, signal, api)
    - Search and filter functionality
-4. Use "Manage Feature Flags" button to access the improved feature flags panel
-5. Create flags with clear explanations and examples
-6. Toggle flags on/off with visual switches
-7. Search and filter flags easily
+
+### 3. Admin Quick Actions
+Available from the admin dashboard:
+
+- **📈 Signals & Drills** (`/admin/signals`) - Manage trading content
+- **🚩 Feature Flags** (`/admin/feature-flags`) - Turn features on/off instantly
+- **🇵🇰 Urdu Demand** (`/admin/urdu-demand`) - Phase 0: View analytics for Urdu interest tracking
+- **👀 View Live Site** (`/`) - See what visitors see
+- **🚀 Test Production Mode** - Use dev toggle
+
+### 4. Phase 0: Urdu Demand Validation
+**Purpose**: Track user interest in Urdu translation before investing 243 hours
+
+1. **User-facing**: Button on homepage (`/en`) - "🇵🇰 اردو میں دیکھیں؟ (View in Urdu?)"
+2. **Admin Dashboard**: View analytics at `/admin/urdu-demand`
+   - Total clicks tracked
+   - Last 7 days / 30 days statistics
+   - Conversion rate calculation
+   - Demand level indicator (HIGH/MODERATE/LOW)
+   - Automated recommendations
+
+3. **API Endpoints**:
+   - `POST /api/analytics/track` - Track Urdu interest clicks
+   - `GET /api/analytics/urdu-demand` - Get analytics summary
+
+4. **Decision Criteria** (after 4 weeks):
+   - 🟢 **>30% demand** → Proceed to Phase 1 (20 hours)
+   - 🟡 **10-30% demand** → Monitor 3 more months
+   - 🔴 **<10% demand** → Stop, save 243 hours
 
 ## Database Setup
 ```bash

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useTranslations, useLocale } from 'next-intl';
 import RevealAnimation from '../animation/RevealAnimation';
 import { SignalData } from '@/utils/supabase';
 import { ActionButton } from '@/components/shared/sharedbuttons';
@@ -163,6 +164,9 @@ const fallbackSignalsData: SignalUpdate[] = [
 ];
 
 const ChangelogContent = () => {
+  const t = useTranslations('signals');
+  const tCommon = useTranslations('common');
+  const locale = useLocale();
   const [signalsData, setSignalsData] = useState<SignalUpdate[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -170,8 +174,6 @@ const ChangelogContent = () => {
   useEffect(() => {
     const fetchSignals = async () => {
       try {
-        // Get current locale from the URL or use default
-        const locale = window.location.pathname.split('/')[1] || 'en';
         const response = await fetch(`/api/signals?limit=10&status=ACTIVE&locale=${locale}`);
         const data = await response.json();
 
@@ -237,7 +239,7 @@ const ChangelogContent = () => {
     // Refresh every 30 seconds
     const interval = setInterval(fetchSignals, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [locale]);
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -310,10 +312,10 @@ const ChangelogContent = () => {
       <div className="space-y-[70px]">
         <div className="space-y-3 text-center">
           <RevealAnimation delay={0.3}>
-            <h2>Live Trading Signals & Market News</h2>
+            <h2>{t('section.title')}</h2>
           </RevealAnimation>
           <RevealAnimation delay={0.4}>
-            <p>Real-time signals, market analysis, and trading alerts from our expert team</p>
+            <p>{t('section.subtitle')}</p>
           </RevealAnimation>
         </div>
 
@@ -325,7 +327,7 @@ const ChangelogContent = () => {
             <RevealAnimation delay={0.5}>
               <div className="text-center mb-8">
                 <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-ns-green-light text-primary-800 dark:bg-ns-green/20 dark:text-ns-green">
-                  🔴 LIVE • Updated every minute
+                  {t('section.liveBadge')}
                 </span>
               </div>
             </RevealAnimation>
@@ -333,11 +335,11 @@ const ChangelogContent = () => {
             {loading ? (
               <div className="text-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
-                <p className="text-sm text-secondary/60 mt-2">Loading signals...</p>
+                <p className="text-sm text-secondary/60 mt-2">{t('sidebar.loading')}</p>
               </div>
             ) : signalsData.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-sm text-secondary/60">No signals available</p>
+                <p className="text-sm text-secondary/60">{t('sidebar.noSignals')}</p>
               </div>
             ) : (
               signalsData.map((signal, index) => (
@@ -365,7 +367,7 @@ const ChangelogContent = () => {
                     {signal.status && signal.pair && (
                       <span
                         className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getStatusBadge(signal.status, signal.result)}`}>
-                        {signal.status === 'CLOSED' && signal.result ? signal.result : signal.status}
+                        {signal.status === 'CLOSED' && signal.result ? tCommon(`status.${signal.result.toLowerCase()}`) : tCommon(`status.${signal.status.toLowerCase()}`)}
                       </span>
                     )}
                     {/* Drill availability indicator */}
@@ -375,7 +377,7 @@ const ChangelogContent = () => {
                           ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
                           : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
                       }`}>
-                        {signal.hasDrillData ? '📊 DRILL AVAILABLE' : '📋 BASIC SIGNAL'}
+                        {signal.hasDrillData ? t('drillAvailability.available') : t('drillAvailability.basic')}
                       </span>
                     )}
                   </div>
@@ -406,7 +408,7 @@ const ChangelogContent = () => {
                               <div className="flex items-center gap-2">
                                 <span
                                   className={`text-lg font-bold ${signal.action === 'BUY' ? 'text-primary-600 dark:text-ns-green' : 'text-red-600 dark:text-ns-red'}`}>
-                                  {signal.action}
+                                  {tCommon(`actions.${signal.action.toLowerCase()}`)}
                                 </span>
                                 {signal.confidence && (
                                   <span className="text-sm font-bold bg-background-1 dark:bg-background-8 px-2 py-1 rounded">
@@ -419,7 +421,7 @@ const ChangelogContent = () => {
                             <div className="grid grid-cols-3 gap-4 text-sm">
                               {signal.entry && (
                                 <div>
-                                  <span className="block text-secondary/60 dark:text-accent/60">Entry</span>
+                                  <span className="block text-secondary/60 dark:text-accent/60">{t('sidebar.labels.entry')}</span>
                                   <span className="font-semibold text-gray-900 dark:text-white">
                                     {signal.entry.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
                                   </span>
@@ -427,7 +429,7 @@ const ChangelogContent = () => {
                               )}
                               {signal.stopLoss && (
                                 <div>
-                                  <span className="block text-secondary/60 dark:text-accent/60">Stop Loss</span>
+                                  <span className="block text-secondary/60 dark:text-accent/60">{t('sidebar.labels.stopLoss')}</span>
                                   <span className="font-semibold text-red-600 dark:text-ns-red">
                                     {signal.stopLoss.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
                                   </span>
@@ -435,7 +437,7 @@ const ChangelogContent = () => {
                               )}
                               {signal.takeProfit && (
                                 <div>
-                                  <span className="block text-secondary/60 dark:text-accent/60">Take Profit</span>
+                                  <span className="block text-secondary/60 dark:text-accent/60">{t('sidebar.labels.takeProfit')}</span>
                                   <span className="font-semibold text-primary-600 dark:text-ns-green">
                                     {signal.takeProfit.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
                                   </span>
@@ -446,10 +448,10 @@ const ChangelogContent = () => {
                             {signal.result && signal.pips && (
                               <div className="pt-3 border-t border-stroke-2 dark:border-stroke-6">
                                 <div className="flex justify-between items-center">
-                                  <span className="text-sm text-secondary/60 dark:text-accent/60">Result</span>
+                                  <span className="text-sm text-secondary/60 dark:text-accent/60">{t('sidebar.labels.result')}</span>
                                   <span
                                     className={`font-bold ${signal.result === 'WIN' ? 'text-primary-600 dark:text-ns-green' : 'text-red-600 dark:text-ns-red'}`}>
-                                    {signal.result} ({signal.pips > 0 ? '+' : ''}
+                                    {tCommon(`status.${signal.result.toLowerCase()}`)} ({signal.pips > 0 ? '+' : ''}
                                     {signal.pips} pips)
                                   </span>
                                 </div>
@@ -463,7 +465,7 @@ const ChangelogContent = () => {
                                 onClick={() => console.log(`Execute ${signal.action} for ${signal.pair}`)}
                                 fullWidth
                                 size="md"
-                                customText={signal.action === 'BUY' ? 'BUY ORDER' : 'SELL ORDER'}
+                                customText={signal.action === 'BUY' ? tCommon('actions.buyOrder') : tCommon('actions.sellOrder')}
                               />
                             </div>
                           </div>
@@ -471,11 +473,11 @@ const ChangelogContent = () => {
 
                         {/* Market info */}
                         <div className="flex items-center justify-between text-sm text-secondary/60 dark:text-accent/60 pt-3 border-t border-stroke-2 dark:border-stroke-6">
-                          <span>Market: {signal.market}</span>
+                          <span>{t('sidebar.labels.market')}: {tCommon(`markets.${signal.market.toLowerCase()}`)}</span>
                           <span className="flex items-center gap-1">
-                            Priority:
+                            {t('sidebar.labels.priority')}:
                             <span className={`w-2 h-2 rounded-full ${getPriorityDotColor(signal.priority)}`}></span>
-                            {signal.priority}
+                            {tCommon(`priority.${signal.priority.toLowerCase()}`)}
                           </span>
                         </div>
                       </div>
@@ -532,7 +534,7 @@ const ChangelogContent = () => {
                             <span className="text-sm font-medium">{signal.author}</span>
                           </div>
                           <span className={`px-2 py-1 rounded text-xs ${getPriorityDotColor(signal.priority)} text-white`}>
-                            {signal.priority}
+                            {tCommon(`priority.${signal.priority.toLowerCase()}`)}
                           </span>
                         </div>
                       </div>
@@ -552,11 +554,11 @@ const ChangelogContent = () => {
 
                       {/* Market info */}
                       <div className="flex items-center justify-between text-sm text-secondary/60 dark:text-accent/60 pt-3 border-t border-stroke-2 dark:border-stroke-6">
-                        <span>Market: {signal.market}</span>
+                        <span>{t('sidebar.labels.market')}: {tCommon(`markets.${signal.market.toLowerCase()}`)}</span>
                         <span className="flex items-center gap-1">
-                          Priority:
+                          {t('sidebar.labels.priority')}:
                           <span className={`w-2 h-2 rounded-full ${getPriorityDotColor(signal.priority)}`}></span>
-                          {signal.priority}
+                          {tCommon(`priority.${signal.priority.toLowerCase()}`)}
                         </span>
                       </div>
                     </div>

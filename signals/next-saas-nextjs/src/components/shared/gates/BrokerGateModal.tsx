@@ -6,6 +6,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/utils/cn';
 import { brokerGateConfig, GATE_CONFIG } from '@/config/gates';
 
@@ -22,6 +23,8 @@ export const BrokerGateModal: React.FC<BrokerGateModalProps> = ({
   onAlreadyHaveAccount,
   onClose,
 }) => {
+  const t = useTranslations('modals.brokerGate');
+  const tCommon = useTranslations('modals.common');
   const [showVerification, setShowVerification] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -82,12 +85,12 @@ export const BrokerGateModal: React.FC<BrokerGateModalProps> = ({
 
                 {/* Title */}
                 <h2 className="text-2xl sm:text-3xl font-bold text-center mb-2 text-gray-900 dark:text-white">
-                  {brokerGateConfig.title}
+                  {t('title')}
                 </h2>
 
                 {/* Subtitle */}
                 <p className="text-center text-gray-600 dark:text-gray-400 mb-6">
-                  {brokerGateConfig.subtitle}
+                  {t('subtitle')}
                 </p>
 
                 {/* Pricing Tiers */}
@@ -139,7 +142,7 @@ export const BrokerGateModal: React.FC<BrokerGateModalProps> = ({
                       'shadow-lg hover:shadow-xl'
                     )}
                   >
-                    {brokerGateConfig.ctaText} →
+                    {t('continueButton')} →
                   </button>
 
                   <button
@@ -152,7 +155,7 @@ export const BrokerGateModal: React.FC<BrokerGateModalProps> = ({
                       'transition-colors'
                     )}
                   >
-                    {brokerGateConfig.ctaSecondary}
+                    {t('otherBroker.name')}
                   </button>
                 </div>
 

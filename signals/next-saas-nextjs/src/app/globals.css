@@ -45,6 +45,15 @@ select:focus-visible {
 @custom-variant rtl (&:where([dir="rtl"], [dir="rtl"] *));
 @custom-variant ltr (&:where([dir="ltr"], [dir="ltr"] *));
 
+/* Phase 1: Urdu Font for RTL */
+[dir="rtl"] {
+  font-family: var(--font-urdu), var(--font-interTight), sans-serif;
+}
+
+[dir="ltr"] {
+  font-family: var(--font-interTight), sans-serif;
+}
+
 @import '../styles/variables.css';
 @import '../styles/icon-font.css';
 @import '../styles/typography.css';

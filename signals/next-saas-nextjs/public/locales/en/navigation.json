@@ -1,0 +1,18 @@
+{
+  "menu": {
+    "home": "Home",
+    "signals": "Signals",
+    "drills": "Drills",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "language": {
+    "switch": "Switch language",
+    "english": "English",
+    "urdu": "اردو"
+  },
+  "mobile": {
+    "menu": "Menu",
+    "close": "Close"
+  }
+}

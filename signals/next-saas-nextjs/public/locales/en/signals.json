@@ -25,7 +25,12 @@
       "entry": "Entry",
       "sl": "SL",
       "tp": "TP",
-      "confidence": "Confidence"
+      "confidence": "Confidence",
+      "stopLoss": "Stop Loss",
+      "takeProfit": "Take Profit",
+      "result": "Result",
+      "market": "Market",
+      "priority": "Priority"
     },
     "actions": {
       "buyNow": "BUY NOW",

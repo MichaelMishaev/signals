@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface EmailVerificationModalProps {
   isOpen: boolean;
@@ -15,6 +16,8 @@ export default function EmailVerificationModal({
   onResend,
   onClose,
 }: EmailVerificationModalProps) {
+  const t = useTranslations('modals.emailVerification');
+  const tCommon = useTranslations('modals.common');
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
   const [isResending, setIsResending] = useState(false);
 
@@ -66,17 +69,17 @@ export default function EmailVerificationModal({
 
           {/* Title */}
           <h2 className="text-heading-5 font-bold text-secondary dark:text-accent mb-4 text-center">
-            Check Your Email
+            {t('title')}
           </h2>
 
           {/* Description */}
           <p className="text-tagline-2 text-secondary dark:text-accent mb-6 text-center">
-            We've sent a magic link to{' '}
+            {t('subtitle')}{' '}
             <span className="font-semibold text-primary-500">{email}</span>
           </p>
 
           <p className="text-tagline-3 text-secondary/70 dark:text-accent/70 mb-8 text-center">
-            Click the link in your email to verify your account and unlock all drills.
+            {t('instructions')}
           </p>
 
           {/* Action Buttons */}
@@ -96,7 +99,7 @@ export default function EmailVerificationModal({
                 disabled={isResending}
                 className="w-full btn btn-md btn-primary hover:btn-secondary dark:hover:btn-accent before:content-none disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isResending ? 'Sending...' : 'Resend Verification Email'}
+                {isResending ? t('resendSuccess') : t('resendButton')}
               </button>
             )}
 
@@ -104,13 +107,13 @@ export default function EmailVerificationModal({
               onClick={onClose}
               className="w-full btn btn-md btn-outline hover:btn-primary dark:hover:btn-accent before:content-none"
             >
-              Close
+              {tCommon('close')}
             </button>
           </div>
 
           {/* Help text */}
           <p className="text-tagline-3 text-secondary/60 dark:text-accent/60 mt-6 text-center">
-            Don't see the email? Check your spam folder.
+            {t('checkSpam')}
           </p>
         </div>
       </div>

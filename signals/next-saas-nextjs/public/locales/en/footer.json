@@ -1,0 +1,39 @@
+{
+  "company": {
+    "title": "Company",
+    "about": "About Us",
+    "career": "Career",
+    "caseStudies": "Case Studies",
+    "contact": "Contact Us"
+  },
+  "support": {
+    "title": "Support",
+    "faq": "FAQ",
+    "documentation": "Documentation",
+    "tutorial": "Tutorial",
+    "support": "Support"
+  },
+  "legal": {
+    "title": "Legal Policies",
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "refund": "Refund Policy",
+    "gdpr": "GDPR Compliance",
+    "affiliate": "Affiliate Policy"
+  },
+  "riskDisclaimer": {
+    "title": "Important Risk Disclaimer",
+    "tradingRisk": "Trading Risk Warning:",
+    "tradingRiskText": "Trading foreign exchange, commodities, and stocks on margin carries a high level of risk and may not be suitable for all investors.",
+    "notFinancialAdvice": "Not Financial Advice:",
+    "notFinancialAdviceText": "Signals provided are for educational purposes only and should not be considered as financial advice or investment recommendations.",
+    "pastPerformance": "Past Performance:",
+    "pastPerformanceText": "Past performance is not indicative of future results. Historical win rates do not guarantee future trading success.",
+    "capitalAtRisk": "Capital at Risk:",
+    "capitalAtRiskText": "Only trade with money you can afford to lose. Never trade with borrowed money or funds required for essential expenses.",
+    "secpCompliance": "SECP Compliance:",
+    "secpComplianceText": "TradeSignal PK operates in accordance with SECP guidelines. License No: [Pending]"
+  },
+  "copyright": "Copyright ©NextSaaS – smart application for modern business",
+  "description": "Turpis tortor nunc sed amet et faucibus vitae morbi congue sed id mauris."
+}

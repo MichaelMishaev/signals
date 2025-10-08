@@ -1,4 +1,4 @@
-import { Inter_Tight } from 'next/font/google';
+import { Inter_Tight, Noto_Nastaliq_Urdu } from 'next/font/google';
 
 const interTight = Inter_Tight({
   subsets: ['latin'],
@@ -7,4 +7,13 @@ const interTight = Inter_Tight({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
 
-export { interTight };
+// Phase 1: Urdu font for RTL support
+const notoNastaliqUrdu = Noto_Nastaliq_Urdu({
+  subsets: ['arabic'],
+  variable: '--font-urdu',
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+  preload: true,
+});
+
+export { interTight, notoNastaliqUrdu };

@@ -6,6 +6,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/utils/cn';
 import { emailGateConfig } from '@/config/gates';
 
@@ -22,6 +23,8 @@ export const EmailGateModal: React.FC<EmailGateModalProps> = ({
   onClose,
   blocking = true, // Default to blocking (cannot dismiss)
 }) => {
+  const t = useTranslations('modals.emailGate');
+  const tCommon = useTranslations('modals.common');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -113,20 +116,22 @@ export const EmailGateModal: React.FC<EmailGateModalProps> = ({
 
             {/* Title */}
             <h2 className="text-2xl sm:text-3xl font-bold text-center mb-2 text-gray-900 dark:text-white">
-              {emailGateConfig.title}
+              {t('title')}
             </h2>
 
             {/* Subtitle */}
             <p className="text-center text-gray-600 dark:text-gray-400 mb-6">
-              {emailGateConfig.subtitle}
+              {t('subtitle')}
             </p>
 
             {/* Benefits */}
             <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
+              <p className="font-semibold mb-2 text-gray-900 dark:text-white">{t('benefits.title')}</p>
               <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                {emailGateConfig.benefits.map((benefit, index) => (
-                  <li key={index}>{benefit}</li>
-                ))}
+                <li>✓ {t('benefits.signal1')}</li>
+                <li>✓ {t('benefits.signal2')}</li>
+                <li>✓ {t('benefits.signal3')}</li>
+                <li>✓ {t('benefits.signal4')}</li>
               </ul>
             </div>
 
@@ -137,7 +142,7 @@ export const EmailGateModal: React.FC<EmailGateModalProps> = ({
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  placeholder={t('emailPlaceholder')}
                   className={cn(
                     'w-full px-4 py-3 rounded-lg border-2',
                     'bg-white dark:bg-gray-800',
@@ -168,13 +173,13 @@ export const EmailGateModal: React.FC<EmailGateModalProps> = ({
                   'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100'
                 )}
               >
-                {isSubmitting ? 'Processing...' : emailGateConfig.ctaText}
+                {isSubmitting ? t('submitting') : t('submitButton')}
               </button>
             </form>
 
             {/* Privacy Note */}
             <p className="text-xs text-center text-gray-500 dark:text-gray-400 mt-4">
-              {emailGateConfig.privacyNote}
+              {t('privacyNote')}
             </p>
 
             {/* Back to Browse Button - Always allow navigation */}

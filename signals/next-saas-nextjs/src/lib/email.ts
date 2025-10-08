@@ -208,10 +208,22 @@ export const sendVerificationCodeEmail = async (email: string) => {
 
 // Send welcome email after successful registration
 export const sendWelcomeEmail = async (email: string, name?: string) => {
-  const transporter = createTransporter();
+  // Check if Resend is configured
+  const isEmailConfigured = process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== "re_YOUR_API_KEY";
 
-  const mailOptions = {
-    from: process.env.EMAIL_FROM || "Signals App <noreply@signals.com>",
+  if (!isEmailConfigured) {
+    console.log("\n======================================");
+    console.log("WELCOME EMAIL (Email not configured)");
+    console.log("======================================");
+    console.log(`Email: ${email}`);
+    console.log(`Name: ${name || "N/A"}`);
+    console.log("Email service not configured - skipping");
+    console.log("======================================\n");
+    return { success: true, message: "Welcome email skipped (not configured)" };
+  }
+
+  const emailData = {
+    from: process.env.EMAIL_FROM || "Signals <onboarding@resend.dev>",
     to: email,
     subject: "Welcome to Signals!",
     html: `
@@ -236,21 +248,27 @@ export const sendWelcomeEmail = async (email: string, name?: string) => {
         <body>
           <div class="container">
             <h2>Welcome to Signals${name ? `, ${name}` : ""}!</h2>
-            <p>Your account has been successfully created. You can now access all drills and track your progress.</p>
+            <p>Your account has been successfully created. You can now access all trading signals and track your performance.</p>
             <p style="text-align: center;">
-              <a href="${process.env.NEXTAUTH_URL}/drill" class="button">Start Learning</a>
+              <a href="${process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL}" class="button">View Signals</a>
             </p>
             <p>If you have any questions, feel free to reach out to our support team.</p>
           </div>
         </body>
       </html>
     `,
-    text: `Welcome to Signals${name ? `, ${name}` : ""}!\n\nYour account has been successfully created. You can now access all drills and track your progress.\n\nVisit ${process.env.NEXTAUTH_URL}/drill to start learning.`,
+    text: `Welcome to Signals${name ? `, ${name}` : ""}!\n\nYour account has been successfully created. You can now access all trading signals and track your performance.\n\nVisit ${process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL} to get started.`,
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Welcome email sent:", info.messageId);
+    const { data, error } = await getResendClient().emails.send(emailData);
+
+    if (error) {
+      console.error("Resend error sending welcome email:", error);
+      return { success: false, error };
+    }
+
+    console.log("Welcome email sent via Resend:", data?.id);
     return { success: true };
   } catch (error) {
     console.error("Error sending welcome email:", error);

@@ -50,6 +50,7 @@ export default function AdminDashboard() {
     { path: '/admin/feature-flags', name: 'Feature Flags', description: 'Manage feature flags and toggles', category: 'admin', visibleInProduction: false, requiresAuth: true },
     { path: '/admin/signals', name: 'Signals & Drills', description: 'Create and manage trading signals and educational drills', category: 'admin', visibleInProduction: false, requiresAuth: true },
     { path: '/admin/translations', name: 'Translations', description: 'Manage English and Urdu translations', category: 'admin', visibleInProduction: false, requiresAuth: true },
+    { path: '/admin/urdu-demand', name: 'Urdu Demand Analytics', description: 'Phase 0: Track user interest in Urdu translation to validate demand before implementation', category: 'admin', visibleInProduction: false, requiresAuth: true },
 
     // Development/Test routes (hidden in production)
     { path: '/drill-test', name: 'Drill Test', description: 'Development testing for drill functionality', category: 'drill', visibleInProduction: false, requiresAuth: false },
@@ -241,7 +242,7 @@ export default function AdminDashboard() {
           {/* Quick Actions */}
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-3">⚡ Quick Actions</h3>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <Link
                 href="/admin/signals"
                 className="flex items-center gap-3 p-4 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
@@ -260,6 +261,16 @@ export default function AdminDashboard() {
                 <div>
                   <div className="font-medium">Feature Flags</div>
                   <div className="text-sm text-blue-100">Turn features on/off instantly</div>
+                </div>
+              </Link>
+              <Link
+                href="/admin/urdu-demand"
+                className="flex items-center gap-3 p-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                <span className="text-2xl">🇵🇰</span>
+                <div>
+                  <div className="font-medium">Urdu Demand</div>
+                  <div className="text-sm text-indigo-100">Phase 0 analytics</div>
                 </div>
               </Link>
               <Link

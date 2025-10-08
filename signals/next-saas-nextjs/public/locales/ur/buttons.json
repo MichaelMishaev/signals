@@ -1,0 +1,58 @@
+{
+  "actions": {
+    "buy": "خریدیں",
+    "sell": "فروخت کریں",
+    "openTrade": "تجارت کھولیں",
+    "viewDetails": "تفصیلات دیکھیں",
+    "learnMore": "مزید جانیں",
+    "getStarted": "شروع کریں",
+    "signUp": "سائن اپ کریں",
+    "login": "لاگ ان",
+    "logout": "لاگ آؤٹ",
+    "submit": "جمع کریں",
+    "cancel": "منسوخ کریں",
+    "close": "بند کریں",
+    "save": "محفوظ کریں",
+    "delete": "حذف کریں",
+    "edit": "ترمیم کریں",
+    "share": "شیئر کریں",
+    "copy": "کاپی کریں",
+    "download": "ڈاؤن لوڈ کریں"
+  },
+  "trading": {
+    "startTrading": "تجارت شروع کریں",
+    "openPosition": "پوزیشن کھولیں",
+    "closePosition": "پوزیشن بند کریں",
+    "setStopLoss": "سٹاپ لاس مقرر کریں",
+    "setTakeProfit": "ٹیک پرافٹ مقرر کریں",
+    "modifyOrder": "آرڈر میں ترمیم کریں",
+    "cancelOrder": "آرڈر منسوخ کریں",
+    "viewChart": "چارٹ دیکھیں",
+    "addToWatchlist": "واچ لسٹ میں شامل کریں"
+  },
+  "navigation": {
+    "home": "ہوم",
+    "back": "واپس",
+    "next": "اگلا",
+    "previous": "پچھلا",
+    "goToTop": "اوپر جائیں",
+    "menu": "مینو",
+    "search": "تلاش کریں"
+  },
+  "social": {
+    "followUs": "ہمیں فالو کریں",
+    "shareOnTwitter": "ٹویٹر پر شیئر کریں",
+    "shareOnFacebook": "فیس بک پر شیئر کریں",
+    "shareOnLinkedIn": "LinkedIn پر شیئر کریں",
+    "copyLink": "لنک کاپی کریں"
+  },
+  "states": {
+    "loading": "لوڈ ہو رہا ہے...",
+    "saving": "محفوظ ہو رہا ہے...",
+    "submitting": "جمع ہو رہا ہے...",
+    "processing": "پروسیسنگ...",
+    "sending": "بھیجا جا رہا ہے...",
+    "updating": "اپ ڈیٹ ہو رہا ہے...",
+    "deleting": "حذف ہو رہا ہے..."
+  }
+}

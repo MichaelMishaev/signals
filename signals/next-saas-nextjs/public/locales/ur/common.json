@@ -44,5 +44,17 @@
   "loading": {
     "loadingSignals": "سگنل لوڈ ہو رہے ہیں...",
     "noSignalsAvailable": "کوئی سگنل دستیاب نہیں"
+  },
+  "badges": {
+    "live": "لائیو",
+    "new": "نیا",
+    "hot": "گرم",
+    "updated": "تازہ کاری"
+  },
+  "time": {
+    "daysAgo": "دن پہلے",
+    "hoursAgo": "گھنٹے پہلے",
+    "minutesAgo": "منٹ پہلے",
+    "justNow": "ابھی"
   }
 }

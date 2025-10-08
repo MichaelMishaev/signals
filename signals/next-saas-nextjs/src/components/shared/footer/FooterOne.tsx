@@ -1,3 +1,5 @@
+'use client';
+
 import RevealAnimation from '@/components/animation/RevealAnimation';
 import { cn } from '@/utils/cn';
 import behance from '@public/images/icons/behance.svg';
@@ -9,12 +11,14 @@ import youtube from '@public/images/icons/youtube.svg';
 import darkLogo from '@public/images/shared/dark-logo.svg';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import ThemeToggle from '../ThemeToggle';
 import FooterDivider from './FooterDivider';
 import FooterLeftGradient from './FooterLeftGradient';
 import FooterRightGradient from './FooterRightGradient';
 
 const FooterOne = ({ className }: { className?: string }) => {
+  const t = useTranslations('footer');
   return (
     <footer className={cn('bg-secondary dark:bg-background-8 relative overflow-hidden', className)}>
       {/* <!-- right gradient --> */}
@@ -31,7 +35,7 @@ const FooterOne = ({ className }: { className?: string }) => {
                   <Image src={darkLogo} alt="NextSass Logo" />
                 </figure>
                 <p className="text-accent/60 text-tagline-1 mt-4 mb-7 font-normal">
-                  Turpis tortor nunc sed amet et faucibus vitae morbi congue sed id mauris.
+                  {t('description')}
                 </p>
                 <div className="flex items-center gap-3">
                   <Link target="_blank" href="https://www.facebook.com" className="footer-social-link">
@@ -68,92 +72,38 @@ const FooterOne = ({ className }: { className?: string }) => {
             </RevealAnimation>
           </div>
           <div className="col-span-12 grid grid-cols-12 gap-x-0 gap-y-8 xl:col-span-8">
-            <div className="col-span-12 md:col-span-4">
-              <RevealAnimation delay={0.4}>
-                <div className="space-y-8">
-                  <p className="sm:text-heading-6 text-tagline-1 text-primary-50 font-normal">Company</p>
-                  <ul className="space-y-3 sm:space-y-5">
-                    <li>
-                      <Link href="/about-01" className="footer-link">
-                        About Us
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/career" className="footer-link">
-                        Career
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/case-study" className="footer-link">
-                        Case Studies
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/contact-us" className="footer-link">
-                        Contact Us
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </RevealAnimation>
-            </div>
-            <div className="col-span-12 md:col-span-4">
+            <div className="col-span-12 md:col-span-6">
               <RevealAnimation delay={0.5}>
                 <div className="space-y-8">
-                  <p className="sm:text-heading-6 text-tagline-1 text-primary-50 font-normal">Support</p>
+                  <p className="sm:text-heading-6 text-tagline-1 text-primary-50 font-normal">{t('support.title')}</p>
                   <ul className="space-y-3 sm:space-y-5">
                     <li>
                       <Link href="/faq" className="footer-link">
-                        FAQ
+                        {t('support.faq')}
                       </Link>
                     </li>
                     <li>
-                      <Link href="/documentation" className="footer-link">
-                        Documentation
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/tutorial" className="footer-link">
-                        Tutorial
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/support" className="footer-link">
-                        Support
+                      <Link href="/#contact" className="footer-link">
+                        {t('company.contact')}
                       </Link>
                     </li>
                   </ul>
                 </div>
               </RevealAnimation>
             </div>
-            <div className="col-span-12 md:col-span-4">
+            <div className="col-span-12 md:col-span-6">
               <RevealAnimation delay={0.6}>
                 <div className="space-y-8">
-                  <p className="sm:text-heading-6 text-tagline-1 text-primary-50 font-normal">Legal Policies</p>
+                  <p className="sm:text-heading-6 text-tagline-1 text-primary-50 font-normal">{t('legal.title')}</p>
                   <ul className="space-y-3 sm:space-y-5">
                     <li>
                       <Link href="/terms-conditions" className="footer-link">
-                        Terms & Conditions
+                        {t('legal.terms')}
                       </Link>
                     </li>
                     <li>
-                      <Link href="/privacy" className="footer-link">
-                        Privacy Policy
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/refund-policy" className="footer-link">
-                        Refund Policy
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/gdpr" className="footer-link">
-                        GDPR Compliance
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/affiliate-policy" className="footer-link">
-                        Affiliate Policy
+                      <Link href="/privacy-policy" className="footer-link">
+                        {t('legal.privacy')}
                       </Link>
                     </li>
                   </ul>
@@ -183,30 +133,29 @@ const FooterOne = ({ className }: { className?: string }) => {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg md:text-xl font-bold text-red-600 dark:text-red-400 mb-3">
-                    Important Risk Disclaimer
+                    {t('riskDisclaimer.title')}
                   </h3>
 
                   <div className="space-y-2 text-xs text-gray-700 dark:text-gray-300">
                     <p>
-                      <strong>Trading Risk Warning:</strong> Trading foreign exchange, commodities, and stocks on margin
-                      carries a high level of risk and may not be suitable for all investors.
+                      <strong>{t('riskDisclaimer.tradingRisk')}</strong> {t('riskDisclaimer.tradingRiskText')}
                     </p>
 
                     <p>
-                      <strong>Not Financial Advice:</strong> Signals provided are for educational purposes only and should not be considered as financial advice or investment recommendations.
+                      <strong>{t('riskDisclaimer.notFinancialAdvice')}</strong> {t('riskDisclaimer.notFinancialAdviceText')}
                     </p>
 
                     <p>
-                      <strong>Past Performance:</strong> Past performance is not indicative of future results. Historical win rates do not guarantee future trading success.
+                      <strong>{t('riskDisclaimer.pastPerformance')}</strong> {t('riskDisclaimer.pastPerformanceText')}
                     </p>
 
                     <p>
-                      <strong>Capital at Risk:</strong> Only trade with money you can afford to lose. Never trade with borrowed money or funds required for essential expenses.
+                      <strong>{t('riskDisclaimer.capitalAtRisk')}</strong> {t('riskDisclaimer.capitalAtRiskText')}
                     </p>
 
                     <div className="mt-3 p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
                       <p className="text-xs text-yellow-800 dark:text-yellow-200">
-                        <strong>SECP Compliance:</strong> TradeSignal PK operates in accordance with SECP guidelines. License No: [Pending]
+                        <strong>{t('riskDisclaimer.secpCompliance')}</strong> {t('riskDisclaimer.secpComplianceText')}
                       </p>
                     </div>
                   </div>
@@ -220,7 +169,7 @@ const FooterOne = ({ className }: { className?: string }) => {
           <FooterDivider />
           <RevealAnimation delay={0.8} offset={10} start="top 105%">
             <p className="text-tagline-1 text-primary-50 font-normal">
-              Copyright &copy;NextSaaS – smart application for modern business
+              {t('copyright')}
             </p>
           </RevealAnimation>
         </div>

@@ -11,18 +11,26 @@ export default getRequestConfig(async ({ requestLocale }) => {
   }
 
   // Load all translation files
-  const [common, hero, signals] = await Promise.all([
+  const [common, hero, signals, modals, buttons, footer, navigation] = await Promise.all([
     import(`@/../public/locales/${locale}/common.json`),
     import(`@/../public/locales/${locale}/hero.json`),
     import(`@/../public/locales/${locale}/signals.json`),
+    import(`@/../public/locales/${locale}/modals.json`),
+    import(`@/../public/locales/${locale}/buttons.json`),
+    import(`@/../public/locales/${locale}/footer.json`),
+    import(`@/../public/locales/${locale}/navigation.json`),
   ]);
 
   return {
     locale,
     messages: {
-      ...common.default,
+      common: common.default,
       hero: hero.default,
       signals: signals.default,
+      modals: modals.default,
+      buttons: buttons.default,
+      footer: footer.default,
+      navigation: navigation.default,
     },
   };
 });

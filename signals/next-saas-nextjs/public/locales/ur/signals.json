@@ -25,7 +25,12 @@
       "entry": "داخلہ",
       "sl": "نقصان روکیں",
       "tp": "منافع لیں",
-      "confidence": "اعتماد"
+      "confidence": "اعتماد",
+      "stopLoss": "نقصان روکیں",
+      "takeProfit": "منافع لیں",
+      "result": "نتیجہ",
+      "market": "مارکیٹ",
+      "priority": "ترجیح"
     },
     "actions": {
       "buyNow": "ابھی خریدیں",
