@@ -13,7 +13,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ flags: [] });
     }
 
-    const session = await getServerSession(authOptions);
+    // Safely get session - wrap in try-catch in case auth is misconfigured
+    let session;
+    try {
+      session = await getServerSession(authOptions);
+    } catch (authError) {
+      console.error('Auth error in feature-flags:', authError);
+      // Continue without session if auth fails
+      session = null;
+    }
 
     // Get query parameters
     const searchParams = request.nextUrl.searchParams;
@@ -68,10 +76,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ flags });
   } catch (error) {
     console.error('Error fetching feature flags:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch feature flags' },
-      { status: 500 }
-    );
+    // Return empty flags gracefully instead of 500 error
+    return NextResponse.json({ flags: [] }, { status: 200 });
   }
 }
 

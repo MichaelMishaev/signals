@@ -7,8 +7,13 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { sessionCache } from "./redis";
+import { getPrisma } from "./prisma";
 
-const prisma = new PrismaClient();
+// Use safe Prisma client that handles missing DATABASE_URL gracefully
+const prismaInstance = getPrisma();
+
+// Fallback for adapter - only used if DATABASE_URL is configured
+const prisma = prismaInstance || new PrismaClient();
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as any,

@@ -11,7 +11,15 @@ export async function POST(request: NextRequest) {
     });
 
     if (!signalsResponse.ok) {
-      throw new Error('Failed to fetch signals');
+      const errorText = await signalsResponse.text();
+      console.error('Failed to fetch signals:', signalsResponse.status, errorText);
+
+      // Return a user-friendly fallback message instead of throwing
+      return NextResponse.json({
+        summary: locale === 'ur'
+          ? 'سگنلز لوڈ کرنے میں مسئلہ ہے۔ براہ کرم بعد میں دوبارہ کوشش کریں۔'
+          : 'Unable to load signals at the moment. Please try again later.',
+      });
     }
 
     const { signals } = await signalsResponse.json();
@@ -88,10 +96,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ summary });
   } catch (error) {
     console.error('Error generating summary:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate summary' },
-      { status: 500 }
-    );
+
+    // Return a graceful fallback instead of 500 error
+    const locale = 'en'; // Default to English since we couldn't parse the request
+    return NextResponse.json({
+      summary: locale === 'ur'
+        ? 'خلاصہ بنانے میں مسئلہ۔ براہ کرم بعد میں کوشش کریں۔'
+        : 'Unable to generate summary at this time. Please try again later.',
+    }, { status: 200 }); // Return 200 with fallback message instead of 500
   }
 }
 
