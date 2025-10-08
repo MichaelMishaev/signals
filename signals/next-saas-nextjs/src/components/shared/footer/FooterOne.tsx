@@ -11,7 +11,8 @@ import youtube from '@public/images/icons/youtube.svg';
 import darkLogo from '@public/images/shared/dark-logo.svg';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import ThemeToggle from '../ThemeToggle';
 import FooterDivider from './FooterDivider';
 import FooterLeftGradient from './FooterLeftGradient';
@@ -19,6 +20,15 @@ import FooterRightGradient from './FooterRightGradient';
 
 const FooterOne = ({ className }: { className?: string }) => {
   const t = useTranslations('footer');
+  const locale = useLocale();
+  const router = useRouter();
+
+  const handleLinkClick = (href: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push(`/${locale}${href}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer className={cn('bg-secondary dark:bg-background-8 relative overflow-hidden', className)}>
       {/* <!-- right gradient --> */}
@@ -78,14 +88,14 @@ const FooterOne = ({ className }: { className?: string }) => {
                   <p className="sm:text-heading-6 text-tagline-1 text-primary-50 font-normal">{t('support.title')}</p>
                   <ul className="space-y-3 sm:space-y-5">
                     <li>
-                      <Link href="/faq" className="footer-link">
+                      <a href={`/${locale}/faq`} onClick={handleLinkClick('/faq')} className="footer-link cursor-pointer">
                         {t('support.faq')}
-                      </Link>
+                      </a>
                     </li>
                     <li>
-                      <Link href="/#contact" className="footer-link">
+                      <a href={`/${locale}/#contact`} onClick={handleLinkClick('/#contact')} className="footer-link cursor-pointer">
                         {t('company.contact')}
-                      </Link>
+                      </a>
                     </li>
                   </ul>
                 </div>
@@ -97,14 +107,14 @@ const FooterOne = ({ className }: { className?: string }) => {
                   <p className="sm:text-heading-6 text-tagline-1 text-primary-50 font-normal">{t('legal.title')}</p>
                   <ul className="space-y-3 sm:space-y-5">
                     <li>
-                      <Link href="/terms-conditions" className="footer-link">
+                      <a href={`/${locale}/terms-conditions`} onClick={handleLinkClick('/terms-conditions')} className="footer-link cursor-pointer">
                         {t('legal.terms')}
-                      </Link>
+                      </a>
                     </li>
                     <li>
-                      <Link href="/privacy-policy" className="footer-link">
+                      <a href={`/${locale}/privacy-policy`} onClick={handleLinkClick('/privacy-policy')} className="footer-link cursor-pointer">
                         {t('legal.privacy')}
-                      </Link>
+                      </a>
                     </li>
                   </ul>
                 </div>

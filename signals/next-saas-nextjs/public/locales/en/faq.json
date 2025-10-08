@@ -1,0 +1,112 @@
+{
+  "meta": {
+    "title": "FAQ - TradeSignal PK | Frequently Asked Questions",
+    "description": "Find answers to common questions about our trading signals, pricing, risk management, and support services."
+  },
+  "pageTitle": "FAQ",
+  "pageHeading": "Frequently Asked Questions",
+  "categories": {
+    "all": "All Questions",
+    "general": "General",
+    "gettingStarted": "Getting Started",
+    "technical": "Technical",
+    "risk": "Risk & Safety",
+    "pricing": "Pricing & Plans",
+    "support": "Support",
+    "performance": "Performance"
+  },
+  "searchPlaceholder": "Search for answers...",
+  "noResults": "No questions found matching your search.",
+  "questions": {
+    "q1": {
+      "question": "What are trading signals?",
+      "answer": "Trading signals are actionable recommendations that indicate when to buy or sell a financial instrument (forex, stocks, crypto, etc.). Each signal includes entry price, stop-loss, and take-profit levels to help you make informed trading decisions."
+    },
+    "q2": {
+      "question": "How accurate are your trading signals?",
+      "answer": "Our signals have an average success rate of 85-92% based on historical performance. Each signal includes a confidence level indicator. However, past performance doesn't guarantee future results, and all trading involves risk."
+    },
+    "q3": {
+      "question": "Which markets do you cover?",
+      "answer": "We provide signals for Forex (major and minor pairs), Pakistani Stock Exchange (PSX), Cryptocurrencies (BTC, ETH, etc.), Commodities (Gold, Silver, Oil), and USD/PKR exchange rates."
+    },
+    "q4": {
+      "question": "How do I get started with TradeSignal PK?",
+      "answer": "Simply sign up for a free account, verify your email, select your broker, and start receiving real-time trading signals. No credit card required for the free tier."
+    },
+    "q5": {
+      "question": "Do I need trading experience to use your signals?",
+      "answer": "No prior experience is required. Each signal comes with clear entry, stop-loss, and take-profit levels. We also provide educational content and risk management guidelines for beginners."
+    },
+    "q6": {
+      "question": "What information is included in each signal?",
+      "answer": "Each signal includes: Trading pair, Buy/Sell action, Entry price, Stop-loss level, Take-profit targets, Confidence percentage, Risk/reward ratio, Market analysis, and Real-time updates."
+    },
+    "q7": {
+      "question": "How are signals delivered?",
+      "answer": "Signals are delivered through our web platform, mobile app notifications, email alerts, and Telegram/WhatsApp (Premium). You receive instant notifications when new signals are published."
+    },
+    "q8": {
+      "question": "What is the difference between Free and Premium plans?",
+      "answer": "Free: 5 signals per day, basic analysis. Premium: Unlimited signals, advanced technical analysis, priority notifications, historical performance data, 1-on-1 support, and exclusive market insights."
+    },
+    "q9": {
+      "question": "Can I use these signals with any broker?",
+      "answer": "Yes! Our signals are broker-independent. You can use them with any forex broker, stock broker, or crypto exchange. We support all major Pakistani and international brokers."
+    },
+    "q10": {
+      "question": "What are the risks involved?",
+      "answer": "All trading carries substantial risk of loss. Never invest more than you can afford to lose. Use proper risk management, always set stop-loss orders, and diversify your investments. Our signals are for educational purposes only."
+    },
+    "q11": {
+      "question": "How should I manage risk when following signals?",
+      "answer": "Follow these rules: 1) Never risk more than 1-2% per trade, 2) Always use stop-loss orders, 3) Don't overtrade, 4) Diversify across different instruments, 5) Keep emotions in check, 6) Review and learn from each trade."
+    },
+    "q12": {
+      "question": "Are you registered with SECP?",
+      "answer": "We are in compliance with SECP guidelines for educational and informational services. We do not manage funds or provide personalized investment advice. Always consult with a registered financial advisor for personal advice."
+    },
+    "q13": {
+      "question": "How much does it cost?",
+      "answer": "Free Plan: PKR 0/month (5 signals/day). Basic Plan: PKR 2,999/month (20 signals/day). Premium Plan: PKR 5,999/month (unlimited signals + advanced features). Annual plans get 20% discount."
+    },
+    "q14": {
+      "question": "Is there a money-back guarantee?",
+      "answer": "Yes! We offer a 30-day money-back guarantee on all paid plans. If you're not satisfied with the service, request a full refund within 30 days of purchase."
+    },
+    "q15": {
+      "question": "What payment methods do you accept?",
+      "answer": "We accept JazzCash, Easypaisa, Bank Transfer, Credit/Debit Cards (Visa, Mastercard), and Cryptocurrency payments. All transactions are secure and encrypted."
+    },
+    "q16": {
+      "question": "How can I contact support?",
+      "answer": "Reach us via: Email: support@tradesignalpk.com, WhatsApp: +92-XXX-XXXXXXX, Live Chat (Premium members), Response time: 24 hours for free users, 2 hours for premium members."
+    },
+    "q17": {
+      "question": "Do you provide trading education?",
+      "answer": "Yes! Premium members get access to: Video tutorials, Market analysis webinars, E-books and guides, One-on-one mentoring sessions, Technical analysis courses, and Risk management workshops."
+    },
+    "q18": {
+      "question": "Can I cancel my subscription anytime?",
+      "answer": "Absolutely! You can cancel your subscription at any time from your account settings. No questions asked, no cancellation fees. Your access continues until the end of your billing period."
+    },
+    "q19": {
+      "question": "Can I see historical performance data?",
+      "answer": "Yes, Premium members have access to complete historical performance data, including win rate, average pip gain/loss, drawdown statistics, and performance by market and time period."
+    },
+    "q20": {
+      "question": "How do I track my own trading performance?",
+      "answer": "Our platform includes a built-in trading journal (Premium) where you can log trades, track P&L, analyze performance metrics, and export reports for tax purposes."
+    }
+  },
+  "contact": {
+    "title": "Still have questions?",
+    "subtitle": "Can't find the answer you're looking for? Our support team is here to help.",
+    "emailLabel": "Email us at",
+    "email": "support@tradesignalpk.com",
+    "whatsappLabel": "WhatsApp",
+    "whatsapp": "+92-XXX-XXXXXXX",
+    "chatLabel": "Live Chat",
+    "chatButton": "Start Chat"
+  }
+}
