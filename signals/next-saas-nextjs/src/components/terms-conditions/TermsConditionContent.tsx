@@ -1,13 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { useTranslations, useLocale } from 'next-intl';
+import { useSafeTranslations, useSafeLocale } from '@/hooks/useSafeTranslations';
 import RevealAnimation from '../animation/RevealAnimation';
 
 const TermsConditionContent = () => {
-  const t = useTranslations('terms');
-  const tCommon = useTranslations('common');
-  const locale = useLocale();
+  const t = useSafeTranslations('terms');
+  const tCommon = useSafeTranslations('common');
+  const locale = useSafeLocale();
 
   // List of all section keys from translations
   const sections = [

@@ -2,13 +2,13 @@
 
 import RevealAnimation from '../animation/RevealAnimation';
 import GeneralTab from './GeneralTab';
-import { useTranslations, useLocale } from 'next-intl';
+import { useSafeTranslations, useSafeLocale } from '@/hooks/useSafeTranslations';
 import Link from 'next/link';
 
 const FaqTab = () => {
-  const t = useTranslations('faq');
-  const tCommon = useTranslations('common');
-  const locale = useLocale();
+  const t = useSafeTranslations('faq');
+  const tCommon = useSafeTranslations('common');
+  const locale = useSafeLocale();
 
   return (
     <section className="py-[100px]">

@@ -11,7 +11,7 @@ import youtube from '@public/images/icons/youtube.svg';
 import darkLogo from '@public/images/shared/dark-logo.svg';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useTranslations, useLocale } from 'next-intl';
+import { useSafeTranslations, useSafeLocale } from '@/hooks/useSafeTranslations';
 import { useRouter } from 'next/navigation';
 import ThemeToggle from '../ThemeToggle';
 import FooterDivider from './FooterDivider';
@@ -19,8 +19,8 @@ import FooterLeftGradient from './FooterLeftGradient';
 import FooterRightGradient from './FooterRightGradient';
 
 const FooterOne = ({ className }: { className?: string }) => {
-  const t = useTranslations('footer');
-  const locale = useLocale();
+  const t = useSafeTranslations('footer');
+  const locale = useSafeLocale();
   const router = useRouter();
 
   const handleLinkClick = (href: string) => (e: React.MouseEvent) => {

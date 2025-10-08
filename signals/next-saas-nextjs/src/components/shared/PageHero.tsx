@@ -3,7 +3,7 @@
 import { cn } from '@/utils/cn';
 import Link from 'next/link';
 import RevealAnimation from '../animation/RevealAnimation';
-import { useTranslations, useLocale } from 'next-intl';
+import { useSafeTranslations, useSafeLocale } from '@/hooks/useSafeTranslations';
 
 interface PageHeroProps {
   className?: string;
@@ -13,8 +13,8 @@ interface PageHeroProps {
 }
 
 const PageHero = ({ className, title, heading, link }: PageHeroProps) => {
-  const t = useTranslations();
-  const locale = useLocale();
+  const t = useSafeTranslations();
+  const locale = useSafeLocale();
 
   // Translate the title and heading if they are translation keys
   const translatedTitle = title?.includes('.') ? t(title) : title;
@@ -30,7 +30,7 @@ const PageHero = ({ className, title, heading, link }: PageHeroProps) => {
               <Link
                 href={`/${locale}`}
                 className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-300">
-                {t('common.home')}
+                {t('common.home') !== 'common.home' ? t('common.home') : 'Home'}
               </Link>
               <span className="mx-2">-</span>
               <Link

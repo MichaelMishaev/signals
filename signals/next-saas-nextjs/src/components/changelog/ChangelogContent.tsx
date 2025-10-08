@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useTranslations, useLocale } from 'next-intl';
+import { useSafeTranslations, useSafeLocale } from '@/hooks/useSafeTranslations';
 import RevealAnimation from '../animation/RevealAnimation';
 import { SignalData } from '@/utils/supabase';
 import { ActionButton } from '@/components/shared/sharedbuttons';
@@ -164,9 +164,9 @@ const fallbackSignalsData: SignalUpdate[] = [
 ];
 
 const ChangelogContent = () => {
-  const t = useTranslations('signals');
-  const tCommon = useTranslations('common');
-  const locale = useLocale();
+  const t = useSafeTranslations('signals');
+  const tCommon = useSafeTranslations('common');
+  const locale = useSafeLocale();
   const [signalsData, setSignalsData] = useState<SignalUpdate[]>([]);
   const [loading, setLoading] = useState(true);
 

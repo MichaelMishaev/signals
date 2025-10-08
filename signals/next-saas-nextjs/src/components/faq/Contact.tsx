@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useSafeTranslations } from '@/hooks/useSafeTranslations';
 import RevealAnimation from '../animation/RevealAnimation';
 
 const Contact = () => {
-  const t = useTranslations('faq.contact');
+  const t = useSafeTranslations('faq.contact');
 
   return (
     <section className="pt-[100px] pb-[200px]">

@@ -1,10 +1,10 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useSafeTranslations } from '@/hooks/useSafeTranslations';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 
 const GeneralTab = () => {
-  const t = useTranslations('faq.questions');
+  const t = useSafeTranslations('faq.questions');
 
   // Generate FAQ items from translations
   const faqItems = Array.from({ length: 20 }, (_, i) => {
