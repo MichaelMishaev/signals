@@ -1,18 +1,27 @@
 /**
  * Popup Manager
  * Central component that manages all popup triggers and displays
+ *
+ * NOTE: Disabled on signal/drill pages since they use the Gate System instead
  */
 
 'use client';
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import { usePopupTriggers } from '@/hooks/usePopupTriggers';
 import BrokerPopup from './BrokerPopups';
 
 export const PopupManager: React.FC = () => {
+  const pathname = usePathname();
+
+  // Disable PopupManager on signal/drill pages - they use GateManager instead
+  const isSignalPage = pathname?.includes('/signal/');
+
   const { activePopup, hidePopup } = usePopupTriggers();
 
-  if (!activePopup) return null;
+  // Don't show marketing popups on signal pages (gate system handles those)
+  if (isSignalPage || !activePopup) return null;
 
   return (
     <BrokerPopup

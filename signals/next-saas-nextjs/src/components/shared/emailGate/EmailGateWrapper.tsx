@@ -43,6 +43,12 @@ export default function EmailGateWrapper({
     return false;
   });
 
+  // STEP 6: Add state to track signals viewed
+  const [signalsViewed, setSignalsViewed] = useState(() => {
+    if (typeof window === 'undefined') return 0;
+    return parseInt(localStorage.getItem('signals-viewed-count') || '0');
+  });
+
   // Check for recent email submissions IMMEDIATELY on component initialization
   const [initialRecentCheck] = useState(() => {
     if (typeof window === 'undefined') {
@@ -102,6 +108,17 @@ export default function EmailGateWrapper({
     }
   }, [initialRecentCheck]);
 
+  // STEP 6: Track signal views on mount
+  useEffect(() => {
+    const newCount = signalsViewed + 1;
+    setSignalsViewed(newCount);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('signals-viewed-count', newCount.toString());
+    }
+    // Only run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     // Reset local state when user becomes authenticated or submits email
     if (emailGate.hasSubmittedEmail || emailGate.isAuthenticated) {
@@ -122,16 +139,29 @@ export default function EmailGateWrapper({
       return;
     }
 
+    // STEP 6: Only show modal after user has seen value (2 signals viewed)
+    const dismissCount = typeof window !== 'undefined'
+      ? parseInt(localStorage.getItem('modal-dismiss-count') || '0')
+      : 0;
+    const hasSeenEnough = signalsViewed >= 2;
+
     // Check if we need to show the email gate
-    if (!emailGate.isLoading && !emailGate.hasSubmittedEmail && !emailGate.isAuthenticated && !emailSubmitted && !recentSubmission && !userDismissedModal) {
-      // Small delay to ensure smooth page load
+    if (!emailGate.isLoading &&
+        !emailGate.hasSubmittedEmail &&
+        !emailGate.isAuthenticated &&
+        !emailSubmitted &&
+        !recentSubmission &&
+        !userDismissedModal &&
+        hasSeenEnough &&
+        dismissCount < 3) {
+      // STEP 6: Longer delay (2 seconds) to feel less aggressive
       const timer = setTimeout(() => {
         emailGate.openEmailGate();
-      }, 500);
+      }, 2000);
 
       return () => clearTimeout(timer);
     }
-  }, [emailGate.isLoading, emailGate.hasSubmittedEmail, emailGate.isAuthenticated, emailGate, emailSubmitted, recentSubmission, userDismissedModal]);
+  }, [emailGate.isLoading, emailGate.hasSubmittedEmail, emailGate.isAuthenticated, emailGate, emailSubmitted, recentSubmission, userDismissedModal, signalsViewed]);
 
   const handleEmailSubmit = async (data: { name: string; email: string }) => {
     const result = await emailGate.submitEmail(data.email, data.name, source);
@@ -343,9 +373,17 @@ export default function EmailGateWrapper({
       <EmailCardPopup
         isOpen={emailGate.isOpen}
         onClose={() => {
-          // STEP 1: When user closes modal, remember for 24 hours
-          const dismissUntil = Date.now() + (24 * 60 * 60 * 1000); // 24 hours
-          localStorage.setItem('email-modal-dismissed-until', dismissUntil.toString());
+          // STEP 6: Track dismiss count and set 24-hour dismissal after 3 dismissals
+          const dismissCount = parseInt(localStorage.getItem('modal-dismiss-count') || '0');
+          const newDismissCount = dismissCount + 1;
+          localStorage.setItem('modal-dismiss-count', newDismissCount.toString());
+
+          // After 3 dismissals, don't show again for 24 hours
+          if (newDismissCount >= 3) {
+            const dismissUntil = Date.now() + (24 * 60 * 60 * 1000); // 24 hours
+            localStorage.setItem('email-modal-dismissed-until', dismissUntil.toString());
+          }
+
           setUserDismissedModal(true);
           emailGate.closeEmailGate();
         }}

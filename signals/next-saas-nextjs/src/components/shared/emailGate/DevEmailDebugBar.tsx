@@ -27,6 +27,9 @@ export default function DevEmailDebugBar() {
       }
     });
 
+    // Clear pending verification
+    localStorage.removeItem('pending_email_verification');
+
     // Clear rate limiting data from localStorage
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('email_submission_')) {
@@ -37,6 +40,7 @@ export default function DevEmailDebugBar() {
     // Clear email verification cookie if it exists
     document.cookie = 'email_verified=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     document.cookie = 'verification_message=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'gate_email_verified=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 
     // Use the email gate's clear function
     if (emailGate.clearEmailGate) {

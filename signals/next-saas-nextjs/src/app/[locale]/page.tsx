@@ -1,5 +1,4 @@
 import Hero from '@/components/tradesignal/Hero';
-import RiskDisclaimer from '@/components/tradesignal/RiskDisclaimer';
 import FooterOne from '@/components/shared/footer/FooterOne';
 import NavbarTwo from '@/components/shared/header/NavbarTwo';
 import TimelineSidebarLayout from '@/components/layout/TimelineSidebarLayout';
@@ -30,10 +29,8 @@ const TradeSignalHomepage = () => {
         <Hero />
         <TimelineSidebarLayout />
 
-        {/* Footer Banner - Above Risk Disclaimer - Auto-detects platform */}
+        {/* Footer Banner - Above footer - Auto-detects platform */}
         <AdBanner position="footer" />
-
-        <RiskDisclaimer />
       </main>
       <FooterOne />
     </Fragment>

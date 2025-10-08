@@ -15,8 +15,8 @@ export const GATE_CONFIG = {
   emailGate: {
     // Trigger settings
     triggerAfterDrills: 1, // Show on 2nd drill attempt
-    blocking: true, // Cannot be dismissed
-    required: true, // Must provide email to continue
+    blocking: false, // Can be dismissed - users can browse freely
+    required: true, // Must provide email to access drill content
 
     // UI content
     title: 'Unlock Unlimited Signals',

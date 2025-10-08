@@ -1,7 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-
 const sideBanners = [
   {
     src: 'https://d3dpet1g0ty5ed.cloudfront.net/UR_The_best_pricing_on_gold_120x600_GOOGLE.png',
@@ -24,17 +22,8 @@ const sideBanners = [
 ];
 
 export default function ExnessBanner() {
-  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentBannerIndex((prev) => (prev + 1) % sideBanners.length);
-    }, 5000); // Rotate every 5 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const currentBanner = sideBanners[currentBannerIndex];
+  // STEP 7: Show static banner (no rotation) to reduce visual clutter
+  const currentBanner = sideBanners[0]; // Always show first banner
 
   return (
     // Banner inside sticky sidebar - no need for sticky positioning

@@ -132,32 +132,43 @@ export const shouldShowEmailGate = (state: GateState): boolean => {
  * CRITICAL: Only show broker gate if user has VERIFIED email, not just submitted
  */
 export const shouldShowBrokerGate = (state: GateState): boolean => {
-  // Check if user has verified email by looking for cookie or localStorage verification
-  const hasVerifiedEmail = typeof window !== 'undefined' && (() => {
-    // Check cookie first
-    const cookies = document.cookie.split(';');
-    const emailCookie = cookies.find(c => c.trim().startsWith('email_verified='));
-    if (emailCookie) return true;
+  // CRITICAL: Only show broker gate if email is VERIFIED
+  // If user has just submitted email but not verified, they should NOT see broker gate
 
-    // Check localStorage for verified email
-    const gateData = localStorage.getItem('emailGate');
-    if (gateData) {
-      try {
-        const data = JSON.parse(gateData);
-        return data.verified === true;
-      } catch {
-        return false;
-      }
+  console.log('[MECHANISM] shouldShowBrokerGate - Initial check:', {
+    hasEmail: state.hasEmail,
+    hasBrokerAccount: state.hasBrokerAccount,
+    drillsViewed: state.drillsViewed,
+  });
+
+  // Basic checks first
+  if (!state.hasEmail) {
+    console.log('[MECHANISM] shouldShowBrokerGate: NO - hasEmail is false');
+    return false; // No email provided at all
+  }
+
+  if (state.hasBrokerAccount) {
+    console.log('[MECHANISM] shouldShowBrokerGate: NO - already has broker');
+    return false; // Already has broker account
+  }
+
+  if (state.drillsViewed < GATE_CONSTANTS.THRESHOLDS.BROKER_GATE) {
+    console.log('[MECHANISM] shouldShowBrokerGate: NO - not enough drills viewed');
+    return false; // Not enough drills viewed
+  }
+
+  // CRITICAL CHECK: If there's pending verification, BLOCK broker gate
+  if (typeof window !== 'undefined') {
+    const pendingVerification = localStorage.getItem('pending_email_verification');
+    if (pendingVerification) {
+      console.log('[MECHANISM] shouldShowBrokerGate: NO - Email pending verification (found pending_email_verification)');
+      return false;
     }
-    return false;
-  })();
+  }
 
-  return (
-    state.hasEmail && // User has provided email
-    hasVerifiedEmail && // User has VERIFIED their email (NEW CHECK)
-    !state.hasBrokerAccount && // User hasn't opened broker account
-    state.drillsViewed >= GATE_CONSTANTS.THRESHOLDS.BROKER_GATE // Viewed 9+ drills
-  );
+  // If we got here, email is verified and all conditions are met
+  console.log('[MECHANISM] shouldShowBrokerGate: YES - All conditions met, showing broker gate');
+  return true;
 };
 
 /**

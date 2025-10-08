@@ -444,6 +444,18 @@ export const shouldShowBanner = (currentSignal?: { confidence: number; currentPr
  */
 export const getGateForDrill = (drillNumber: number): GateType => {
   const state = getGateState();
+
+  console.log('[GATE] getGateForDrill called with:', {
+    drillNumber,
+    state: {
+      hasEmail: state.hasEmail,
+      hasBrokerAccount: state.hasBrokerAccount,
+      drillsViewed: state.drillsViewed,
+      userEmail: state.userEmail,
+    },
+    pendingVerification: typeof window !== 'undefined' ? localStorage.getItem('pending_email_verification') : null,
+  });
+
   const decision = GateFlowMechanism.canAccessDrill(drillNumber, state);
 
   if (decision.gateToShow) {
@@ -454,6 +466,8 @@ export const getGateForDrill = (drillNumber: number): GateType => {
       currentStage: decision.currentStage,
       reason: decision.reason,
     });
+  } else {
+    console.log('[GATE] ✅ No gate needed - access granted');
   }
 
   return decision.gateToShow;

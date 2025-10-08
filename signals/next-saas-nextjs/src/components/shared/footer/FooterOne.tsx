@@ -162,9 +162,63 @@ const FooterOne = ({ className }: { className?: string }) => {
             </div>
           </div>
         </div>
+        {/* Risk Disclaimer Section */}
+        <div className="mt-12 mb-8">
+          <RevealAnimation delay={0.7}>
+            <div className="bg-red-50 dark:bg-red-900/10 border-2 border-red-200 dark:border-red-800 rounded-xl p-6 md:p-8">
+              <div className="flex items-start gap-4">
+                <div className="bg-red-100 dark:bg-red-900/30 p-3 rounded-lg flex-shrink-0">
+                  <svg
+                    className="w-6 h-6 text-red-600 dark:text-red-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg md:text-xl font-bold text-red-600 dark:text-red-400 mb-3">
+                    Important Risk Disclaimer
+                  </h3>
+
+                  <div className="space-y-2 text-xs text-gray-700 dark:text-gray-300">
+                    <p>
+                      <strong>Trading Risk Warning:</strong> Trading foreign exchange, commodities, and stocks on margin
+                      carries a high level of risk and may not be suitable for all investors.
+                    </p>
+
+                    <p>
+                      <strong>Not Financial Advice:</strong> Signals provided are for educational purposes only and should not be considered as financial advice or investment recommendations.
+                    </p>
+
+                    <p>
+                      <strong>Past Performance:</strong> Past performance is not indicative of future results. Historical win rates do not guarantee future trading success.
+                    </p>
+
+                    <p>
+                      <strong>Capital at Risk:</strong> Only trade with money you can afford to lose. Never trade with borrowed money or funds required for essential expenses.
+                    </p>
+
+                    <div className="mt-3 p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                      <p className="text-xs text-yellow-800 dark:text-yellow-200">
+                        <strong>SECP Compliance:</strong> TradeSignal PK operates in accordance with SECP guidelines. License No: [Pending]
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </RevealAnimation>
+        </div>
+
         <div className="relative pt-[26px] pb-[100px] text-center">
           <FooterDivider />
-          <RevealAnimation delay={0.7} offset={10} start="top 105%">
+          <RevealAnimation delay={0.8} offset={10} start="top 105%">
             <p className="text-tagline-1 text-primary-50 font-normal">
               Copyright &copy;NextSaaS – smart application for modern business
             </p>

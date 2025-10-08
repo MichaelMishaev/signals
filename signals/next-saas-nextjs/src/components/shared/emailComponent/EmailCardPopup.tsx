@@ -26,9 +26,46 @@ const EmailCardPopup = ({
   headerColor = 'bg-primary-500',
   className,
 }: EmailCardPopupProps) => {
+  // STEP 4: Real-time email validation function
+  const validateEmailRealtime = (email: string): { isValid: boolean; message: string; suggestion?: string } => {
+    if (!email) {
+      return { isValid: false, message: '' };
+    }
+
+    // Check basic format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return { isValid: false, message: 'Please enter a valid email address' };
+    }
+
+    // Check for common typos
+    const commonTypos = [
+      { wrong: 'gmail.con', correct: 'gmail.com' },
+      { wrong: 'gmail.co', correct: 'gmail.com' },
+      { wrong: 'gmai.com', correct: 'gmail.com' },
+      { wrong: 'gmial.com', correct: 'gmail.com' },
+      { wrong: 'yahoo.con', correct: 'yahoo.com' },
+      { wrong: 'hotmail.con', correct: 'hotmail.com' },
+      { wrong: 'outlook.con', correct: 'outlook.com' },
+    ];
+
+    for (const typo of commonTypos) {
+      if (email.includes(typo.wrong)) {
+        return {
+          isValid: false,
+          message: 'Check your email',
+          suggestion: `Did you mean ${email.replace(typo.wrong, typo.correct)}?`
+        };
+      }
+    }
+
+    return { isValid: true, message: '' };
+  };
+
   const [formData, setFormData] = useState({ name: '', email: '' });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ name: '', email: '' });
+  const [emailSuggestion, setEmailSuggestion] = useState<string>('');
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   // Handle dialog open/close
@@ -54,6 +91,7 @@ const EmailCardPopup = ({
     if (isOpen) {
       setFormData({ name: '', email: '' });
       setErrors({ name: '', email: '' });
+      setEmailSuggestion('');
     }
   }, [isOpen]);
 
@@ -101,9 +139,27 @@ const EmailCardPopup = ({
       setFormData({ name: '', email: '' });
       setErrors({ name: '', email: '' });
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Submission error:', error);
-      setErrors({ ...errors, email: 'Something went wrong. Please try again.' });
+
+      // STEP 5: Better error messages based on error type
+      let errorMessage = 'Unable to send verification email. Please try again.';
+
+      if (error.message) {
+        if (error.message.includes('rate limit') || error.message.includes('too many')) {
+          errorMessage = '⏰ Too many attempts. Please wait 2 minutes before trying again.';
+        } else if (error.message.includes('invalid') || error.message.includes('email')) {
+          errorMessage = '📧 Email format is incorrect. Example: name@example.com';
+        } else if (error.message.includes('already') || error.message.includes('exists')) {
+          errorMessage = '✓ This email is already verified! Check your inbox for previous emails.';
+        } else if (error.message.includes('network') || error.message.includes('connection')) {
+          errorMessage = '📡 Connection issue. Please check your internet and try again.';
+        } else if (error.message.includes('server') || error.message.includes('500')) {
+          errorMessage = '🔧 Our servers are having trouble. Please try again in a few minutes.';
+        }
+      }
+
+      setErrors({ ...errors, email: errorMessage });
     } finally {
       setLoading(false);
     }
@@ -147,9 +203,9 @@ const EmailCardPopup = ({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full flex items-center justify-center transition-colors text-gray-500 dark:text-gray-400"
+          className="absolute top-4 right-4 w-12 h-12 md:w-10 md:h-10 min-h-[44px] min-w-[44px] touch-manipulation hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full flex items-center justify-center transition-colors text-gray-500 dark:text-gray-400"
           aria-label="Close dialog">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -221,6 +277,19 @@ const EmailCardPopup = ({
               onChange={(e) => {
                 setFormData({ ...formData, email: e.target.value });
                 if (errors.email) setErrors({ ...errors, email: '' });
+                if (emailSuggestion) setEmailSuggestion('');
+              }}
+              onBlur={(e) => {
+                const email = e.target.value;
+                if (email) {
+                  const validation = validateEmailRealtime(email);
+                  if (!validation.isValid) {
+                    setErrors({ ...errors, email: validation.message });
+                    if (validation.suggestion) {
+                      setEmailSuggestion(validation.suggestion);
+                    }
+                  }
+                }
               }}
               className={cn(
                 'w-full px-3 py-3 rounded-md',
@@ -236,6 +305,20 @@ const EmailCardPopup = ({
               required
             />
             {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+            {emailSuggestion && (
+              <button
+                type="button"
+                onClick={() => {
+                  const suggestedEmail = emailSuggestion.split(' ').pop()?.replace('?', '') || '';
+                  setFormData({ ...formData, email: suggestedEmail });
+                  setEmailSuggestion('');
+                  setErrors({ ...errors, email: '' });
+                }}
+                className="text-blue-600 dark:text-blue-400 text-xs mt-1 hover:underline block"
+              >
+                {emailSuggestion}
+              </button>
+            )}
           </div>
 
           {/* Single Button - Google Style */}

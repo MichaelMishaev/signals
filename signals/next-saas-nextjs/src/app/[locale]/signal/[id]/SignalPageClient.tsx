@@ -85,7 +85,7 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
   if (!drills || drills.length === 0) {
     return (
       <>
-        <div className="min-h-screen bg-background-1 dark:bg-background-8 pb-24">
+        <div id="main-content" className="min-h-screen bg-background-1 dark:bg-background-8 pb-24">
           <SignalDetailAnalytics signal={signal} />
         </div>
 
@@ -208,7 +208,7 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
 
   return (
     <>
-      <div className="min-h-screen bg-background-1 dark:bg-background-8">
+      <div id="main-content" className="min-h-screen bg-background-1 dark:bg-background-8">
         {/* Signal Header */}
         <div className="bg-white dark:bg-background-6 border-b border-gray-200 dark:border-gray-700">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -222,9 +222,9 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
                     handleStartTrading();
                   }
                 }}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 md:px-4 md:py-2 min-h-[44px] min-w-[44px] touch-manipulation bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
                 <span className="text-sm font-medium">Home</span>
@@ -278,15 +278,35 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
         {/* Drill Content with Sidebar */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Main Content */}
+            {/* Main Content - ONLY SHOW IF EMAIL VERIFIED */}
             <div className="lg:col-span-9">
-              {drills
-                .filter(drill => drill.type === activeTab)
-                .map(drill => (
-                  <div key={drill.id}>
-                    {renderDrillContent(drill)}
+              {hasEmail ? (
+                drills
+                  .filter(drill => drill.type === activeTab)
+                  .map(drill => (
+                    <div key={drill.id}>
+                      {renderDrillContent(drill)}
+                    </div>
+                  ))
+              ) : (
+                <div className="bg-white dark:bg-background-6 rounded-xl p-12 shadow-lg text-center">
+                  <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-4xl">🔒</span>
                   </div>
-                ))}
+                  <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+                    Verify Your Email to Access Drill Content
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    Please verify your email address to unlock detailed analysis, case studies, and premium trading insights.
+                  </p>
+                  <div className="inline-flex items-center gap-2 px-6 py-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-800 dark:text-blue-200 text-sm">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Check your email for the magic link</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Sidebar - Banner */}

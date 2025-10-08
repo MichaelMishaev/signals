@@ -1,10 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import gradient16 from '@public/images/gradient/gradient-16.png';
-import gradient27 from '@public/images/gradient/gradient-27.png';
-import gradient6 from '@public/images/gradient/gradient-6.png';
-import Image from 'next/image';
 import Link from 'next/link';
 import RevealAnimation from '../animation/RevealAnimation';
 import { SignalData } from '@/utils/supabase';
@@ -387,23 +383,8 @@ const ChangelogContent = () => {
                   {/* Wrap signal content with Link only if drill data is available */}
                   {signal.type === 'SIGNAL' && signal.hasDrillData ? (
                     <Link href={`/signal/${signal.id}`} className="block">
-                      <div className="bg-background-2 dark:bg-background-6 px-[42px] py-10 space-y-6 rounded-[20px] relative overflow-hidden z-10 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer">
-                        {/* Gradient background */}
-                        {index % 3 === 0 && (
-                          <div className="-z-10 absolute -right-[105%] -top-[50%] sm:-right-[104%] sm:-top-[95%] md:-right-[88%] md:-top-[98%] lg:-right-[80%] lg:-top-[90%] xl:-right-[78%] xl:-top-[97%] -rotate-[160deg] size-[650px] sm:size-[1060px] pointer-events-none select-none">
-                            <Image src={gradient27} alt="gradient" />
-                          </div>
-                        )}
-                        {index % 3 === 1 && (
-                          <div className="-z-10 absolute -right-[100%] -top-[45%] sm:-right-[120%] sm:-top-[95%] md:-right-[94%] md:-top-[98%] lg:-right-[84%] xl:-right-[74%] xl:-top-[92%] -rotate-[260deg] size-[650px] sm:size-[1060px] pointer-events-none select-none">
-                            <Image src={gradient6} alt="gradient" />
-                          </div>
-                        )}
-                        {index % 3 === 2 && (
-                          <div className="-z-10 absolute -right-[85%] -top-[30%] sm:-right-[88%] sm:-top-[64%] md:-right-[78%] md:-top-[70%] lg:-right-[64%] lg:-top-[73%] xl:-right-[65%] xl:-top-[78%] rotate-[45deg] size-[650px] sm:size-[1060px] pointer-events-none select-none">
-                            <Image src={gradient16} alt="gradient" />
-                          </div>
-                        )}
+                      <div className="bg-gradient-to-br from-background-2 to-background-3 dark:from-background-6 dark:to-background-7 px-[42px] py-10 space-y-6 rounded-[20px] relative overflow-hidden z-10 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer">
+                        {/* STEP 7: Simplified CSS gradient - no complex images */}
 
                         {/* Signal Header */}
                         <div className="space-y-3">
@@ -501,23 +482,8 @@ const ChangelogContent = () => {
                     </Link>
                   ) : signal.type === 'SIGNAL' && !signal.hasDrillData ? (
                     /* Non-clickable signal without drill data */
-                    <div className="bg-background-2 dark:bg-background-6 px-[42px] py-10 space-y-6 rounded-[20px] relative overflow-hidden z-10 opacity-90">
-                      {/* Gradient background */}
-                      {index % 3 === 0 && (
-                        <div className="-z-10 absolute -right-[105%] -top-[50%] sm:-right-[104%] sm:-top-[95%] md:-right-[88%] md:-top-[98%] lg:-right-[80%] lg:-top-[90%] xl:-right-[78%] xl:-top-[97%] -rotate-[160deg] size-[650px] sm:size-[1060px] pointer-events-none select-none">
-                          <Image src={gradient27} alt="gradient" />
-                        </div>
-                      )}
-                      {index % 3 === 1 && (
-                        <div className="-z-10 absolute -right-[100%] -top-[45%] sm:-right-[120%] sm:-top-[95%] md:-right-[94%] md:-top-[98%] lg:-right-[84%] xl:-right-[74%] xl:-top-[92%] -rotate-[260deg] size-[650px] sm:size-[1060px] pointer-events-none select-none">
-                          <Image src={gradient6} alt="gradient" />
-                        </div>
-                      )}
-                      {index % 3 === 2 && (
-                        <div className="-z-10 absolute -right-[100%] -bottom-[45%] sm:-right-[120%] sm:-bottom-[95%] md:-right-[94%] md:-bottom-[98%] lg:-right-[84%] xl:-right-[74%] xl:-bottom-[92%] rotate-[260deg] size-[650px] sm:size-[1060px] pointer-events-none select-none">
-                          <Image src={gradient16} alt="gradient" />
-                        </div>
-                      )}
+                    <div className="bg-gradient-to-br from-background-2 to-background-3 dark:from-background-6 dark:to-background-7 px-[42px] py-10 space-y-6 rounded-[20px] relative overflow-hidden z-10 opacity-90">
+                      {/* STEP 7: Simplified CSS gradient - no complex images */}
 
                       {/* Signal content */}
                       <div className="space-y-4">
@@ -572,23 +538,8 @@ const ChangelogContent = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-background-2 dark:bg-background-6 px-[42px] py-10 space-y-6 rounded-[20px] relative overflow-hidden z-10">
-                      {/* Gradient backgrounds for non-signal items */}
-                      {index % 3 === 0 && (
-                        <div className="-z-10 absolute -right-[105%] -top-[50%] sm:-right-[104%] sm:-top-[95%] md:-right-[88%] md:-top-[98%] lg:-right-[80%] lg:-top-[90%] xl:-right-[78%] xl:-top-[97%] -rotate-[160deg] size-[650px] sm:size-[1060px] pointer-events-none select-none">
-                          <Image src={gradient27} alt="gradient" />
-                        </div>
-                      )}
-                      {index % 3 === 1 && (
-                        <div className="-z-10 absolute -right-[100%] -top-[45%] sm:-right-[120%] sm:-top-[95%] md:-right-[94%] md:-top-[98%] lg:-right-[84%] xl:-right-[74%] xl:-top-[92%] -rotate-[260deg] size-[650px] sm:size-[1060px] pointer-events-none select-none">
-                          <Image src={gradient6} alt="gradient" />
-                        </div>
-                      )}
-                      {index % 3 === 2 && (
-                        <div className="-z-10 absolute -right-[85%] -top-[30%] sm:-right-[88%] sm:-top-[64%] md:-right-[78%] md:-top-[70%] lg:-right-[64%] lg:-top-[73%] xl:-right-[65%] xl:-top-[78%] rotate-[45deg] size-[650px] sm:size-[1060px] pointer-events-none select-none">
-                          <Image src={gradient16} alt="gradient" />
-                        </div>
-                      )}
+                    <div className="bg-gradient-to-br from-background-2 to-background-3 dark:from-background-6 dark:to-background-7 px-[42px] py-10 space-y-6 rounded-[20px] relative overflow-hidden z-10">
+                      {/* STEP 7: Simplified CSS gradient - no complex images */}
 
                       {/* Non-signal content */}
                       <div className="space-y-3">

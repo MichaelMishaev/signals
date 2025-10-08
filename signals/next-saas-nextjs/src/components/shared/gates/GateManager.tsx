@@ -62,11 +62,12 @@ export const GateManager: React.FC<GateManagerProps> = ({ gateFlow }) => {
 
   return (
     <>
-      {/* Email Gate */}
+      {/* Email Gate - BLOCKING (cannot be dismissed when accessing drill content) */}
       <EmailGateModal
         isOpen={activeGate === 'email'}
         onSubmit={onEmailSubmit}
         onClose={closeGate}
+        blocking={true}
       />
 
       {/* Broker Gate */}
