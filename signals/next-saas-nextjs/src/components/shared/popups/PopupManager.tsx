@@ -18,10 +18,15 @@ export const PopupManager: React.FC = () => {
   // Disable PopupManager on signal/drill pages - they use GateManager instead
   const isSignalPage = pathname?.includes('/signal/');
 
+  // Also disable on FAQ, Terms, and Privacy pages
+  const isStaticPage = pathname?.includes('/faq') ||
+                       pathname?.includes('/terms') ||
+                       pathname?.includes('/privacy');
+
   const { activePopup, hidePopup } = usePopupTriggers();
 
-  // Don't show marketing popups on signal pages (gate system handles those)
-  if (isSignalPage || !activePopup) return null;
+  // Don't show popups on signal pages (gate system handles those) or static pages
+  if (isSignalPage || isStaticPage || !activePopup) return null;
 
   return (
     <BrokerPopup

@@ -1,17 +1,33 @@
 'use client';
 
-import { TabProvider } from '@/context/TabContext';
 import RevealAnimation from '../animation/RevealAnimation';
-import FaqTabContent from './FaqTabContent';
-import FaqTabList from './FaqTabList';
-import { useTranslations } from 'next-intl';
+import GeneralTab from './GeneralTab';
+import { useTranslations, useLocale } from 'next-intl';
+import Link from 'next/link';
 
 const FaqTab = () => {
   const t = useTranslations('faq');
+  const tCommon = useTranslations('common');
+  const locale = useLocale();
 
   return (
     <section className="py-[100px]">
       <div className="main-container">
+        {/* Home Button */}
+        <RevealAnimation delay={0.1}>
+          <div className="mb-8">
+            <Link
+              href={`/${locale}`}
+              className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              {tCommon('backToHome')}
+            </Link>
+          </div>
+        </RevealAnimation>
+
         <div className="text-center space-y-5">
           <RevealAnimation delay={0.2}>
             <span className="badge badge-cyan">{t('pageTitle')}</span>
@@ -29,10 +45,7 @@ const FaqTab = () => {
         </div>
         <RevealAnimation delay={0.5}>
           <div className="py-[70px]">
-            <TabProvider defaultValue={0}>
-              <FaqTabList />
-              <FaqTabContent />
-            </TabProvider>
+            <GeneralTab />
           </div>
         </RevealAnimation>
       </div>

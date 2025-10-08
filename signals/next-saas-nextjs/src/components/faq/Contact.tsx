@@ -1,7 +1,12 @@
+'use client';
+
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import RevealAnimation from '../animation/RevealAnimation';
 
 const Contact = () => {
+  const t = useTranslations('faq.contact');
+
   return (
     <section className="pt-[100px] pb-[200px]">
       <div className="main-container">
@@ -9,16 +14,15 @@ const Contact = () => {
           {/* heading  */}
           <div className="main-w-[850px] md:w-full mx-auto text-center space-y-5">
             <RevealAnimation delay={0.2}>
-              <span className="badge badge-cyan">Contact</span>
+              <span className="badge badge-cyan">{t('title')}</span>
             </RevealAnimation>
             <div className="space-y-3">
               <RevealAnimation delay={0.3}>
-                <h2 id="contact-heading">Still have questions?</h2>
+                <h2 id="contact-heading">{t('title')}</h2>
               </RevealAnimation>
               <RevealAnimation delay={0.4}>
                 <p className="max-w-[442px] sm:w-full mx-auto">
-                  If your question isn&apos;t listed here, feel free to contact us or start a live chat with our team.
-                  We&apos;re happy to help!
+                  {t('subtitle')}
                 </p>
               </RevealAnimation>
             </div>

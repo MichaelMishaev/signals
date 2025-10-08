@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
 import { UseGateFlowReturn } from '@/hooks/useGateFlow';
 import EmailGateModal from './EmailGateModal';
 import BrokerGateModal from './BrokerGateModal';
@@ -37,9 +38,28 @@ export const GateManager: React.FC<GateManagerProps> = ({ gateFlow }) => {
   } = gateFlow;
 
   const t = useTranslations();
+  const pathname = usePathname();
   const [toast, setToast] = useState<ToastState>({ show: false, message: '', type: 'info' });
 
   console.log('[GateManager] Rendering with activeGate:', activeGate);
+
+  // ULTRA-SAFETY: Only allow gates on signal pages - prevent any rendering on other pages
+  const isSignalPage = pathname?.includes('/signal/');
+
+  // CRITICAL FIX: Close all gates when component unmounts (user navigates away)
+  useEffect(() => {
+    return () => {
+      console.log('[GateManager] Unmounting - closing all gates');
+      closeGate();
+      closeVerificationModal();
+    };
+  }, [closeGate, closeVerificationModal]);
+
+  // ULTRA-SAFETY: If not on signal page, don't render ANY gates
+  if (!isSignalPage) {
+    console.log('[GateManager] BLOCKED: Not on signal page, pathname:', pathname);
+    return null;
+  }
 
   // Listen for toast events
   useEffect(() => {

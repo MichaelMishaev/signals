@@ -1,14 +1,28 @@
-import faqData from '@/data/json/faq/faq.json';
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 
 const GeneralTab = () => {
+  const t = useTranslations('faq.questions');
+
+  // Generate FAQ items from translations
+  const faqItems = Array.from({ length: 20 }, (_, i) => {
+    const key = `q${i + 1}`;
+    return {
+      id: i + 1,
+      question: t(`${key}.question`),
+      answer: t(`${key}.answer`),
+    };
+  });
+
   return (
     <Accordion
       className="mx-auto w-full max-w-[850px] space-y-4"
       defaultValue="1"
       enableScrollAnimation={true}
       animationDelay={0.1}>
-      {faqData.map((item) => (
+      {faqItems.map((item) => (
         <AccordionItem
           className="dark:bg-background-7 rounded-[20px] bg-white px-6 sm:px-8"
           key={item.id}

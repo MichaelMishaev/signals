@@ -91,6 +91,11 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
 
         // Clear the cookie
         document.cookie = 'gate_email_verified=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+        // CRITICAL FIX: Clear pending verification from localStorage
+        localStorage.removeItem('pending_email_verification');
+        setPendingVerification(false);
+        setPendingEmail(null);
       }
     };
 
@@ -167,6 +172,11 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
           // Email is verified! Grant access immediately
           const newState = setEmailProvided(email);
           setState(newState);
+
+          // Clear pending verification state
+          localStorage.removeItem('pending_email_verification');
+          setPendingVerification(false);
+          setPendingEmail(null);
 
           // Close gate
           setActiveGate(null);
