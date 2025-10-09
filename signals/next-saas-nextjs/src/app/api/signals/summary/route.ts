@@ -20,13 +20,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch directly from database
-    const { data, error } = await supabaseAdmin
+    const { data: signalsData, error } = await supabaseAdmin
       .from('signals')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(3);
 
-    if (error || !data) {
+    if (error || !signalsData) {
       console.error('Failed to fetch signals from database:', error);
       return NextResponse.json({
         summary: locale === 'ur'
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    signals = data;
+    signals = signalsData;
 
     if (!signals || signals.length === 0) {
       return NextResponse.json({
