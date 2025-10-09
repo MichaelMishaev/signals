@@ -167,7 +167,11 @@ const Hero = () => {
           </div>
           <ul className="flex flex-col sm:flex-row items-center sm:items-start gap-y-4 gap-x-4 justify-center sm:justify-start mt-12 md:mt-14 lg:mb-[100px] px-4 sm:px-0">
             <RevealAnimation delay={0.7} direction="left" offset={50}>
-              <li className="w-full sm:w-auto">
+              <li className="w-full sm:w-auto relative">
+                {/* HOT Badge */}
+                <span className="absolute -top-3 -right-2 z-10 inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold rounded-full shadow-lg animate-bounce">
+                  🔥 HOT
+                </span>
                 <button
                   onClick={() => setShowSummaryModal(true)}
                   className="btn btn-primary hover:btn-white dark:hover:btn-white-dark mx-auto sm:mx-0 block md:inline-block w-[90%] md:w-auto btn-lg md:btn-xl border-0 font-bold">
