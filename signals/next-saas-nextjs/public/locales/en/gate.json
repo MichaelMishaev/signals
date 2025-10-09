@@ -1,0 +1,23 @@
+{
+  "title": "Unlock Premium Content",
+  "subtitle": "Enter your email to access this feature",
+  "emailPlaceholder": "your@email.com",
+  "namePlaceholder": "Your Name (optional)",
+  "sendButton": "Send Magic Link",
+  "sendingButton": "Sending...",
+  "resendButton": "Resend Link",
+  "checkingButton": "Checking...",
+  "verifyingButton": "Verifying...",
+  "success": "Magic link sent! Check your email to verify access.",
+  "verified": "Email verified! Redirecting...",
+  "alreadyVerified": "Your email is already verified. Redirecting...",
+  "emailSent": "Magic link sent successfully! Check your email.",
+  "emailFailed": "Failed to send email. Please try again or contact support.",
+  "invalidEmail": "Please enter a valid email address.",
+  "networkError": "Network error. Please check your connection and try again.",
+  "rateLimitExceeded": "Too many requests. Please wait a moment before trying again.",
+  "close": "Close",
+  "cancel": "Cancel",
+  "tryAgain": "Try Again",
+  "contactSupport": "Contact Support"
+}

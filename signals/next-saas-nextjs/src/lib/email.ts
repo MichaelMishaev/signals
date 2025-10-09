@@ -6,8 +6,9 @@ let resend: Resend | null = null;
 const getResendClient = () => {
   if (!resend) {
     const apiKey = process.env.RESEND_API_KEY;
-    if (!apiKey) {
-      throw new Error("RESEND_API_KEY is not configured");
+    if (!apiKey || apiKey === "re_YOUR_API_KEY") {
+      // Return null instead of throwing - caller should handle this
+      return null;
     }
     resend = new Resend(apiKey);
   }
@@ -117,7 +118,20 @@ export const sendMagicLinkEmail = async (email: string, baseUrl: string, returnU
   };
 
   try {
-    const { data, error } = await getResendClient().emails.send(emailData);
+    const client = getResendClient();
+
+    if (!client) {
+      // Resend not configured - return development mode response
+      console.warn("Resend client not available, returning development magic link");
+      return {
+        success: true,
+        token,
+        message: "Magic link generated (email service not configured)",
+        magicLink
+      };
+    }
+
+    const { data, error } = await client.emails.send(emailData);
 
     if (error) {
       console.error("Resend error:", error);
@@ -191,7 +205,14 @@ export const sendVerificationCodeEmail = async (email: string) => {
   };
 
   try {
-    const { data, error } = await getResendClient().emails.send(emailData);
+    const client = getResendClient();
+
+    if (!client) {
+      console.warn("Resend client not available, returning development code");
+      return { success: true, code };
+    }
+
+    const { data, error } = await client.emails.send(emailData);
 
     if (error) {
       console.error("Resend error:", error);
@@ -261,7 +282,14 @@ export const sendWelcomeEmail = async (email: string, name?: string) => {
   };
 
   try {
-    const { data, error } = await getResendClient().emails.send(emailData);
+    const client = getResendClient();
+
+    if (!client) {
+      console.warn("Resend client not available, skipping welcome email");
+      return { success: true, message: "Welcome email skipped (email service not configured)" };
+    }
+
+    const { data, error } = await client.emails.send(emailData);
 
     if (error) {
       console.error("Resend error sending welcome email:", error);
