@@ -1,20 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getSupabaseAdmin } from '@/utils/supabase';
 
 export async function POST(request: NextRequest) {
   try {
     const { locale } = await request.json();
 
-    // Fetch the latest 3 signals
-    const signalsResponse = await fetch(`${request.nextUrl.origin}/api/signals?limit=3`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
+    // Fetch the latest 3 signals directly from Supabase (avoid internal HTTP call)
+    const supabaseAdmin = getSupabaseAdmin();
 
-    if (!signalsResponse.ok) {
-      const errorText = await signalsResponse.text();
-      console.error('Failed to fetch signals:', signalsResponse.status, errorText);
+    let signals: any[] = [];
 
-      // Return a user-friendly fallback message instead of throwing
+    if (!supabaseAdmin) {
+      console.error('Supabase not configured - cannot fetch signals');
       return NextResponse.json({
         summary: locale === 'ur'
           ? 'سگنلز لوڈ کرنے میں مسئلہ ہے۔ براہ کرم بعد میں دوبارہ کوشش کریں۔'
@@ -22,7 +19,23 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const { signals } = await signalsResponse.json();
+    // Fetch directly from database
+    const { data, error } = await supabaseAdmin
+      .from('signals')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(3);
+
+    if (error || !data) {
+      console.error('Failed to fetch signals from database:', error);
+      return NextResponse.json({
+        summary: locale === 'ur'
+          ? 'سگنلز لوڈ کرنے میں مسئلہ ہے۔ براہ کرم بعد میں دوبارہ کوشش کریں۔'
+          : 'Unable to load signals at the moment. Please try again later.',
+      });
+    }
+
+    signals = data;
 
     if (!signals || signals.length === 0) {
       return NextResponse.json({
