@@ -47,6 +47,7 @@ export default function AdminDashboard() {
 
     // Admin routes (hidden in production)
     { path: '/admin', name: 'Admin Dashboard', description: 'Main admin control panel', category: 'admin', visibleInProduction: false, requiresAuth: true },
+    { path: '/admin/signal-import', name: 'Signal Import Tool', description: 'Paste JSON to create signals with auto-generated drills', category: 'admin', visibleInProduction: false, requiresAuth: true },
     { path: '/admin/feature-flags', name: 'Feature Flags', description: 'Manage feature flags and toggles', category: 'admin', visibleInProduction: false, requiresAuth: true },
     { path: '/admin/signals', name: 'Signals & Drills', description: 'Create and manage trading signals and educational drills', category: 'admin', visibleInProduction: false, requiresAuth: true },
     { path: '/admin/translations', name: 'Translations', description: 'Manage English and Urdu translations', category: 'admin', visibleInProduction: false, requiresAuth: true },
@@ -242,7 +243,17 @@ export default function AdminDashboard() {
           {/* Quick Actions */}
           <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-3">⚡ Quick Actions</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+              <Link
+                href="/admin/signal-import"
+                className="flex items-center gap-3 p-4 bg-gradient-to-br from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg"
+              >
+                <span className="text-2xl">📥</span>
+                <div>
+                  <div className="font-medium">Import Signal</div>
+                  <div className="text-sm text-emerald-100">Paste JSON & create</div>
+                </div>
+              </Link>
               <Link
                 href="/admin/signals"
                 className="flex items-center gap-3 p-4 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"

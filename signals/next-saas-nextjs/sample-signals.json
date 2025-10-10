@@ -1,0 +1,38 @@
+[
+  {
+    "title": "EUR/USD Strong BUY Signal - Bullish Momentum",
+    "title_ur": "EUR/USD مضبوط خریداری کا سگنل - تیزی کا رجحان",
+    "content": "Technical analysis shows strong bullish momentum with RSI oversold recovery and key support at 1.0820. Multiple indicators confirm upward trend. Expected target at 1.0920 with tight stop loss management for optimal risk-reward ratio.",
+    "content_ur": "تکنیکی تجزیہ مضبوط تیزی کا رجحان ظاہر کرتا ہے۔ RSI اوور سولڈ سے بحالی اور 1.0820 پر اہم سپورٹ۔ متعدد اشارے اوپر کے رجحان کی تصدیق کرتے ہیں۔",
+    "pair": "EUR/USD",
+    "action": "BUY",
+    "entry": 1.0850,
+    "stop_loss": 1.0820,
+    "take_profit": 1.0920,
+    "confidence": 87,
+    "market": "FOREX",
+    "status": "ACTIVE",
+    "priority": "HIGH",
+    "author": "Ahmad Ali",
+    "author_ur": "احمد علی",
+    "published_date": "2025-10-10T12:00:00.000Z"
+  },
+  {
+    "title": "BTC/USDT Bullish Breakout - Crypto Rally",
+    "title_ur": "BTC/USDT تیزی کا بریک آؤٹ - کرپٹو ریلی",
+    "content": "Bitcoin breaking above key resistance with massive volume surge. Institutional buying evident. Strong bullish momentum suggests move towards $46,500.",
+    "content_ur": "بٹ کوائن بڑے حجم کے اضافے کے ساتھ اہم مزاحمت سے اوپر جا رہا ہے۔",
+    "pair": "BTC/USDT",
+    "action": "BUY",
+    "entry": 45000,
+    "stop_loss": 44500,
+    "take_profit": 46500,
+    "confidence": 91,
+    "market": "CRYPTO",
+    "status": "ACTIVE",
+    "priority": "HIGH",
+    "author": "Sarah Mitchell",
+    "author_ur": "سارہ مچل",
+    "published_date": "2025-10-10T10:00:00.000Z"
+  }
+]
