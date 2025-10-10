@@ -70,8 +70,17 @@ export const GateManager: React.FC<GateManagerProps> = ({ gateFlow }) => {
       // Handle translation with proper namespace
       if (customEvent.detail.translate) {
         try {
-          // Try to translate with 'common.' prefix
-          message = t(`common.${customEvent.detail.message}`);
+          // Translate using the message key directly (e.g., 'gate.emailFailed')
+          const translated = t(customEvent.detail.message);
+
+          // Check if translation failed (next-intl returns error format instead of throwing)
+          if (translated && !translated.startsWith('MISSING_MESSAGE:')) {
+            message = translated;
+          } else {
+            console.warn('[GateManager] Translation not found:', customEvent.detail.message);
+            // Fallback to original message
+            message = customEvent.detail.message;
+          }
         } catch (error) {
           console.error('[GateManager] Translation error:', error);
           // Fallback to original message if translation fails

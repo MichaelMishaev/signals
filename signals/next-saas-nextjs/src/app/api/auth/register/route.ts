@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { getPrisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { sendMagicLinkEmail, sendWelcomeEmail } from "@/lib/email";
 
-const prisma = new PrismaClient();
-
 export async function POST(request: NextRequest) {
   try {
+    // Get Prisma client with proper error handling
+    const prisma = getPrisma();
+    if (!prisma) {
+      console.error("[register] Database not configured");
+      return NextResponse.json(
+        { error: "Database not configured" },
+        { status: 503 }
+      );
+    }
+
     const { email, password, name, sendMagicLink = true } = await request.json();
 
     // Validate input

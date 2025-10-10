@@ -45,7 +45,23 @@ export default function SignalImportPage() {
     priority: "HIGH",
     author: "Ahmad Ali",
     author_ur: "احمد علی",
-    published_date: new Date().toISOString()
+    published_date: new Date().toISOString(),
+    drills: [
+      {
+        title: "EUR/USD Technical Deep Dive",
+        description: "Complete technical analysis breakdown",
+        type: "CASE_STUDY",
+        content: "# Technical Analysis\n\nDetailed analysis here...",
+        order_index: 1
+      },
+      {
+        title: "Real-Time Performance Dashboard",
+        description: "Live analytics and metrics",
+        type: "ANALYTICS",
+        content: "# Analytics Dashboard\n\nPerformance metrics here...",
+        order_index: 2
+      }
+    ]
   };
 
   const validateSignal = (data: any): string[] => {
@@ -276,6 +292,21 @@ export default function SignalImportPage() {
                     <li>• <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">status</code> - ACTIVE, CLOSED, CANCELLED</li>
                     <li>• <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">priority</code> - HIGH, MEDIUM, LOW</li>
                     <li>• <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">author_ur</code> - Urdu author name</li>
+                    <li>• <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">drills</code> - Array of custom drills (see sample)</li>
+                  </ul>
+                </div>
+
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Custom Drills (Optional):</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    Include a <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">drills</code> array to add custom drills. If omitted, 3 drills are auto-generated.
+                  </p>
+                  <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                    <li>• <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">title</code> - Drill title (required)</li>
+                    <li>• <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">description</code> - Short description (required)</li>
+                    <li>• <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">type</code> - CASE_STUDY, BLOG, or ANALYTICS (required)</li>
+                    <li>• <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">content</code> - Drill content/markdown (required)</li>
+                    <li>• <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">order_index</code> - Display order (optional)</li>
                   </ul>
                 </div>
 

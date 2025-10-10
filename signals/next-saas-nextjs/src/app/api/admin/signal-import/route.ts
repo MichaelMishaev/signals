@@ -20,6 +20,20 @@ interface SignalImportData {
   author: string;
   author_ur?: string;
   published_date?: string;
+  drills?: CustomDrillInput[];
+}
+
+interface CustomDrillInput {
+  title: string;
+  title_ur?: string;
+  description: string;
+  description_ur?: string;
+  type: 'CASE_STUDY' | 'BLOG' | 'ANALYTICS';
+  content: string;
+  content_ur?: string;
+  order_index?: number;
+  is_active?: boolean;
+  image_url?: string;
 }
 
 interface DrillData {
@@ -239,9 +253,15 @@ export async function POST(request: NextRequest) {
   try {
     const body: SignalImportData = await request.json();
 
+    // Extract drills from body (if provided)
+    const customDrills = body.drills;
+
+    // Remove drills from signal data
+    const { drills: _, ...signalOnlyData } = body;
+
     // Set defaults
     const signalData = {
-      ...body,
+      ...signalOnlyData,
       status: body.status || 'ACTIVE',
       priority: body.priority || 'MEDIUM',
       published_date: body.published_date || new Date().toISOString(),
@@ -255,8 +275,26 @@ export async function POST(request: NextRequest) {
       data: signalData,
     });
 
-    // Generate drills
-    const drillTemplates = generateDrills(signal);
+    // Generate drills: use custom if provided, otherwise auto-generate
+    let drillTemplates: DrillData[];
+    if (customDrills && customDrills.length > 0) {
+      // Use custom drills from JSON
+      drillTemplates = customDrills.map((drill, index) => ({
+        title: drill.title,
+        title_ur: drill.title_ur,
+        description: drill.description,
+        description_ur: drill.description_ur,
+        type: drill.type,
+        content: drill.content,
+        content_ur: drill.content_ur,
+        order_index: drill.order_index ?? index + 1,
+        is_active: drill.is_active ?? true,
+        image_url: drill.image_url,
+      }));
+    } else {
+      // Auto-generate 3 default drills
+      drillTemplates = generateDrills(signal);
+    }
 
     // Create drills in database
     const drills = await Promise.all(

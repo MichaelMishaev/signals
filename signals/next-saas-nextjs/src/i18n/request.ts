@@ -11,7 +11,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
   }
 
   // Load all translation files
-  const [common, hero, signals, modals, buttons, footer, navigation, faq, terms] = await Promise.all([
+  const [common, hero, signals, modals, buttons, footer, navigation, faq, terms, gate] = await Promise.all([
     import(`@/../public/locales/${locale}/common.json`),
     import(`@/../public/locales/${locale}/hero.json`),
     import(`@/../public/locales/${locale}/signals.json`),
@@ -21,6 +21,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     import(`@/../public/locales/${locale}/navigation.json`),
     import(`@/../public/locales/${locale}/faq.json`),
     import(`@/../public/locales/${locale}/terms.json`),
+    import(`@/../public/locales/${locale}/gate.json`),
   ]);
 
   return {
@@ -35,6 +36,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       navigation: navigation.default,
       faq: faq.default,
       terms: terms.default,
+      gate: gate.default,
     },
   };
 });

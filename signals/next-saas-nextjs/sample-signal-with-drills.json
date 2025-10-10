@@ -1,0 +1,55 @@
+{
+  "title": "EUR/USD Strong BUY Signal - Bullish Momentum",
+  "title_ur": "EUR/USD مضبوط خریداری کا سگنل - تیزی کا رجحان",
+  "content": "Technical analysis shows strong bullish momentum with RSI oversold recovery and key support at 1.0820. Multiple indicators confirm upward trend. Expected target at 1.0920 with tight stop loss management for optimal risk-reward ratio.",
+  "content_ur": "تکنیکی تجزیہ مضبوط تیزی کا رجحان ظاہر کرتا ہے۔ RSI اوور سولڈ سے بحالی اور 1.0820 پر اہم سپورٹ۔",
+  "pair": "EUR/USD",
+  "action": "BUY",
+  "entry": 1.0850,
+  "stop_loss": 1.0820,
+  "take_profit": 1.0920,
+  "confidence": 87,
+  "market": "FOREX",
+  "status": "ACTIVE",
+  "priority": "HIGH",
+  "author": "Ahmad Ali",
+  "author_ur": "احمد علی",
+  "drills": [
+    {
+      "title": "EUR/USD Technical Analysis Deep Dive",
+      "title_ur": "EUR/USD تکنیکی تجزیہ کی گہرائی",
+      "description": "Complete breakdown of technical factors driving this BUY signal",
+      "description_ur": "اس خریداری کے سگنل کو چلانے والے تکنیکی عوامل کی مکمل تفصیل",
+      "type": "CASE_STUDY",
+      "content": "# EUR/USD Technical Analysis\n\n## Overview\nThe EUR/USD pair is showing strong bullish momentum with multiple technical indicators aligning for a potential upward move.\n\n## Key Technical Levels\n- **Entry**: 1.0850\n- **Stop Loss**: 1.0820 (30 pips risk)\n- **Take Profit**: 1.0920 (70 pips reward)\n- **Risk:Reward Ratio**: 1:2.33\n\n## Technical Indicators\n\n### RSI (Relative Strength Index)\nThe RSI has recovered from oversold territory (below 30) and is now trending upward, indicating renewed buying pressure.\n\n### Support Levels\n- Primary Support: 1.0820\n- Secondary Support: 1.0780\n\n### Resistance Levels\n- First Target: 1.0920\n- Secondary Target: 1.0950\n\n## Market Context\nThe euro is benefiting from:\n- Positive economic data from the Eurozone\n- Dollar weakness across major pairs\n- Technical breakout above key resistance\n\n## Trading Strategy\n1. Enter at 1.0850\n2. Place stop loss at 1.0820\n3. Target 1.0920 for first profit taking\n4. Consider trailing stop once 1.0900 is reached\n\n*Risk management is crucial. Never risk more than 2% of your account on a single trade.*",
+      "content_ur": "# EUR/USD تکنیکی تجزیہ\n\nیورو/ڈالر کی جوڑی مضبوط تیزی کی رفتار دکھا رہی ہے۔\n\nمزید تفصیلات جلد آ رہی ہیں...",
+      "order_index": 1,
+      "is_active": true,
+      "image_url": "/images/drills/eurusd-analysis.jpg"
+    },
+    {
+      "title": "Real-Time Performance Dashboard",
+      "title_ur": "حقیقی وقت کی کارکردگی ڈیش بورڈ",
+      "description": "Live performance metrics and analytics for EUR/USD",
+      "description_ur": "EUR/USD کے لیے لائیو کارکردگی کے میٹرکس",
+      "type": "ANALYTICS",
+      "content": "# EUR/USD Performance Dashboard\n\n## Signal Status: ACTIVE\n\n### Current Metrics\n- **Signal ID**: Auto-assigned\n- **Published**: Live\n- **Market**: FOREX\n- **Confidence**: 87%\n\n### Risk-Reward Analysis\n- **Entry Price**: 1.0850\n- **Stop Loss**: 1.0820 (30 pips)\n- **Take Profit**: 1.0920 (70 pips)\n- **R:R Ratio**: 1:2.33 ✅ Excellent\n\n### Performance Tracking\nThis dashboard will track:\n- Real-time price movement\n- Distance to stop loss\n- Distance to take profit\n- Time in trade\n- P&L updates\n\n### Signal Health\n- ✅ Risk management: Optimal\n- ✅ Position sizing: Appropriate\n- ✅ Market conditions: Favorable\n\n### Historical Context\nSimilar EUR/USD buy signals with 85%+ confidence have shown:\n- 72% win rate\n- Average profit: 54 pips\n- Average hold time: 18 hours\n\n*Monitor this dashboard for real-time updates and alerts.*",
+      "content_ur": "# EUR/USD کارکردگی ڈیش بورڈ\n\n## سگنل کی حیثیت: فعال\n\nحقیقی وقت کی تازہ کاریاں جلد آ رہی ہیں...",
+      "order_index": 2,
+      "is_active": true,
+      "image_url": "/images/drills/analytics-dashboard.jpg"
+    },
+    {
+      "title": "Market Context: Euro Strength Returns",
+      "title_ur": "مارکیٹ کا سیاق و سباق: یورو کی طاقت واپس آ رہی ہے",
+      "description": "Understanding the fundamental factors supporting EUR/USD upside",
+      "description_ur": "EUR/USD کی بڑھوتری کی حمایت کرنے والے بنیادی عوامل کو سمجھنا",
+      "type": "BLOG",
+      "content": "# Why EUR/USD is Moving Higher\n\n## Market Overview\nThe euro is showing renewed strength against the US dollar, driven by a combination of fundamental and technical factors.\n\n## Fundamental Drivers\n\n### 1. ECB Policy Outlook\nThe European Central Bank has maintained a hawkish stance, with rates expected to remain elevated to combat inflation.\n\n### 2. Economic Data\n- Eurozone GDP growth exceeded expectations\n- Manufacturing PMI showing signs of recovery\n- Unemployment at historic lows\n\n### 3. US Dollar Weakness\n- Fed dovish pivot expectations\n- Treasury yields declining\n- Risk-on sentiment in global markets\n\n## Technical Confluence\nThe fundamental picture aligns with technical indicators:\n- Breakout above 1.0800 resistance\n- Bullish MACD crossover\n- Volume supporting the move\n\n## What's Next?\n\n### Short-term (1-3 days)\n- Target: 1.0920\n- Key resistance to watch: 1.0900\n- Support if pullback: 1.0820\n\n### Medium-term (1-2 weeks)\n- Potential to test 1.1000 psychological level\n- Focus on ECB speakers and US data\n\n## Risk Factors\n⚠️ Watch for:\n- Unexpected Fed hawkish commentary\n- Geopolitical developments\n- Major economic data surprises\n\n## Conclusion\nThe combination of improving Eurozone fundamentals and technical breakout supports the bullish case for EUR/USD. This signal represents a high-probability setup with favorable risk-reward.\n\n*Always manage risk appropriately and stay informed on market developments.*",
+      "content_ur": "# یورو/ڈالر کیوں بڑھ رہا ہے\n\n## مارکیٹ کا جائزہ\nیورو امریکی ڈالر کے مقابلے میں نئی طاقت دکھا رہا ہے۔\n\nمزید تفصیلی تجزیہ جلد آ رہا ہے...",
+      "order_index": 3,
+      "is_active": true,
+      "image_url": "/images/drills/forex-market-news.jpg"
+    }
+  ]
+}

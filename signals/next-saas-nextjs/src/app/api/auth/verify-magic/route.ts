@@ -1,13 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { getPrisma } from "@/lib/prisma";
 import { magicLinkCache } from "@/lib/redis";
 import { signIn } from "next-auth/react";
 import { normalizeEmail } from "@/utils/email";
 
-const prisma = new PrismaClient();
-
 export async function GET(request: NextRequest) {
   try {
+    // Get Prisma client with proper error handling
+    const prisma = getPrisma();
+    if (!prisma) {
+      console.error("[verify-magic] Database not configured");
+      return NextResponse.redirect(
+        new URL("/auth/error?error=DatabaseError", request.url)
+      );
+    }
+
     const searchParams = request.nextUrl.searchParams;
     const token = searchParams.get("token");
 
