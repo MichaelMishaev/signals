@@ -55,6 +55,11 @@ const authMiddleware = withAuth(
 );
 
 export default function middleware(req: NextRequest) {
+  // Skip middleware for admin routes (no locale prefix needed)
+  if (req.nextUrl.pathname.startsWith('/admin')) {
+    return NextResponse.next();
+  }
+
   const isAuthProtectedPath = req.nextUrl.pathname.match(/\/(en|ur)\/(drill|auth)/);
 
   if (isAuthProtectedPath) {
@@ -65,5 +70,5 @@ export default function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/(en|ur)/:path*', '/((?!api|_next|_vercel|.*\\..*).*)'],
+  matcher: ['/', '/(en|ur)/:path*', '/((?!api|admin|_next|_vercel|.*\\..*).*)'],
 };
