@@ -225,33 +225,34 @@ export const switchUser = (newEmail: string | null): ExtendedGateState => {
 
 /**
  * Record a drill view
+ * NOTE: signalId is actually the drill ID (not signal ID) - each drill tab counts as a view
  */
-export const recordDrillView = (signalId: number): ExtendedGateState => {
+export const recordDrillView = (drillId: number): ExtendedGateState => {
   const state = getGateState();
 
   console.log('[GATE] 🔍 recordDrillView called', {
-    signalId,
+    drillId,
     currentDrillsViewed: state.drillsViewed,
     drillHistory: state.drillHistory.map(d => d.signalId),
   });
 
-  // Check if already viewed this signal in this session
+  // Check if already viewed THIS SPECIFIC DRILL in this session
   const alreadyViewed = state.drillHistory.some(
-    (view) => view.signalId === signalId
+    (view) => view.signalId === drillId
   );
 
   if (alreadyViewed) {
     console.log('[GATE] ⏭️  Drill view skipped (duplicate)', {
-      signalId: signalId,
+      drillId: drillId,
       drillsViewed: state.drillsViewed,
     });
-    // Don't count duplicate views
+    // Don't count duplicate views of the SAME drill tab
     return state;
   }
 
   // Add to history
   const drillView: DrillView = {
-    signalId,
+    signalId: drillId, // Store drill ID in the history
     timestamp: Date.now(),
     beforeEmail: !state.hasEmail,
   };
@@ -261,7 +262,7 @@ export const recordDrillView = (signalId: number): ExtendedGateState => {
 
   console.log('[GATE] 📊 Drill view recorded', {
     timestamp: new Date().toISOString(),
-    signalId: signalId,
+    drillId: drillId,
     drillsViewed: newCoreState.drillsViewed,
     beforeEmail: !state.hasEmail,
     currentStage: state.hasEmail ? (state.hasBrokerAccount ? 'broker_user' : 'email_user') : 'anonymous',
