@@ -483,10 +483,13 @@ Then enter exactly that. No more, no less.`,
     setValidationErrors([]);
 
     try {
+      // Clean citation references from JSON input (e.g., :contentReference[oaicite:1]{index=1})
+      const cleanedInput = jsonInput.replace(/:contentReference\[oaicite:\d+\]\{index:\d+\}/g, '');
+
       // Parse JSON
       let signalData: SignalImportData;
       try {
-        signalData = JSON.parse(jsonInput);
+        signalData = JSON.parse(cleanedInput);
       } catch (e) {
         setError('Invalid JSON format. Please check your JSON syntax.');
         setIsLoading(false);
