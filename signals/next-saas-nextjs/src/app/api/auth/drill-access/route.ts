@@ -1,13 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { getPrisma } from "@/lib/prisma";
 import { sendMagicLinkEmail, sendVerificationCodeEmail } from "@/lib/email";
 import { magicLinkCache } from "@/lib/redis";
 import { normalizeEmail, isValidEmail } from "@/utils/email";
 
-const prisma = new PrismaClient();
-
 export async function POST(request: NextRequest) {
   try {
+    // Get Prisma client with proper error handling
+    const prisma = getPrisma();
+    if (!prisma) {
+      console.error("[drill-access] Database not configured");
+      return NextResponse.json(
+        { error: "Database not configured" },
+        { status: 503 }
+      );
+    }
+
     const { email, name, source, action, returnUrl } = await request.json();
 
     // Validate email

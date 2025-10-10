@@ -65,9 +65,19 @@ export const GateManager: React.FC<GateManagerProps> = ({ gateFlow }) => {
   useEffect(() => {
     const handleToast = (event: Event) => {
       const customEvent = event as CustomEvent;
-      const message = customEvent.detail.translate
-        ? t(customEvent.detail.message)
-        : customEvent.detail.message;
+      let message = customEvent.detail.message;
+
+      // Handle translation with proper namespace
+      if (customEvent.detail.translate) {
+        try {
+          // Try to translate with 'common.' prefix
+          message = t(`common.${customEvent.detail.message}`);
+        } catch (error) {
+          console.error('[GateManager] Translation error:', error);
+          // Fallback to original message if translation fails
+          message = customEvent.detail.message;
+        }
+      }
 
       setToast({
         show: true,

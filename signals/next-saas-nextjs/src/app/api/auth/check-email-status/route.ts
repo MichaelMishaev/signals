@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { getPrisma } from "@/lib/prisma";
 import { normalizeEmail } from "@/utils/email";
-
-const prisma = new PrismaClient();
 
 /**
  * Check if email is verified in database
@@ -10,6 +8,16 @@ const prisma = new PrismaClient();
  */
 export async function POST(request: NextRequest) {
   try {
+    // Get Prisma client with proper error handling
+    const prisma = getPrisma();
+    if (!prisma) {
+      console.error("[check-email-status] Database not configured");
+      return NextResponse.json(
+        { error: "Database not configured" },
+        { status: 503 }
+      );
+    }
+
     const { email } = await request.json();
 
     if (!email) {
