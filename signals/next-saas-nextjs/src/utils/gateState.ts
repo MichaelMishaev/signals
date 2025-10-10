@@ -118,9 +118,11 @@ export const getGateState = (forceEmail?: string | null): ExtendedGateState => {
       }
     }
 
-    // No state found, return default
+    // No state found, create default and save it
     console.log('[GATE] 🆕 Creating new default state');
-    return createDefaultState();
+    const defaultState = createDefaultState();
+    saveGateState(defaultState); // CRITICAL FIX: Save initial state to localStorage
+    return defaultState;
   } catch (error) {
     console.error('Error loading gate state:', error);
     return createDefaultState();
