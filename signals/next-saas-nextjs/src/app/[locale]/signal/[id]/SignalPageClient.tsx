@@ -64,10 +64,11 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
   const tCommon = useTranslations('common');
   const [activeTab, setActiveTab] = useState<string>(drills.length > 0 ? drills[0].type : 'overview');
   const [buttonPressed, setButtonPressed] = useState<boolean>(false);
+  const [shouldShowContent, setShouldShowContent] = useState<boolean>(true); // First drill is always free
 
   // NEW Gate Flow Hook - single source of truth for gate state
   const gateFlow = useGateFlow({ confidence: signal.confidence, currentProfit: signal.pips });
-  const { onDrillView, hasEmail } = gateFlow;
+  const { onDrillView, hasEmail, drillsViewed } = gateFlow;
 
   // Handler to start the trading flow
   const handleStartTrading = () => {
@@ -79,6 +80,30 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
   // REMOVED: Don't auto-record first drill on page load
   // Users should get the first drill for free, gate appears on 2nd drill
   // The onDrillView is only called when user clicks drill tabs (line 265)
+
+  // Update content visibility based on gate state
+  // First drill is always free, subsequent drills require email
+  useEffect(() => {
+    console.log('[SignalPageClient] Updating shouldShowContent:', {
+      hasEmail,
+      drillsViewed,
+      currentValue: shouldShowContent,
+    });
+
+    // If user has email, always show content
+    if (hasEmail) {
+      console.log('[SignalPageClient] User has email - showing content');
+      setShouldShowContent(true);
+      return;
+    }
+
+    // If no email: first drill is free (drillsViewed === 0), hide after first drill click
+    // drillsViewed === 0: First drill is free, show content
+    // drillsViewed >= 1: Already viewed a drill, need email for more
+    const newValue = drillsViewed === 0;
+    console.log('[SignalPageClient] No email - setting shouldShowContent to:', newValue);
+    setShouldShowContent(newValue);
+  }, [hasEmail, drillsViewed]);
 
   // If no drills available, show the legacy analytics view
   if (!drills || drills.length === 0) {
@@ -277,9 +302,9 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
         {/* Drill Content with Sidebar */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Main Content - ONLY SHOW IF EMAIL VERIFIED */}
+            {/* Main Content - Show first drill for free, require email for subsequent drills */}
             <div className="lg:col-span-9">
-              {hasEmail ? (
+              {shouldShowContent ? (
                 drills
                   .filter(drill => drill.type === activeTab)
                   .map(drill => (
@@ -293,10 +318,10 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
                     <span className="text-4xl">🔒</span>
                   </div>
                   <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
-                    Verify Your Email to Access Drill Content
+                    Verify Your Email to Access More Drills
                   </h2>
                   <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    Please verify your email address to unlock detailed analysis, case studies, and premium trading insights.
+                    You've viewed your free drill. Verify your email to unlock all detailed analysis, case studies, and premium trading insights.
                   </p>
                   <div className="inline-flex items-center gap-2 px-6 py-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-800 dark:text-blue-200 text-sm">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
