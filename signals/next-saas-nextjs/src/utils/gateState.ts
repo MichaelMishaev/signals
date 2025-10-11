@@ -443,13 +443,14 @@ export const shouldShowBanner = (currentSignal?: { confidence: number; currentPr
 // ============================================================================
 
 /**
- * Get which gate (if any) should be shown for a drill attempt
+ * Get which gate (if any) should be shown after viewing a drill
+ * NOTE: This is called AFTER incrementing drillsViewed, so it checks if a gate should appear
  */
-export const getGateForDrill = (drillNumber: number): GateType => {
+export const getGateForDrill = (drillsViewedCount: number): GateType => {
   const state = getGateState();
 
   console.log('[GATE] getGateForDrill called with:', {
-    drillNumber,
+    drillsViewedCount,
     state: {
       hasEmail: state.hasEmail,
       hasBrokerAccount: state.hasBrokerAccount,
@@ -459,21 +460,20 @@ export const getGateForDrill = (drillNumber: number): GateType => {
     pendingVerification: typeof window !== 'undefined' ? localStorage.getItem('pending_email_verification') : null,
   });
 
-  const decision = GateFlowMechanism.canAccessDrill(drillNumber, state);
+  // Use getNextGate to determine which gate (if any) should be shown
+  const gateToShow = GateFlowMechanism.getNextGate(state);
 
-  if (decision.gateToShow) {
-    console.log(`[GATE] 🚪 ${decision.gateToShow.toUpperCase()} GATE TRIGGERED`, {
+  if (gateToShow) {
+    console.log(`[GATE] 🚪 ${gateToShow.toUpperCase()} GATE TRIGGERED`, {
       timestamp: new Date().toISOString(),
-      drillNumber: drillNumber,
       drillsViewed: state.drillsViewed,
-      currentStage: decision.currentStage,
-      reason: decision.reason,
+      currentStage: GateFlowMechanism.getUserStage(state),
     });
   } else {
     console.log('[GATE] ✅ No gate needed - access granted');
   }
 
-  return decision.gateToShow;
+  return gateToShow;
 };
 
 /**

@@ -56,7 +56,10 @@ test.describe('First Drill Free - Email Gate on Second Drill', () => {
       // Click second drill button (BLOG or CASE STUDY)
       console.log('👆 Clicking second drill button...');
       await drillButtons[1].click();
-      await page.waitForTimeout(2000);
+
+      // Wait for React to process state updates and re-render
+      // The click triggers: onDrillView -> setState -> setActiveGate -> GateManager re-render
+      await page.waitForTimeout(3000);
 
       await page.screenshot({ path: 'test-step2-second-drill-clicked.png', fullPage: true });
 
@@ -76,16 +79,19 @@ test.describe('First Drill Free - Email Gate on Second Drill', () => {
       console.log('  - drillHistory:', gateState?.drillHistory?.length || 0);
 
       // Check if email gate modal appeared
-      const emailGateModal = await page.locator('text=Unlock Unlimited Signals').count();
+      const emailGateModal = await page.locator('text=Get Free Trading Signals').count();
       const emailInput = await page.locator('input[type="email"]').count();
+      const backdrop = await page.locator('.fixed.inset-0.bg-black\\/80').count();
 
       console.log('\n🚪 Email Gate Check:');
       console.log(`  - Email gate modal visible: ${emailGateModal > 0}`);
       console.log(`  - Email input field visible: ${emailInput > 0}`);
+      console.log(`  - Dark backdrop visible: ${backdrop > 0}`);
 
       // ASSERTION 2: Email gate should appear after clicking second drill
       expect(emailGateModal, 'Email gate modal should appear after clicking second drill').toBeGreaterThan(0);
       expect(emailInput, 'Email input field should be visible in gate modal').toBeGreaterThan(0);
+      expect(backdrop, 'Dark backdrop should be visible').toBeGreaterThan(0);
 
       console.log('✅ PASSED: Email gate appears on second drill\n');
 
