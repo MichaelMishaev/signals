@@ -34,15 +34,25 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user exists and is verified
-    const user = await prisma.user.findUnique({
-      where: { email: normalizedEmail },
-      select: {
-        id: true,
-        email: true,
-        emailVerified: true,
-        name: true,
-      },
-    });
+    let user;
+    try {
+      user = await prisma.user.findUnique({
+        where: { email: normalizedEmail },
+        select: {
+          id: true,
+          email: true,
+          emailVerified: true,
+          name: true,
+        },
+      });
+    } catch (dbError: any) {
+      console.warn("[check-email-status] Database connection failed:", dbError?.message || dbError);
+      // Database not available - return not verified
+      return NextResponse.json({
+        verified: false,
+        exists: false,
+      });
+    }
 
     if (!user) {
       // User doesn't exist - return not verified

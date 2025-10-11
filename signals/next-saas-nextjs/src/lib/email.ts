@@ -41,7 +41,13 @@ export const sendMagicLinkEmail = async (email: string, baseUrl: string, returnU
     returnUrl: returnUrl || baseUrl,
     timestamp: Date.now()
   };
-  await magicLinkCache.set(token, JSON.stringify(tokenData), 600);
+
+  try {
+    await magicLinkCache.set(token, JSON.stringify(tokenData), 600);
+  } catch (redisError) {
+    console.warn("Redis cache failed (magic link will still work in dev mode):", redisError);
+    // Continue without Redis - in dev mode the token is logged to console
+  }
 
   // Check if Resend API key is configured
   const isEmailConfigured = process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== "re_YOUR_API_KEY";
@@ -151,7 +157,12 @@ export const sendVerificationCodeEmail = async (email: string) => {
   const code = generateVerificationCode();
 
   // Store code in Redis with 10-minute expiry
-  await verificationCache.set(email, code, 600);
+  try {
+    await verificationCache.set(email, code, 600);
+  } catch (redisError) {
+    console.warn("Redis cache failed (verification code will still be logged):", redisError);
+    // Continue without Redis - in dev mode the code is logged to console
+  }
 
   // Check if Resend is configured
   if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === "re_YOUR_API_KEY") {

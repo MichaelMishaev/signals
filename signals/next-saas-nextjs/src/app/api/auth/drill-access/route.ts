@@ -36,57 +36,57 @@ export async function POST(request: NextRequest) {
         const ipKey = `rate_limit_ip:${clientIP}`;
 
         try {
-        // Get current counts from Redis
-        const [emailCount, ipCount] = await Promise.all([
-          magicLinkCache.get(emailKey),
-          magicLinkCache.get(ipKey)
-        ]);
+          // Get current counts from Redis
+          const [emailCount, ipCount] = await Promise.all([
+            magicLinkCache.get(emailKey),
+            magicLinkCache.get(ipKey)
+          ]);
 
-        // Parse existing data or initialize
-        let emailData = emailCount ? JSON.parse(emailCount) : { count: 0, timestamp: now };
-        let ipData = ipCount ? JSON.parse(ipCount) : { count: 0, timestamp: now };
+          // Parse existing data or initialize
+          let emailData = emailCount ? JSON.parse(emailCount) : { count: 0, timestamp: now };
+          let ipData = ipCount ? JSON.parse(ipCount) : { count: 0, timestamp: now };
 
-        // Reset counters if more than 1 hour has passed
-        const HOUR = 60 * 60 * 1000;
-        if (now - emailData.timestamp > HOUR) {
-          emailData = { count: 0, timestamp: now };
-        }
-        if (now - ipData.timestamp > HOUR) {
-          ipData = { count: 0, timestamp: now };
-        }
+          // Reset counters if more than 1 hour has passed
+          const HOUR = 60 * 60 * 1000;
+          if (now - emailData.timestamp > HOUR) {
+            emailData = { count: 0, timestamp: now };
+          }
+          if (now - ipData.timestamp > HOUR) {
+            ipData = { count: 0, timestamp: now };
+          }
 
-        // Check limits: 3 emails per hour per email, 10 per hour per IP
-        if (emailData.count >= 3) {
-          return NextResponse.json(
-            {
-              error: "Too many email requests",
-              message: "You can only request 3 verification emails per hour. Please try again later.",
-              cooldownMinutes: Math.ceil((HOUR - (now - emailData.timestamp)) / (60 * 1000))
-            },
-            { status: 429 }
-          );
-        }
+          // Check limits: 3 emails per hour per email, 10 per hour per IP
+          if (emailData.count >= 3) {
+            return NextResponse.json(
+              {
+                error: "Too many email requests",
+                message: "You can only request 3 verification emails per hour. Please try again later.",
+                cooldownMinutes: Math.ceil((HOUR - (now - emailData.timestamp)) / (60 * 1000))
+              },
+              { status: 429 }
+            );
+          }
 
-        if (ipData.count >= 10) {
-          return NextResponse.json(
-            {
-              error: "Too many requests from this IP",
-              message: "Too many requests from your location. Please try again later.",
-              cooldownMinutes: Math.ceil((HOUR - (now - ipData.timestamp)) / (60 * 1000))
-            },
-            { status: 429 }
-          );
-        }
+          if (ipData.count >= 10) {
+            return NextResponse.json(
+              {
+                error: "Too many requests from this IP",
+                message: "Too many requests from your location. Please try again later.",
+                cooldownMinutes: Math.ceil((HOUR - (now - ipData.timestamp)) / (60 * 1000))
+              },
+              { status: 429 }
+            );
+          }
 
-        // Increment counters
-        emailData.count++;
-        ipData.count++;
+          // Increment counters
+          emailData.count++;
+          ipData.count++;
 
-        // Store updated counts
-        await Promise.all([
-          magicLinkCache.set(emailKey, JSON.stringify(emailData), 3600), // 1 hour
-          magicLinkCache.set(ipKey, JSON.stringify(ipData), 3600) // 1 hour
-        ]);
+          // Store updated counts
+          await Promise.all([
+            magicLinkCache.set(emailKey, JSON.stringify(emailData), 3600), // 1 hour
+            magicLinkCache.set(ipKey, JSON.stringify(ipData), 3600) // 1 hour
+          ]);
 
         } catch (redisError) {
           console.warn("Redis rate limiting failed, proceeding:", redisError);
@@ -102,20 +102,30 @@ export async function POST(request: NextRequest) {
     let user: any = null;
 
     if (prisma) {
-      // Check if user exists (using normalized email)
-      user = await prisma.user.findUnique({
-        where: { email: normalizedEmail },
-      });
-
-      // If user doesn't exist, create one
-      if (!user) {
-        user = await prisma.user.create({
-          data: {
-            email: normalizedEmail,
-            name: name || undefined,
-            // No password for drill-only users (magic link only)
-          },
+      try {
+        // Check if user exists (using normalized email)
+        user = await prisma.user.findUnique({
+          where: { email: normalizedEmail },
         });
+
+        // If user doesn't exist, create one
+        if (!user) {
+          user = await prisma.user.create({
+            data: {
+              email: normalizedEmail,
+              name: name || undefined,
+              // No password for drill-only users (magic link only)
+            },
+          });
+        }
+      } catch (dbError: any) {
+        console.warn("[drill-access] Database connection failed:", dbError?.message || dbError);
+        // Use mock user if database fails
+        user = {
+          id: `temp_${normalizedEmail}`,
+          email: normalizedEmail,
+          name: name || null,
+        };
       }
     } else {
       // Mock user when database is not available
@@ -143,7 +153,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Track drill access request (only if database is available)
-        if (prisma) {
+        if (prisma && typeof user.id === 'string' && !user.id.startsWith('temp_')) {
           try {
             await prisma.drillProgress.upsert({
               where: {
@@ -162,8 +172,9 @@ export async function POST(request: NextRequest) {
                 attempts: 1,
               },
             });
-          } catch (dbError) {
-            console.error("Failed to track drill access:", dbError);
+          } catch (dbError: any) {
+            console.warn("Failed to track drill access:", dbError?.message || dbError);
+            // Continue without tracking - not critical for email sending
           }
         }
 
@@ -215,19 +226,31 @@ export async function POST(request: NextRequest) {
           });
         }
 
-        const verifiedUser = await prisma.user.findUnique({
-          where: { email: normalizedEmail },
-          select: {
-            id: true,
-            email: true,
-            emailVerified: true,
-            drillProgress: {
-              where: {
-                drillId: source || "general",
+        let verifiedUser;
+        try {
+          verifiedUser = await prisma.user.findUnique({
+            where: { email: normalizedEmail },
+            select: {
+              id: true,
+              email: true,
+              emailVerified: true,
+              drillProgress: {
+                where: {
+                  drillId: source || "general",
+                },
               },
             },
-          },
-        });
+          });
+        } catch (dbError: any) {
+          console.warn("[verify-access] Database connection failed:", dbError?.message || dbError);
+          // Database not available - return basic response
+          return NextResponse.json({
+            success: true,
+            hasAccess: false,
+            emailVerified: false,
+            drillProgress: null,
+          });
+        }
 
         if (!verifiedUser) {
           return NextResponse.json(

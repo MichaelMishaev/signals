@@ -132,34 +132,43 @@ export const verificationCache = {
 
 // Magic link token cache
 export const magicLinkCache = {
-  set: async (token: string, email: string, expirySeconds = 600) => {
-    if (!redis) return false;
+  set: async (token: string, value: string, expirySeconds = 600) => {
+    if (!redis) {
+      console.warn('Redis not configured - magic link cache disabled');
+      return false;
+    }
     try {
-      await redis.setex(`magic:${token}`, expirySeconds, email);
+      await redis.setex(`magic:${token}`, expirySeconds, value);
       return true;
     } catch (error) {
-      console.error('Redis magic link set error:', error);
+      console.warn('Redis magic link set error (cache disabled):', error instanceof Error ? error.message : error);
       return false;
     }
   },
 
   get: async (token: string) => {
-    if (!redis) return null;
+    if (!redis) {
+      console.warn('Redis not configured - magic link cache disabled');
+      return null;
+    }
     try {
       return await redis.get(`magic:${token}`);
     } catch (error) {
-      console.error('Redis magic link get error:', error);
+      console.warn('Redis magic link get error (cache disabled):', error instanceof Error ? error.message : error);
       return null;
     }
   },
 
   delete: async (token: string) => {
-    if (!redis) return false;
+    if (!redis) {
+      console.warn('Redis not configured - magic link cache disabled');
+      return false;
+    }
     try {
       await redis.del(`magic:${token}`);
       return true;
     } catch (error) {
-      console.error('Redis magic link delete error:', error);
+      console.warn('Redis magic link delete error (cache disabled):', error instanceof Error ? error.message : error);
       return false;
     }
   }
