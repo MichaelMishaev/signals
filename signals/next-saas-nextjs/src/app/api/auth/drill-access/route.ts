@@ -258,10 +258,17 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Drill access error:", error);
+    console.error("Error stack:", error?.stack);
+    console.error("Error message:", error?.message);
+    console.error("Error details:", {
+      name: error?.name,
+      message: error?.message,
+      code: error?.code
+    });
     return NextResponse.json(
-      { error: "An error occurred processing your request" },
+      { error: "An error occurred processing your request", details: error?.message },
       { status: 500 }
     );
   }

@@ -76,13 +76,9 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
     setButtonPressed(true);
   };
 
-  // Track drill view when first drill tab is shown
-  useEffect(() => {
-    if (drills.length > 0 && activeTab === drills[0].type) {
-      console.log('[SignalPageClient] Recording initial drill view:', drills[0].id);
-      onDrillView(drills[0].id);
-    }
-  }, []); // Only run once on mount
+  // REMOVED: Don't auto-record first drill on page load
+  // Users should get the first drill for free, gate appears on 2nd drill
+  // The onDrillView is only called when user clicks drill tabs (line 265)
 
   // If no drills available, show the legacy analytics view
   if (!drills || drills.length === 0) {

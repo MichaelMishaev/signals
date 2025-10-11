@@ -82,8 +82,8 @@ const SignalsFeed = () => {
 
   const handleTradeAction = (signalId: string, action: string) => {
     console.log(`Trade action initiated for signal ${signalId}: ${action}`);
-    // Here you would implement the actual trade action
-    // For example: navigate to trading page, open modal, etc.
+    // Navigate to signal detail page to view drills
+    window.location.href = `/${locale}/signal/${signalId}`;
   };
 
   return (

@@ -71,10 +71,12 @@ export async function POST(request: NextRequest) {
       exists: true,
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error checking email status:", error);
+    console.error("Error stack:", error?.stack);
+    console.error("Error message:", error?.message);
     return NextResponse.json(
-      { error: "Failed to check email status" },
+      { error: "Failed to check email status", details: error?.message },
       { status: 500 }
     );
   }
