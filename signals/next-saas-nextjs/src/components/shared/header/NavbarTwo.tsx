@@ -24,9 +24,10 @@ interface NavbarTwoProps {
   megaMenuColor?: string;
   btnClassName?: string;
   hideMenu?: boolean;
+  hideLangSwitch?: boolean;
 }
 
-const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName, hideMenu = false }) => {
+const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName, hideMenu = false, hideLangSwitch = false }) => {
   const { isScrolled } = useNavbarScroll(150);
   const { isProductionMode, mounted } = useProductionMode();
 
@@ -41,10 +42,12 @@ const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName,
           )}>
           {/* logo */}
           <LogoV2 />
-          {/* Language Switcher - always visible */}
-          <div className="ml-auto xl:ml-0 mr-4">
-            <LanguageSwitcher />
-          </div>
+          {/* Language Switcher - hidden when hideLangSwitch is true */}
+          {!hideLangSwitch && (
+            <div className="ml-auto xl:ml-0 mr-4">
+              <LanguageSwitcher />
+            </div>
+          )}
           {/* navigation - hidden in production mode or when hideMenu is true */}
           {mounted && !isProductionMode && !hideMenu && (
             <nav className="hidden items-center xl:flex">

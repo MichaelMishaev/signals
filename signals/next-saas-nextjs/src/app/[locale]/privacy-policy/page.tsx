@@ -36,6 +36,7 @@ const PrivacyPolicy = () => {
         className="bg-accent/10 dark:bg-background-7/40 backdrop-blur-[25px] max-md:!top-8"
         btnClassName="btn-green hover:btn-white dark:hover:btn-white-dark"
         hideMenu={true}
+        hideLangSwitch={true}
       />
       <main className="bg-background-3 dark:bg-background-7">
         <PrivacyContent />

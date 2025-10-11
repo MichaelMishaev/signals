@@ -1,0 +1,86 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('Privacy Policy Page', () => {
+  test('should display privacy policy in English', async ({ page }) => {
+    await page.goto('http://localhost:5001/en/privacy-policy');
+
+    // Check if the page loaded successfully
+    await expect(page).toHaveTitle(/Privacy Policy/i);
+
+    // Check for key English content
+    await expect(page.getByText(/PipGuru Privacy Policy/i)).toBeVisible();
+    await expect(page.getByText(/Information We Collect/i)).toBeVisible();
+    await expect(page.getByText(/Data Security/i)).toBeVisible();
+
+    // Check for language toggle button
+    const toggleButton = page.getByRole('button', { name: /اردو میں دیکھیں/i });
+    await expect(toggleButton).toBeVisible();
+  });
+
+  test('should toggle to Urdu language', async ({ page }) => {
+    await page.goto('http://localhost:5001/en/privacy-policy');
+
+    // Click the language toggle button
+    const toggleButton = page.getByRole('button', { name: /اردو میں دیکھیں/i });
+    await toggleButton.click();
+
+    // Wait for Urdu content to appear
+    await expect(page.getByText(/پِپ گُرو رازداری کی پالیسی/)).toBeVisible();
+    await expect(page.getByText(/معلومات جو ہم جمع کرتے ہیں/)).toBeVisible();
+
+    // Check that button text changed to English
+    await expect(page.getByRole('button', { name: /Switch to English/i })).toBeVisible();
+  });
+
+  test('should display risk warning section', async ({ page }) => {
+    await page.goto('http://localhost:5001/en/privacy-policy');
+
+    // Check for risk warning
+    await expect(page.getByText(/Risk Warning/i)).toBeVisible();
+    await expect(page.getByText(/Forex and CFD trading/i)).toBeVisible();
+  });
+
+  test('should display contact information', async ({ page }) => {
+    await page.goto('http://localhost:5001/en/privacy-policy');
+
+    // Check for contact section
+    await expect(page.getByText(/Contact Us/i)).toBeVisible();
+    await expect(page.getByText(/privacy@pipguru.club/i)).toBeVisible();
+  });
+
+  test('should have proper dark mode support', async ({ page }) => {
+    await page.goto('http://localhost:5001/en/privacy-policy');
+
+    // Enable dark mode (if there's a dark mode toggle)
+    await page.emulateMedia({ colorScheme: 'dark' });
+
+    // Take a screenshot to verify dark mode
+    await page.screenshot({ path: 'tests/screenshots/privacy-policy-dark.png', fullPage: true });
+  });
+
+  test('should be responsive on mobile', async ({ page }) => {
+    // Set mobile viewport
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto('http://localhost:5001/en/privacy-policy');
+
+    // Check if content is visible and readable on mobile
+    await expect(page.getByText(/PipGuru Privacy Policy/i)).toBeVisible();
+
+    // Verify language toggle is accessible
+    const toggleButton = page.getByRole('button', { name: /اردو میں دیکھیں/i });
+    await expect(toggleButton).toBeVisible();
+
+    // Take mobile screenshot
+    await page.screenshot({ path: 'tests/screenshots/privacy-policy-mobile.png', fullPage: true });
+  });
+
+  test('should load Urdu page directly', async ({ page }) => {
+    await page.goto('http://localhost:5001/ur/privacy-policy');
+
+    // Check if page loads (even if content is still in English initially)
+    await expect(page).toHaveURL(/privacy-policy/);
+
+    // The toggle button should allow switching languages
+    await expect(page.getByRole('button')).toBeVisible();
+  });
+});

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Production Email Gate Test</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #000; color: #0f0; }
+    .step { margin: 10px 0; padding: 10px; border: 1px solid #0f0; }
+    .pass { background: #004400; }
+    .fail { background: #440000; color: #f00; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Production Email Gate Diagnostic</h1>
+  <div id="output"></div>
+
+  <script>
+    const log = (msg, pass = true) => {
+      const div = document.createElement('div');
+      div.className = `step ${pass ? 'pass' : 'fail'}`;
+      div.textContent = msg;
+      document.getElementById('output').appendChild(div);
+    };
+
+    async function testProduction() {
+      log('🚀 Starting production diagnostics...');
+
+      // Test 1: Check if drills API works
+      try {
+        const drillsRes = await fetch('https://www.pipguru.club/api/drills?signal_id=17');
+        const drills = await drillsRes.json();
+        log(`✅ Drills API: ${drills.length} drills found (IDs: ${drills.map(d => d.id).join(', ')})`);
+      } catch (e) {
+        log(`❌ Drills API failed: ${e.message}`, false);
+      }
+
+      // Test 2: Check localStorage
+      log('💾 Testing localStorage...');
+      localStorage.clear();
+      log('  - Cleared localStorage');
+
+      // Simulate gate state
+      const testState = {
+        drillsViewed: 0,
+        hasEmail: false,
+        hasBrokerAccount: false,
+        drillHistory: []
+      };
+      localStorage.setItem('gate_flow_state_anonymous', JSON.stringify(testState));
+      log('  - Set initial gate state');
+
+      const loaded = JSON.parse(localStorage.getItem('gate_flow_state_anonymous'));
+      log(`  - Loaded state: drillsViewed=${loaded.drillsViewed}, hasEmail=${loaded.hasEmail}`);
+
+      // Test 3: Simulate drill view
+      loaded.drillsViewed = 1;
+      localStorage.setItem('gate_flow_state_anonymous', JSON.stringify(loaded));
+      const afterDrill = JSON.parse(localStorage.getItem('gate_flow_state_anonymous'));
+      log(`  - After drill view: drillsViewed=${afterDrill.drillsViewed}`);
+
+      // Test 4: Check if gate should trigger
+      const shouldShowGate = !afterDrill.hasEmail && afterDrill.drillsViewed >= 1;
+      log(`🚪 Gate should show: ${shouldShowGate} (hasEmail=${afterDrill.hasEmail}, drillsViewed=${afterDrill.drillsViewed})`);
+
+      log('\\n📋 Instructions:');
+      log('1. Open https://www.pipguru.club/en/signal/17 in a new tab');
+      log('2. Open DevTools Console (F12)');
+      log('3. Click the BLOG tab (second drill)');
+      log('4. Check console for [GATE] logs');
+      log('5. Modal should appear with "Get Free Trading Signals"');
+    }
+
+    testProduction();
+  </script>
+</body>
+</html>
