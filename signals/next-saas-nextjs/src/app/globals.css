@@ -47,11 +47,51 @@ select:focus-visible {
 
 /* Phase 1: Urdu Font for RTL */
 [dir="rtl"] {
-  font-family: var(--font-urdu), var(--font-interTight), sans-serif;
+  font-family: var(--font-urdu), 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Mehr Nastaliq', 'Alvi Nastaleeq', serif;
+  font-weight: 600;
+  line-height: 2.2;
+  letter-spacing: 0.02em;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6 {
+  font-weight: 700;
+  line-height: 2.5;
+}
+
+[dir="rtl"] p {
+  font-weight: 600;
+  line-height: 2.5;
+}
+
+[dir="rtl"] li {
+  line-height: 2.5;
 }
 
 [dir="ltr"] {
   font-family: var(--font-interTight), sans-serif;
+}
+
+/* Urdu Font Utility Class */
+.font-urdu {
+  font-family: var(--font-urdu), 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Mehr Nastaliq', 'Alvi Nastaleeq', serif;
+  direction: rtl;
+  text-align: right;
+  font-weight: 600;
+  line-height: 2.2;
+  letter-spacing: 0.02em;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @import '../styles/variables.css';

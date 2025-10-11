@@ -23,9 +23,10 @@ interface NavbarTwoProps {
   className?: string;
   megaMenuColor?: string;
   btnClassName?: string;
+  hideMenu?: boolean;
 }
 
-const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName }) => {
+const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName, hideMenu = false }) => {
   const { isScrolled } = useNavbarScroll(150);
   const { isProductionMode, mounted } = useProductionMode();
 
@@ -44,8 +45,8 @@ const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName 
           <div className="ml-auto xl:ml-0 mr-4">
             <LanguageSwitcher />
           </div>
-          {/* navigation - hidden in production mode */}
-          {mounted && !isProductionMode && (
+          {/* navigation - hidden in production mode or when hideMenu is true */}
+          {mounted && !isProductionMode && !hideMenu && (
             <nav className="hidden items-center xl:flex">
               <ul className="flex items-center gap-6">
                 {navigationItems.map((item) => {
@@ -79,20 +80,20 @@ const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName 
               </ul>
             </nav>
           )}
-          {/* CTA Button - hidden in production mode */}
-          {mounted && !isProductionMode && (
+          {/* CTA Button - hidden in production mode or when hideMenu is true */}
+          {mounted && !isProductionMode && !hideMenu && (
             <NavCTAButton
               href="/signup-01"
               btnClassName={cn(isScrolled && 'btn-white', btnClassName)}
               label="Get started"
             />
           )}
-          {/* mobile menu btn - hidden in production mode */}
-          {mounted && !isProductionMode && <MobileMenuButton />}
+          {/* mobile menu btn - hidden in production mode or when hideMenu is true */}
+          {mounted && !isProductionMode && !hideMenu && <MobileMenuButton />}
         </div>
 
-        {/* Mobile menu - hidden in production mode */}
-        {mounted && !isProductionMode && <MobileMenu />}
+        {/* Mobile menu - hidden in production mode or when hideMenu is true */}
+        {mounted && !isProductionMode && !hideMenu && <MobileMenu />}
       </header>
     </MobileMenuProvider>
   );
