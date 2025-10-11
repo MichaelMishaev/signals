@@ -14,7 +14,7 @@ export const GATE_CONFIG = {
   // ============================================================================
   emailGate: {
     // Trigger settings
-    triggerAfterDrills: 1, // Show on 2nd drill attempt
+    triggerAfterDrills: 2, // Show after viewing 2 drills (on 3rd attempt)
     blocking: false, // Can be dismissed - users can browse freely
     required: true, // Must provide email to access drill content
 
