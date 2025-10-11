@@ -68,7 +68,7 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
 
   // NEW Gate Flow Hook - single source of truth for gate state
   const gateFlow = useGateFlow({ confidence: signal.confidence, currentProfit: signal.pips });
-  const { onDrillView, hasEmail, drillsViewed } = gateFlow;
+  const { onDrillView, hasEmail, drillsViewed, activeGate } = gateFlow;
 
   // Handler to start the trading flow
   const handleStartTrading = () => {
@@ -312,7 +312,21 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
                       {renderDrillContent(drill)}
                     </div>
                   ))
+              ) : activeGate ? (
+                /* When email gate is active, show a simple message - the modal will overlay */
+                <div className="bg-white dark:bg-background-6 rounded-xl p-12 shadow-lg text-center">
+                  <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                    <span className="text-4xl">✉️</span>
+                  </div>
+                  <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+                    Almost There!
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    Please provide your email address to continue accessing premium trading content.
+                  </p>
+                </div>
               ) : (
+                /* Fallback: Show verification reminder */
                 <div className="bg-white dark:bg-background-6 rounded-xl p-12 shadow-lg text-center">
                   <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6">
                     <span className="text-4xl">🔒</span>

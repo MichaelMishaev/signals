@@ -78,13 +78,13 @@ export const EmailGateModal: React.FC<EmailGateModalProps> = ({
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 animate-fadeIn"
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] animate-fadeIn"
         onClick={handleBackdropClick}
       />
 
       {/* Modal */}
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
         onClick={handleBackdropClick}
       >
         <div
