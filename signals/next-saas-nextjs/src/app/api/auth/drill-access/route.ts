@@ -6,16 +6,6 @@ import { normalizeEmail, isValidEmail } from "@/utils/email";
 
 export async function POST(request: NextRequest) {
   try {
-    // Get Prisma client with proper error handling
-    const prisma = getPrisma();
-    if (!prisma) {
-      console.error("[drill-access] Database not configured");
-      return NextResponse.json(
-        { error: "Database not configured" },
-        { status: 503 }
-      );
-    }
-
     const { email, name, source, action, returnUrl } = await request.json();
 
     // Validate email
@@ -105,20 +95,36 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Check if user exists (using normalized email)
-    let user = await prisma.user.findUnique({
-      where: { email: normalizedEmail },
-    });
+    // Get Prisma client with proper error handling
+    const prisma = getPrisma();
 
-    // If user doesn't exist, create one
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          email: normalizedEmail,
-          name: name || undefined,
-          // No password for drill-only users (magic link only)
-        },
+    // If Prisma not configured, create a mock user for email sending
+    let user: any = null;
+
+    if (prisma) {
+      // Check if user exists (using normalized email)
+      user = await prisma.user.findUnique({
+        where: { email: normalizedEmail },
       });
+
+      // If user doesn't exist, create one
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            email: normalizedEmail,
+            name: name || undefined,
+            // No password for drill-only users (magic link only)
+          },
+        });
+      }
+    } else {
+      // Mock user when database is not available
+      console.log("[drill-access] Database not configured - using mock user");
+      user = {
+        id: `temp_${normalizedEmail}`,
+        email: normalizedEmail,
+        name: name || null,
+      };
     }
 
     // Handle different actions
@@ -136,27 +142,29 @@ export async function POST(request: NextRequest) {
           );
         }
 
-        // Track drill access request
-        try {
-          await prisma.drillProgress.upsert({
-            where: {
-              userId_drillId: {
+        // Track drill access request (only if database is available)
+        if (prisma) {
+          try {
+            await prisma.drillProgress.upsert({
+              where: {
+                userId_drillId: {
+                  userId: user.id,
+                  drillId: source || "general",
+                },
+              },
+              update: {
+                attempts: { increment: 1 },
+                lastAttempt: new Date(),
+              },
+              create: {
                 userId: user.id,
                 drillId: source || "general",
+                attempts: 1,
               },
-            },
-            update: {
-              attempts: { increment: 1 },
-              lastAttempt: new Date(),
-            },
-            create: {
-              userId: user.id,
-              drillId: source || "general",
-              attempts: 1,
-            },
-          });
-        } catch (dbError) {
-          console.error("Failed to track drill access:", dbError);
+            });
+          } catch (dbError) {
+            console.error("Failed to track drill access:", dbError);
+          }
         }
 
         // Check if we're in development mode without email configured
@@ -197,6 +205,16 @@ export async function POST(request: NextRequest) {
 
       case "verify-access": {
         // Check if user has verified email (use normalized email)
+        if (!prisma) {
+          // Without database, return basic response
+          return NextResponse.json({
+            success: true,
+            hasAccess: false,
+            emailVerified: false,
+            drillProgress: null,
+          });
+        }
+
         const verifiedUser = await prisma.user.findUnique({
           where: { email: normalizedEmail },
           select: {

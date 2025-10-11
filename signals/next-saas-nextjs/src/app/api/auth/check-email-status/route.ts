@@ -8,16 +8,6 @@ import { normalizeEmail } from "@/utils/email";
  */
 export async function POST(request: NextRequest) {
   try {
-    // Get Prisma client with proper error handling
-    const prisma = getPrisma();
-    if (!prisma) {
-      console.error("[check-email-status] Database not configured");
-      return NextResponse.json(
-        { error: "Database not configured" },
-        { status: 503 }
-      );
-    }
-
     const { email } = await request.json();
 
     if (!email) {
@@ -29,6 +19,19 @@ export async function POST(request: NextRequest) {
 
     // Normalize email for consistent lookup
     const normalizedEmail = normalizeEmail(email);
+
+    // Get Prisma client with proper error handling
+    const prisma = getPrisma();
+
+    // If Prisma is not configured, skip database check
+    // This allows the gate to work without a database (email verification only)
+    if (!prisma) {
+      console.log("[check-email-status] Database not configured - skipping DB check");
+      return NextResponse.json({
+        verified: false,
+        exists: false,
+      });
+    }
 
     // Check if user exists and is verified
     const user = await prisma.user.findUnique({
