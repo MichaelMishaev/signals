@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useModalContext } from '@/context/ModalContext';
 import EmailCardPopup from '../emailComponent/EmailCardPopup';
-import DevEmailDebugBar from './DevEmailDebugBar';
 import RevealAnimation from '../../animation/RevealAnimation';
 
 interface EmailGateWrapperProps {
@@ -244,8 +243,6 @@ export default function EmailGateWrapper({
 
   return (
     <>
-      <DevEmailDebugBar />
-
       {/* Verification Notice Banner */}
       {showVerificationNotice && (
         <div className="fixed top-0 left-0 right-0 z-50 bg-green-500 text-white p-4 text-center animate-slide-down">

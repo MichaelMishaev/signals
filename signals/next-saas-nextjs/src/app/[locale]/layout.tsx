@@ -5,7 +5,6 @@ import { FeatureFlagProvider } from '@/context/FeatureFlagContext';
 import { SessionProvider } from '@/components/auth/SessionProvider';
 import VerificationToast from '@/components/shared/VerificationToast';
 import DevProductionToggle from '@/components/shared/DevProductionToggle';
-import DevEmailDebugBar from '@/components/shared/emailGate/DevEmailDebugBar';
 import PopupManager from '@/components/shared/popups/PopupManager';
 import { interTight, notoNastaliqUrdu } from '@/utils/font';
 import { NextIntlClientProvider } from 'next-intl';
@@ -60,7 +59,6 @@ export default async function LocaleLayout({
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
               <FeatureFlagProvider>
                 <ModalProvider>
-                  <DevEmailDebugBar />
                   <Suspense fallback={<div>Loading...</div>}>
                     <SmoothScrollProvider>{children}</SmoothScrollProvider>
                   </Suspense>
