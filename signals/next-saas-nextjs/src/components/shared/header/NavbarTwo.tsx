@@ -25,9 +25,10 @@ interface NavbarTwoProps {
   btnClassName?: string;
   hideMenu?: boolean;
   hideLangSwitch?: boolean;
+  hideLogo?: boolean;
 }
 
-const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName, hideMenu = false, hideLangSwitch = false }) => {
+const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName, hideMenu = false, hideLangSwitch = false, hideLogo = false }) => {
   const { isScrolled } = useNavbarScroll(150);
   const { isProductionMode, mounted } = useProductionMode();
 
@@ -36,12 +37,12 @@ const NavbarTwo: FC<NavbarTwoProps> = ({ className, megaMenuColor, btnClassName,
       <header>
         <div
           className={cn(
-            'lp:!max-w-[1290px] bg-accent/10 dark:bg-background-7/40 fixed top-20 left-1/2 z-50 mx-auto flex w-full max-w-[360px] -translate-x-1/2 items-center justify-between rounded-full px-2.5 py-2.5 backdrop-blur-[25px] max-md:!top-24 min-[425px]:max-w-[380px] min-[500px]:max-w-[450px] sm:max-w-[540px] md:max-w-[720px] lg:max-w-[960px] xl:max-w-[1140px] xl:py-0',
+            'bg-accent/10 dark:bg-background-7/40 fixed top-20 left-1/2 z-50 mx-auto flex w-full max-w-[360px] -translate-x-1/2 items-center justify-between rounded-full px-2.5 py-2.5 backdrop-blur-[25px] max-md:!top-24 min-[425px]:max-w-[380px] min-[500px]:max-w-[450px] sm:max-w-[540px] md:max-w-[720px] lg:max-w-[960px] xl:max-w-[1140px] xl:py-0',
             className,
             isScrolled && 'bg-background-7 top-10 transition-all duration-500 ease-in-out',
           )}>
-          {/* logo */}
-          <LogoV2 />
+          {/* logo - hidden when hideLogo is true */}
+          {!hideLogo && <LogoV2 />}
           {/* Language Switcher - hidden when hideLangSwitch is true */}
           {!hideLangSwitch && (
             <div className="ml-auto xl:ml-0 mr-4">

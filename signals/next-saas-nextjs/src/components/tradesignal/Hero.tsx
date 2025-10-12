@@ -79,19 +79,6 @@ const Hero = () => {
           </svg>
         </div>
 
-        {/* Live Market Ticker */}
-        <div className="absolute top-4 left-0 right-0 z-10">
-          <div className="bg-black/30 backdrop-blur-sm text-white py-2 overflow-hidden">
-            <div className="animate-marquee whitespace-nowrap">
-              <span className="mx-4">🔴 USD/PKR: 285.50 (-0.25%)</span>
-              <span className="mx-4">🟢 PSX: 45,250 (+1.2%)</span>
-              <span className="mx-4">🟢 Gold: $1,950 (+0.8%)</span>
-              <span className="mx-4">🔴 BTC: $42,500 (-2.1%)</span>
-              <span className="mx-4">🟢 EUR/PKR: 310.25 (+0.5%)</span>
-            </div>
-          </div>
-        </div>
-
         <div className="main-container relative z-10">
           <div className="space-y-3 md:space-y-5 text-center md:text-left max-w-full md:max-w-[800px]">
             <RevealAnimation delay={0.1}>
@@ -189,29 +176,6 @@ const Hero = () => {
               </li>
             </RevealAnimation>
           </ul>
-
-          {/* Phase 0: Urdu Interest Tracker - Only show on English pages */}
-          {locale === 'en' && (
-            <RevealAnimation delay={1.1}>
-              <div className="mt-6 px-4 sm:px-0">
-                <button
-                  onClick={handleUrduInterest}
-                  disabled={urduRequestSent}
-                  className={`text-sm flex items-center gap-2 ${
-                    urduRequestSent
-                      ? 'text-white/50 cursor-not-allowed'
-                      : 'text-white/90 hover:text-white hover:underline cursor-pointer'
-                  } transition-colors`}
-                  aria-label="Request Urdu language support"
-                >
-                  <span className="text-lg">🇵🇰</span>
-                  <span className="font-medium">
-                    {urduRequestSent ? '✓ شکریہ Thanks!' : 'اردو میں دیکھیں؟ (View in Urdu?)'}
-                  </span>
-                </button>
-              </div>
-            </RevealAnimation>
-          )}
 
           {/* Live Signal Notification */}
           <RevealAnimation delay={1.0}>

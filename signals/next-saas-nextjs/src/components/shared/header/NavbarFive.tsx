@@ -31,7 +31,7 @@ const NavbarFive: FC<NavbarFiveProps> = ({ className, megaMenuColor }) => {
       <header>
         <div
           className={cn(
-            'lp:!max-w-[1290px] fixed top-6 left-1/2 z-50 mx-auto flex w-full max-w-[320px] -translate-x-1/2 items-center justify-between rounded-full px-2.5 py-2.5 transition-all duration-500 ease-in-out min-[425px]:max-w-[360px] min-[500px]:max-w-[450px] sm:max-w-[540px] md:max-w-[720px] lg:max-w-[960px] xl:max-w-[1140px] xl:py-0',
+            'fixed top-6 left-1/2 z-50 mx-auto flex w-full max-w-[320px] -translate-x-1/2 items-center justify-between rounded-full px-2.5 py-2.5 transition-all duration-500 ease-in-out min-[425px]:max-w-[360px] min-[500px]:max-w-[450px] sm:max-w-[540px] md:max-w-[720px] lg:max-w-[960px] xl:max-w-[1140px] xl:py-0',
             isScrolled && 'bg-background-1 dark:bg-background-5 top-4 backdrop-blur-[15px]',
             className,
           )}>
