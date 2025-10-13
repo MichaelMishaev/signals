@@ -206,7 +206,7 @@ const Hero = () => {
                 </button>
               </li>
             </RevealAnimation>
-            <RevealAnimation delay={0.9} direction="left" offset={50}>
+            <RevealAnimation delay={0.8} direction="left" offset={50}>
               <li className="w-full sm:w-auto">
                 <button
                   onClick={scrollToSignals}

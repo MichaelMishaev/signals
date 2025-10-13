@@ -1,8 +1,9 @@
 import Hero from '@/components/tradesignal/Hero';
 import FooterOne from '@/components/shared/footer/FooterOne';
 import NavbarTwo from '@/components/shared/header/NavbarTwo';
-import TimelineSidebarLayout from '@/components/layout/TimelineSidebarLayout';
+import ContentTabsSwitcher from '@/components/layout/ContentTabsSwitcher';
 import AdBanner from '@/components/shared/banners/AdBanner';
+import getMarkDownData from '@/utils/getMarkDownData';
 import { Metadata, Viewport } from 'next';
 import { Fragment } from 'react';
 
@@ -19,6 +20,9 @@ export const viewport: Viewport = {
 };
 
 const TradeSignalHomepage = () => {
+  // Fetch news data on the server
+  const newsArticles = getMarkDownData('src/data/news');
+
   return (
     <Fragment>
       <NavbarTwo
@@ -30,7 +34,9 @@ const TradeSignalHomepage = () => {
       />
       <main className="bg-background-2 dark:bg-background-6 relative">
         <Hero />
-        <TimelineSidebarLayout />
+
+        {/* Content Tabs Switcher - Toggle between Signals and News */}
+        <ContentTabsSwitcher newsArticles={newsArticles} />
 
         {/* Footer Banner - Above footer - Auto-detects platform */}
         <AdBanner position="footer" />
