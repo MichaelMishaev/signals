@@ -87,7 +87,7 @@ const SignalsFeed = () => {
   };
 
   return (
-    <div className="p-6 bg-white dark:bg-background-6 rounded-2xl shadow-lg">
+    <div id="signals-feed-container" className="p-6 bg-white dark:bg-background-6 rounded-2xl shadow-lg">
       {/* Header */}
       <div className="text-center space-y-2 mb-6">
         <RevealAnimation delay={0.1}>

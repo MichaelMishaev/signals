@@ -57,40 +57,48 @@ const Hero = () => {
   const scrollToSignals = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    // Strategy: Wait for DOM to be ready, then find the first signal
     const findAndScrollToFirstSignal = () => {
-      // Try multiple selectors to find the signals section
+      console.log('🔍 Attempting to scroll to first signal...');
+
+      // Priority 1: Try to find signal cards by data attribute
       const signalCards = document.querySelectorAll('[data-signal-card]');
+      console.log(`📊 Found ${signalCards.length} signal cards`);
 
       if (signalCards.length > 0) {
-        // Always scroll to the FIRST signal (index 0)
+        console.log('✅ Scrolling to first signal card (index 0)');
         signalCards[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
         return true;
       }
 
-      // Fallback 1: Scroll to signals feed container
-      const signalsFeed = document.querySelector('.bg-white.dark\\:bg-background-6.rounded-2xl');
-      if (signalsFeed) {
-        signalsFeed.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Priority 2: Try to find signals feed container by ID
+      const signalsFeedById = document.getElementById('signals-feed-container');
+      if (signalsFeedById) {
+        console.log('✅ Scrolling to signals feed container (by ID)');
+        signalsFeedById.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return true;
       }
 
-      // Fallback 2: Scroll to timeline section
-      const timelineElement = document.querySelector('.bg-background-3.dark\\:bg-background-7');
+      // Priority 3: Try timeline section
+      const timelineElement = document.querySelector('section.bg-background-3, section.dark\\:bg-background-7');
       if (timelineElement) {
+        console.log('✅ Scrolling to timeline section (fallback)');
         timelineElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return true;
       }
 
+      console.log('❌ Could not find any scroll target');
       return false;
     };
 
     // Try immediately
-    if (!findAndScrollToFirstSignal()) {
-      // If fails, wait a bit for React to render signals, then retry
+    const success = findAndScrollToFirstSignal();
+
+    // If fails, retry after short delay for DOM to render
+    if (!success) {
+      console.log('⏳ Retrying in 200ms...');
       setTimeout(() => {
         findAndScrollToFirstSignal();
-      }, 100);
+      }, 200);
     }
   };
 

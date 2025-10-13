@@ -60,3 +60,7 @@ playwright-report/
 
 # Claude Code configuration
 .claude/
+
+# Image optimization backups (keep originals local only)
+**/*.original
+*.original
