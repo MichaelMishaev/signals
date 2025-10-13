@@ -38,50 +38,7 @@ const FooterOne = ({ className }: { className?: string }) => {
       <FooterLeftGradient />
       <div className="main-container px-5">
         <div className="grid grid-cols-12 justify-between gap-x-0 gap-y-16 pt-16 pb-12 xl:pt-[90px]">
-          <div className="col-span-12 xl:col-span-4">
-            <RevealAnimation delay={0.3}>
-              <div className="max-w-[306px]">
-                <figure>
-                  <Image src={darkLogo} alt="NextSass Logo" />
-                </figure>
-                <p className="text-accent/60 text-tagline-1 mt-4 mb-7 font-normal">
-                  {t('description')}
-                </p>
-                <div className="flex items-center gap-3">
-                  <Link target="_blank" href="https://www.facebook.com" className="footer-social-link">
-                    <span className="sr-only">Facebook</span>
-                    <Image className="size-6" src={facebook} alt="Facebook" />
-                  </Link>
-                  <div className="bg-stroke-1/20 h-6 w-px"></div>
-                  <Link target="_blank" href="https://www.instagram.com" className="footer-social-link">
-                    <span className="sr-only">Instagram</span>
-                    <Image className="size-6" src={instagram} alt="Instagram" />
-                  </Link>
-                  <div className="bg-stroke-1/20 h-6 w-px"></div>
-                  <Link target="_blank" href="https://www.youtube.com" className="footer-social-link">
-                    <span className="sr-only">Youtube</span>
-                    <Image className="size-6" src={youtube} alt="Youtube" />
-                  </Link>
-                  <div className="bg-stroke-1/20 h-6 w-px"></div>
-                  <Link target="_blank" href="https://www.linkedin.com" className="footer-social-link">
-                    <span className="sr-only">LinkedIn</span>
-                    <Image className="size-6" src={linkedin} alt="LinkedIn" />
-                  </Link>
-                  <div className="bg-stroke-1/20 h-6 w-px"></div>
-                  <Link target="_blank" href="https://www.dribbble.com" className="footer-social-link">
-                    <span className="sr-only">Dribbble</span>
-                    <Image className="size-6" src={dribbble} alt="Dribbble" />
-                  </Link>
-                  <div className="bg-stroke-1/20 h-6 w-px"></div>
-                  <Link target="_blank" href="https://www.behance.net" className="footer-social-link">
-                    <span className="sr-only">Behance</span>
-                    <Image className="size-6" src={behance} alt="Behance" />
-                  </Link>
-                </div>
-              </div>
-            </RevealAnimation>
-          </div>
-          <div className="col-span-12 grid grid-cols-12 gap-x-0 gap-y-8 xl:col-span-8">
+          <div className="col-span-12 grid grid-cols-12 gap-x-0 gap-y-8">
             <div className="col-span-12 md:col-span-6">
               <RevealAnimation delay={0.5}>
                 <div className="space-y-8">

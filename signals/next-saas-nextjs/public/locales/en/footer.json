@@ -24,15 +24,15 @@
   "riskDisclaimer": {
     "title": "Important Risk Disclaimer",
     "tradingRisk": "Trading Risk Warning:",
-    "tradingRiskText": "Trading foreign exchange, commodities, and stocks on margin carries a high level of risk and may not be suitable for all investors.",
+    "tradingRiskText": "Trading Forex, cryptocurrencies, commodities, and stocks involves substantial risk of loss. You could lose all invested capital. Only trade with money you can afford to lose. The majority of retail traders lose money.",
     "notFinancialAdvice": "Not Financial Advice:",
-    "notFinancialAdviceText": "Signals provided are for educational purposes only and should not be considered as financial advice or investment recommendations.",
+    "notFinancialAdviceText": "Signals are for educational purposes only and NOT financial advice. We are NOT licensed advisors or brokers. Make your own independent decisions and consult qualified professionals before investing.",
     "pastPerformance": "Past Performance:",
-    "pastPerformanceText": "Past performance is not indicative of future results. Historical win rates do not guarantee future trading success.",
+    "pastPerformanceText": "Past performance does not guarantee future results. Historical win rates do not predict future trading success. Individual results vary significantly.",
     "capitalAtRisk": "Capital at Risk:",
-    "capitalAtRiskText": "Only trade with money you can afford to lose. Never trade with borrowed money or funds required for essential expenses.",
+    "capitalAtRiskText": "Only trade with money you can afford to lose. Never use borrowed funds. You are solely responsible for all trading decisions. TradeSignal PK is NOT liable for any losses.",
     "secpCompliance": "SECP Compliance:",
-    "secpComplianceText": "TradeSignal PK operates in accordance with SECP guidelines. License No: [Pending]"
+    "secpComplianceText": "TradeSignal PK is an educational signals platform. We are NOT a licensed broker or advisor. We do NOT hold funds or execute trades. Use SECP-licensed brokers only. Verify at www.secp.gov.pk"
   },
   "copyright": "Copyright ©NextSaaS – smart application for modern business",
   "description": "Turpis tortor nunc sed amet et faucibus vitae morbi congue sed id mauris."

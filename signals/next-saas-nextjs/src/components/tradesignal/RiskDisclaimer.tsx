@@ -28,94 +28,118 @@ const RiskDisclaimer = () => {
 
                 <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
                   <p>
-                    <strong>HIGH RISK WARNING:</strong> Trading foreign exchange, commodities, options, futures, and
-                    stocks on margin carries an extremely high level of risk and may not be suitable for all investors.
-                    The high degree of leverage available can work against you as well as for you. Before deciding to
-                    trade, you should carefully consider your investment objectives, level of experience, and risk
-                    tolerance. There is a substantial risk of loss associated with trading. You could sustain a total
-                    loss of your initial investment and be required to deposit additional funds to maintain your
-                    position. Only invest funds that you can afford to lose completely.
+                    <strong>⚠️ HIGH RISK WARNING:</strong> Trading foreign exchange (Forex), cryptocurrencies,
+                    commodities, options, futures, and stocks involves <strong>substantial risk of loss</strong> and
+                    may not be suitable for all investors. You could lose some or all of your invested capital.
+                    Leverage can magnify both profits and losses. Before trading, carefully consider your financial
+                    situation, investment experience, risk tolerance, and objectives. <strong>Only trade with money you
+                    can afford to lose completely.</strong> Never use borrowed funds or money needed for essential
+                    expenses.
                   </p>
 
                   <p>
-                    <strong>LOSS OF CAPITAL WARNING:</strong> The majority of retail investor accounts lose money when
-                    trading leveraged products. You should consider whether you understand how leveraged products work
-                    and whether you can afford to take the high risk of losing your money. Statistics show that a
-                    significant percentage of traders experience losses. Do not invest money you cannot afford to lose.
+                    <strong>📊 MAJORITY OF TRADERS LOSE MONEY:</strong> Statistical data shows that the majority of
+                    retail traders lose money when trading leveraged products. You should consider whether you fully
+                    understand how these products work and whether you can afford to take the high risk of losing your
+                    money. Past success rates do not predict your individual performance.
                   </p>
 
                   <p>
-                    <strong>NOT FINANCIAL OR INVESTMENT ADVICE:</strong> The signals, analysis, and information provided
-                    by TradeSignal PK are for educational, informational, and entertainment purposes only. They do not
-                    constitute financial advice, investment recommendations, trading advice, or solicitations to buy or
-                    sell any securities or financial instruments. We are not registered investment advisors, and nothing
-                    on this platform should be interpreted as personalized investment advice. You are solely responsible
-                    for your own investment decisions.
+                    <strong>🚫 NOT FINANCIAL OR INVESTMENT ADVICE:</strong> TradeSignal PK is a <strong>trading
+                    signals platform for educational purposes only</strong>. All signals, analysis, commentary, and
+                    information provided are <strong>NOT</strong> financial advice, investment recommendations, or
+                    solicitations to buy/sell securities. We are <strong>NOT</strong> registered investment advisors,
+                    financial advisors, or brokers. You must make your own independent trading decisions and consult
+                    qualified financial professionals before investing.
                   </p>
 
                   <p>
-                    <strong>PAST PERFORMANCE DISCLAIMER:</strong> Past performance is not indicative of future results.
-                    Historical win rates, performance metrics, and trading results displayed on this platform are based
-                    on past data and do not guarantee or predict future trading performance. No representation is being
-                    made that any account will or is likely to achieve profits or losses similar to those shown. Trading
-                    results can vary significantly, and past success does not ensure future profitability.
+                    <strong>📈 PAST PERFORMANCE DOES NOT GUARANTEE FUTURE RESULTS:</strong> Historical win rates,
+                    performance metrics, and past trading results displayed on this platform do not guarantee or
+                    predict future performance. No representation is made that any account will achieve similar
+                    profits or losses. Market conditions change constantly, and individual results vary significantly
+                    based on execution, timing, broker, account size, and risk management.
                   </p>
 
                   <p>
-                    <strong>HYPOTHETICAL OR SIMULATED PERFORMANCE:</strong> Hypothetical or simulated performance
-                    results have certain limitations. Unlike actual trading records, simulated results do not represent
-                    actual trading and may not reflect the impact of market risks, liquidity issues, or other real-world
-                    trading factors. Simulated trading programs are generally designed with the benefit of hindsight, and
-                    no representation is made that any account will achieve results similar to those shown.
+                    <strong>🎯 SIGNALS ARE EDUCATIONAL INDICATORS ONLY:</strong> Trading signals provided by
+                    TradeSignal PK are educational market analysis indicators, not guaranteed trading instructions.
+                    Signals may be delayed, contain errors, or become invalid due to rapidly changing market
+                    conditions. You are solely responsible for independently verifying all information, conducting
+                    your own analysis, and deciding whether to act on any signal.
                   </p>
 
                   <p>
-                    <strong>YOUR SOLE RESPONSIBILITY:</strong> You acknowledge and agree that you are solely responsible
-                    for your investment decisions and any resulting gains or losses. You should conduct your own research
-                    and due diligence before making any trading decisions. If necessary, seek independent advice from a
-                    qualified financial advisor who understands your specific circumstances. TradeSignal PK does not
-                    provide personalized financial advice and cannot be held responsible for your trading decisions.
+                    <strong>💼 YOUR SOLE RESPONSIBILITY:</strong> You acknowledge that you are fully responsible for
+                    all trading decisions and their outcomes (profits or losses). You must conduct your own due
+                    diligence, risk assessment, and market research. TradeSignal PK does not make decisions for you
+                    and cannot be held responsible for your trading results, missed opportunities, execution problems,
+                    or any losses incurred.
                   </p>
 
                   <p>
-                    <strong>NO GUARANTEES:</strong> TradeSignal PK makes no guarantees, warranties, or promises regarding
-                    the accuracy, completeness, timeliness, or reliability of any signals, analysis, or information
-                    provided. Trading signals may contain errors, delays, or inaccuracies. We reserve the right to modify,
-                    suspend, or discontinue any service without prior notice. Your use of our platform is entirely at your
-                    own risk.
+                    <strong>❌ NO GUARANTEES OR WARRANTIES:</strong> TradeSignal PK provides information <strong>&quot;AS
+                    IS&quot;</strong> without any guarantees regarding accuracy, completeness, timeliness, or
+                    reliability. We make no promises about profitability, win rates, or signal performance. Technical
+                    issues, delays, errors, or service interruptions may occur. We reserve the right to modify or
+                    discontinue services without notice.
                   </p>
 
                   <p>
-                    <strong>LIMITATION OF LIABILITY:</strong> TradeSignal PK, its owners, employees, affiliates, and
-                    partners shall not be held liable for any direct, indirect, incidental, consequential, or special
-                    damages arising from your use of our platform or reliance on any information, signals, or analysis
-                    provided. This includes, but is not limited to, financial losses, lost profits, trading losses, or
-                    data loss. You agree to indemnify and hold harmless TradeSignal PK from any claims arising from your
-                    trading activities.
+                    <strong>⚖️ LIMITATION OF LIABILITY:</strong> <strong>Under no circumstances</strong> shall
+                    TradeSignal PK, its owners, employees, partners, or affiliates be liable for any trading losses,
+                    missed profits, direct, indirect, incidental, consequential, or special damages arising from use
+                    of this platform or reliance on any signals or information. You agree to hold TradeSignal PK
+                    harmless from any claims related to your trading activities.
                   </p>
 
                   <p>
-                    <strong>REGULATORY WARNING:</strong> Online trading and investing in financial markets may be subject
-                    to regulations in your jurisdiction. It is your responsibility to ensure compliance with all applicable
-                    laws, regulations, and licensing requirements. Some jurisdictions may prohibit or restrict certain
-                    types of trading activities. Verify that you are legally permitted to trade in your country of residence.
+                    <strong>🔒 BROKER RESPONSIBILITY:</strong> TradeSignal PK is <strong>NOT a broker</strong> and
+                    does not execute trades, hold funds, or manage client money. You must use properly licensed and
+                    regulated brokers for all trading activities. We are not responsible for broker actions, execution
+                    quality, spreads, commissions, technical problems, or any broker-related issues.
                   </p>
 
-                  <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border-l-4 border-yellow-500">
-                    <p className="text-xs text-yellow-800 dark:text-yellow-200">
-                      <strong>PAKISTAN REGULATORY NOTICE:</strong> TradeSignal PK operates in accordance with the
-                      Securities and Exchange Commission of Pakistan (SECP) guidelines and applicable financial
-                      regulations. We are committed to transparency, ethical practices, and client protection. This
-                      platform provides educational content and trading signals but does not operate as a regulated
-                      financial advisor or broker. All trading activities should be conducted through properly licensed
-                      and regulated brokers. For regulatory inquiries, contact the SECP at{' '}
-                      <a
-                        href="https://www.secp.gov.pk"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline hover:text-yellow-900 dark:hover:text-yellow-100">
-                        www.secp.gov.pk
-                      </a>
+                  <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border-l-4 border-yellow-500">
+                    <p className="text-xs text-yellow-900 dark:text-yellow-200 space-y-2">
+                      <strong className="block text-sm mb-2">🇵🇰 PAKISTAN REGULATORY COMPLIANCE (SECP):</strong>
+                      <span className="block">
+                        TradeSignal PK operates as an <strong>educational trading signals platform</strong> in
+                        accordance with Pakistani laws and SECP guidelines. We are committed to transparency and
+                        client protection.
+                      </span>
+                      <span className="block mt-2">
+                        <strong>Important:</strong> We are <strong>NOT</strong> a licensed broker, financial advisor,
+                        or investment advisor. We do <strong>NOT</strong> hold client funds, execute trades, or
+                        provide personalized financial advice.
+                      </span>
+                      <span className="block mt-2">
+                        <strong>Verify Your Broker:</strong> Always use SECP-licensed and regulated brokers. Verify
+                        broker credentials at{' '}
+                        <a
+                          href="https://www.secp.gov.pk"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline font-semibold hover:text-yellow-950 dark:hover:text-yellow-50">
+                          www.secp.gov.pk
+                        </a>
+                      </span>
+                      <span className="block mt-2 text-[10px] italic">
+                        Note: As of 2025, no Forex brokers are SECP-regulated for retail Forex trading in Pakistan.
+                        International brokers operate under their respective jurisdictions. Users must verify
+                        regulatory status and assume all risks.
+                      </span>
+                    </p>
+                  </div>
+
+                  <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-300 dark:border-red-700">
+                    <p className="text-xs font-bold text-red-900 dark:text-red-200 text-center">
+                      ⚠️ FINAL WARNING: THE MAJORITY OF RETAIL TRADERS LOSE MONEY ⚠️
+                    </p>
+                    <p className="text-xs text-red-800 dark:text-red-300 mt-2 text-center">
+                      Before risking your capital, ensure you fully understand the risks involved and are financially
+                      prepared to accept complete loss of your investment. If in doubt, seek professional financial
+                      advice.
                     </p>
                   </div>
 
