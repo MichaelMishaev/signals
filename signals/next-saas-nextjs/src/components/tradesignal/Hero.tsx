@@ -7,6 +7,7 @@ import RevealAnimation from '../animation/RevealAnimation';
 import LinkButton from '../ui/button/LinkButton';
 import { useState } from 'react';
 import SignalSummaryModal from './SignalSummaryModal';
+import Toast from '../shared/Toast';
 
 const Hero = () => {
   const t = useTranslations('hero');
@@ -15,6 +16,8 @@ const Hero = () => {
   const pathname = usePathname();
   const [urduRequestSent, setUrduRequestSent] = useState(false);
   const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const switchLanguage = (newLocale: string) => {
     const pathWithoutLocale = pathname.replace(/^\/(en|ur)/, '');
@@ -37,38 +40,63 @@ const Hero = () => {
 
       setUrduRequestSent(true);
 
-      // Show feedback message
-      alert('شکریہ! Thank you for your interest!\n\nWe\'re evaluating Urdu language support. Your feedback helps us prioritize features.');
+      // Show toast notification instead of alert
+      setToastMessage('شکریہ! Thank you for your interest!\n\nWe\'re evaluating Urdu language support. Your feedback helps us prioritize features.');
+      setShowToast(true);
 
       // Reset after 5 seconds
       setTimeout(() => setUrduRequestSent(false), 5000);
     } catch (error) {
       console.error('Failed to track Urdu interest:', error);
       // Still show message even if tracking fails
-      alert('شکریہ! Thank you for your interest!');
+      setToastMessage('شکریہ! Thank you for your interest!');
+      setShowToast(true);
     }
   };
 
-  const scrollToLastSignal = (e: React.MouseEvent) => {
+  const scrollToSignals = (e: React.MouseEvent) => {
     e.preventDefault();
-    // Try to find the last signal card in the signals feed
-    const signalCards = document.querySelectorAll('[data-signal-card]');
-    const lastSignal = signalCards[signalCards.length - 1];
 
-    if (lastSignal) {
-      lastSignal.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else {
-      // Fallback: scroll to timeline section if no signals found
+    // Strategy: Wait for DOM to be ready, then find the first signal
+    const findAndScrollToFirstSignal = () => {
+      // Try multiple selectors to find the signals section
+      const signalCards = document.querySelectorAll('[data-signal-card]');
+
+      if (signalCards.length > 0) {
+        // Always scroll to the FIRST signal (index 0)
+        signalCards[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return true;
+      }
+
+      // Fallback 1: Scroll to signals feed container
+      const signalsFeed = document.querySelector('.bg-white.dark\\:bg-background-6.rounded-2xl');
+      if (signalsFeed) {
+        signalsFeed.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return true;
+      }
+
+      // Fallback 2: Scroll to timeline section
       const timelineElement = document.querySelector('.bg-background-3.dark\\:bg-background-7');
       if (timelineElement) {
         timelineElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return true;
       }
+
+      return false;
+    };
+
+    // Try immediately
+    if (!findAndScrollToFirstSignal()) {
+      // If fails, wait a bit for React to render signals, then retry
+      setTimeout(() => {
+        findAndScrollToFirstSignal();
+      }, 100);
     }
   };
 
   return (
     <section className="md:mt-4 lg:mt-6 xl:mt-[30px]">
-      <div className="max-w-[1860px] mx-auto pt-[170px] sm:pt-[190px] md:pt-[210px] lg:pt-[220px] pb-[80px] sm:pb-[100px] lg:pb-[200px] min-h-[600px] md:max-h-[940px] md:rounded-[30px] xl:rounded-[50px] relative overflow-hidden bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 dark:from-primary-700 dark:via-primary-600 dark:to-primary-500">
+      <div className="max-w-[1860px] mx-auto pt-[100px] sm:pt-[130px] md:pt-[160px] lg:pt-[180px] pb-[60px] sm:pb-[80px] lg:pb-[150px] min-h-[600px] md:max-h-[940px] md:rounded-3xl xl:rounded-[40px] relative overflow-hidden bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 dark:from-primary-600 dark:via-primary-500 dark:to-primary-400">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -88,35 +116,39 @@ const Hero = () => {
                 </span>
 
                 {/* Language Pills - Enhanced Visibility */}
-                <div className="flex gap-2 p-1 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+                <div className="flex gap-2 p-1 bg-white/10 backdrop-blur-sm rounded-full border border-white/20" role="group" aria-label="Language selector">
                   <button
                     onClick={() => switchLanguage('en')}
+                    aria-label={locale === 'en' ? 'English - Current language' : 'Switch to English'}
+                    aria-current={locale === 'en' ? 'true' : 'false'}
                     className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 ${
                       locale === 'en'
                         ? 'bg-white text-primary-600 shadow-lg scale-105'
                         : 'bg-transparent text-white hover:bg-white/20 hover:scale-105'
                     }`}
                   >
-                    🇬🇧 English
+                    <span aria-hidden="true">🇬🇧</span> <span lang="en">English</span>
                   </button>
                   <button
                     onClick={() => switchLanguage('ur')}
+                    aria-label={locale === 'ur' ? 'اردو - موجودہ زبان' : 'اردو میں تبدیل کریں'}
+                    aria-current={locale === 'ur' ? 'true' : 'false'}
                     className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 ${
                       locale === 'ur'
                         ? 'bg-white text-primary-600 shadow-lg scale-105'
                         : 'bg-transparent text-white hover:bg-white/20 hover:scale-105'
                     }`}
                   >
-                    🇵🇰 اردو
+                    <span aria-hidden="true">🇵🇰</span> <span lang="ur">اردو</span>
                   </button>
                 </div>
               </div>
             </RevealAnimation>
             <div className="space-y-2.5 md:space-y-4">
               <RevealAnimation delay={0.2}>
-                <h1 className="max-w-full md:max-w-[800px] leading-[1.2] text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
+                <h1 className="max-w-full md:max-w-[800px] leading-[1.15] text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
                   <span className="text-white block">{t('title.line1')}</span>
-                  <span className="text-ns-yellow block mt-2">{t('title.line2')}</span>
+                  <span className="text-ns-yellow block mt-1.5 sm:mt-2">{t('title.line2')}</span>
                 </h1>
               </RevealAnimation>
               <RevealAnimation delay={0.3}>
@@ -155,9 +187,9 @@ const Hero = () => {
           <ul className="flex flex-col sm:flex-row items-center sm:items-start gap-y-4 gap-x-4 justify-center sm:justify-start mt-12 md:mt-14 lg:mb-[100px] px-4 sm:px-0">
             <RevealAnimation delay={0.7} direction="left" offset={50}>
               <li className="w-full sm:w-auto relative">
-                {/* HOT Badge */}
-                <span className="absolute -top-3 -right-2 z-10 inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold rounded-full shadow-lg animate-bounce">
-                  🔥 HOT
+                {/* Free Trial Badge */}
+                <span className="absolute -top-3 -right-2 z-10 inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-bold rounded-full shadow-lg">
+                  ✓ 7-Day Free Trial
                 </span>
                 <button
                   onClick={() => setShowSummaryModal(true)}
@@ -169,7 +201,7 @@ const Hero = () => {
             <RevealAnimation delay={0.9} direction="left" offset={50}>
               <li className="w-full sm:w-auto">
                 <button
-                  onClick={scrollToLastSignal}
+                  onClick={scrollToSignals}
                   className="btn btn-lg md:btn-xl btn-dark bg-white/20 backdrop-blur-sm mx-auto sm:mx-0 block md:inline-block w-[90%] md:w-auto hover:bg-white/30 text-white border-white/30">
                   {t('cta.viewLiveSignals')}
                 </button>
@@ -201,6 +233,16 @@ const Hero = () => {
         isOpen={showSummaryModal}
         onClose={() => setShowSummaryModal(false)}
       />
+
+      {/* Toast Notification */}
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          type="success"
+          onClose={() => setShowToast(false)}
+          duration={6000}
+        />
+      )}
     </section>
   );
 };

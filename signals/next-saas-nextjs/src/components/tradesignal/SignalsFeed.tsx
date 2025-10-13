@@ -144,9 +144,10 @@ const SignalsFeed = () => {
       {/* Signals List */}
       <div className="space-y-4">
         {loading ? (
-          <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+          <div className="text-center py-8" role="status" aria-live="polite">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto" aria-hidden="true"></div>
             <p className="text-sm text-secondary/60 mt-2">{t('loading')}</p>
+            <span className="sr-only">Loading signals, please wait...</span>
           </div>
         ) : filteredSignals.length === 0 ? (
           <div className="text-center py-8">

@@ -320,8 +320,8 @@ const ChangelogContent = () => {
         </div>
 
         <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 bg-stroke-2 dark:bg-stroke-6 h-full hidden lg:block"></div>
+          {/* Timeline line - visible on mobile too (left side) */}
+          <div className="absolute lg:left-1/2 left-2 lg:transform lg:-translate-x-1/2 w-0.5 bg-stroke-2 dark:bg-stroke-6 h-full"></div>
 
           <div className="space-y-8">
             <RevealAnimation delay={0.5}>
@@ -333,9 +333,10 @@ const ChangelogContent = () => {
             </RevealAnimation>
 
             {loading ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+              <div className="text-center py-8" role="status" aria-live="polite">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto" aria-hidden="true"></div>
                 <p className="text-sm text-secondary/60 mt-2">{t('sidebar.loading')}</p>
+                <span className="sr-only">Loading timeline, please wait...</span>
               </div>
             ) : signalsData.length === 0 ? (
               <div className="text-center py-8">
@@ -345,11 +346,11 @@ const ChangelogContent = () => {
               signalsData.map((signal, index) => (
               <React.Fragment key={`${signal.id}-${index}`}>
               <RevealAnimation delay={0.6 + index * 0.1}>
-                <div className="relative max-w-[850px] mx-auto">
-                  {/* Timeline dot with priority indicator */}
+                <div className="relative max-w-[850px] mx-auto pl-8 lg:pl-0">
+                  {/* Timeline dot with priority indicator - visible on mobile too */}
                   <div
-                    className={`absolute left-1/2 transform -translate-x-1/2 w-4 h-4 ${getPriorityDotColor(signal.priority)} rounded-full border-4 border-background-3 dark:border-background-7 z-20 -mt-2 hidden lg:block shadow-lg`}>
-                    <div className="w-2 h-2 bg-white dark:bg-background-8 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+                    className={`absolute lg:left-1/2 left-0 lg:transform lg:-translate-x-1/2 w-3 h-3 lg:w-4 lg:h-4 ${getPriorityDotColor(signal.priority)} rounded-full border-2 lg:border-4 border-background-3 dark:border-background-7 z-20 -mt-2 shadow-lg`}>
+                    <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 bg-white dark:bg-background-8 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
                   </div>
 
                   {/* Time stamp */}
@@ -385,7 +386,7 @@ const ChangelogContent = () => {
                   {/* Wrap signal content with Link only if drill data is available */}
                   {signal.type === 'SIGNAL' && signal.hasDrillData ? (
                     <Link href={`/signal/${signal.id}`} className="block">
-                      <div className="bg-gradient-to-br from-background-2 to-background-3 dark:from-background-6 dark:to-background-7 px-[42px] py-10 space-y-6 rounded-[20px] relative overflow-hidden z-10 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer">
+                      <div className="bg-gradient-to-br from-background-2 to-background-3 dark:from-background-6 dark:to-background-7 px-[42px] py-10 space-y-6 rounded-2xl relative overflow-hidden z-10 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer">
                         {/* STEP 7: Simplified CSS gradient - no complex images */}
 
                         {/* Signal Header */}
@@ -418,27 +419,27 @@ const ChangelogContent = () => {
                               </div>
                             </div>
 
-                            <div className="grid grid-cols-3 gap-4 text-sm">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 text-sm">
                               {signal.entry && (
-                                <div>
-                                  <span className="block text-secondary/60 dark:text-accent/60">{t('sidebar.labels.entry')}</span>
-                                  <span className="font-semibold text-gray-900 dark:text-white">
+                                <div className="min-w-0">
+                                  <span className="block text-secondary/60 dark:text-accent/60 text-xs sm:text-sm truncate">{t('sidebar.labels.entry')}</span>
+                                  <span className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">
                                     {signal.entry.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
                                   </span>
                                 </div>
                               )}
                               {signal.stopLoss && (
-                                <div>
-                                  <span className="block text-secondary/60 dark:text-accent/60">{t('sidebar.labels.stopLoss')}</span>
-                                  <span className="font-semibold text-red-600 dark:text-ns-red">
+                                <div className="min-w-0">
+                                  <span className="block text-secondary/60 dark:text-accent/60 text-xs sm:text-sm truncate">{t('sidebar.labels.stopLoss')}</span>
+                                  <span className="font-semibold text-red-600 dark:text-ns-red text-sm sm:text-base">
                                     {signal.stopLoss.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
                                   </span>
                                 </div>
                               )}
                               {signal.takeProfit && (
-                                <div>
-                                  <span className="block text-secondary/60 dark:text-accent/60">{t('sidebar.labels.takeProfit')}</span>
-                                  <span className="font-semibold text-primary-600 dark:text-ns-green">
+                                <div className="min-w-0 col-span-2 sm:col-span-1">
+                                  <span className="block text-secondary/60 dark:text-accent/60 text-xs sm:text-sm truncate">{t('sidebar.labels.takeProfit')}</span>
+                                  <span className="font-semibold text-primary-600 dark:text-ns-green text-sm sm:text-base">
                                     {signal.takeProfit.toFixed(signal.pair.includes('PKR') ? 2 : 4)}
                                   </span>
                                 </div>
@@ -484,7 +485,7 @@ const ChangelogContent = () => {
                     </Link>
                   ) : signal.type === 'SIGNAL' && !signal.hasDrillData ? (
                     /* Non-clickable signal without drill data */
-                    <div className="bg-gradient-to-br from-background-2 to-background-3 dark:from-background-6 dark:to-background-7 px-[42px] py-10 space-y-6 rounded-[20px] relative overflow-hidden z-10 opacity-90">
+                    <div className="bg-gradient-to-br from-background-2 to-background-3 dark:from-background-6 dark:to-background-7 px-[42px] py-10 space-y-6 rounded-2xl relative overflow-hidden z-10 opacity-90">
                       {/* STEP 7: Simplified CSS gradient - no complex images */}
 
                       {/* Signal content */}
@@ -540,7 +541,7 @@ const ChangelogContent = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-gradient-to-br from-background-2 to-background-3 dark:from-background-6 dark:to-background-7 px-[42px] py-10 space-y-6 rounded-[20px] relative overflow-hidden z-10">
+                    <div className="bg-gradient-to-br from-background-2 to-background-3 dark:from-background-6 dark:to-background-7 px-[42px] py-10 space-y-6 rounded-2xl relative overflow-hidden z-10">
                       {/* STEP 7: Simplified CSS gradient - no complex images */}
 
                       {/* Non-signal content */}

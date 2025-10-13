@@ -125,7 +125,7 @@ const FooterOne = ({ className }: { className?: string }) => {
         {/* Risk Disclaimer Section */}
         <div className="mt-12 mb-8">
           <RevealAnimation delay={0.7}>
-            <div className="bg-red-50 dark:bg-red-900/10 border-2 border-red-200 dark:border-red-800 rounded-xl p-6 md:p-8">
+            <div className="bg-red-50 dark:bg-red-900/10 border-3 border-red-300 dark:border-red-700 rounded-2xl p-6 md:p-8">
               <div className="flex items-start gap-4">
                 <div className="bg-red-100 dark:bg-red-900/30 p-3 rounded-lg flex-shrink-0">
                   <svg
