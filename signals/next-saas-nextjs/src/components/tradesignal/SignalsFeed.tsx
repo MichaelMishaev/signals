@@ -7,6 +7,7 @@ import { SignalData } from '@/utils/supabase';
 import { ActionButton } from '@/components/shared/sharedbuttons';
 import AdBanner from '@/components/shared/banners/AdBanner';
 import { trackAffiliateClick } from '@/utils/affiliateTracking';
+import { fetchLivePrices, calculatePnL, formatPrice, LivePrice, PriceCache } from '@/services/livePriceService';
 
 const SignalsFeed = () => {
   const t = useTranslations('signals.sidebar');
@@ -16,6 +17,8 @@ const SignalsFeed = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedMarket, setSelectedMarket] = useState<string>('ALL');
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [livePrices, setLivePrices] = useState<PriceCache>({});
+  const [pricesLoading, setPricesLoading] = useState(false);
 
   // Fetch signals from API
   useEffect(() => {
@@ -24,6 +27,12 @@ const SignalsFeed = () => {
         const response = await fetch(`/api/signals?limit=5&status=ACTIVE&locale=${locale}`);
         const data = await response.json();
         setSignals(data.signals || []);
+
+        // Fetch live prices for all signal pairs
+        if (data.signals && data.signals.length > 0) {
+          const pairs = data.signals.map((s: SignalData) => s.pair);
+          fetchPricesForPairs(pairs);
+        }
       } catch (error) {
         console.error('Error fetching signals:', error);
       } finally {
@@ -38,6 +47,33 @@ const SignalsFeed = () => {
     return () => clearInterval(interval);
   }, [locale]);
 
+  // Fetch live prices for given pairs
+  const fetchPricesForPairs = async (pairs: string[]) => {
+    if (!pairs || pairs.length === 0) return;
+
+    setPricesLoading(true);
+    try {
+      const prices = await fetchLivePrices(pairs);
+      setLivePrices(prices);
+    } catch (error) {
+      console.error('Error fetching live prices:', error);
+    } finally {
+      setPricesLoading(false);
+    }
+  };
+
+  // Auto-refresh prices every 30 seconds
+  useEffect(() => {
+    if (signals.length === 0) return;
+
+    const interval = setInterval(() => {
+      const pairs = signals.map(s => s.pair);
+      fetchPricesForPairs(pairs);
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
+  }, [signals]);
+
   // Manual refresh function
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -45,6 +81,12 @@ const SignalsFeed = () => {
       const response = await fetch(`/api/signals?limit=5&status=ACTIVE&locale=${locale}`);
       const data = await response.json();
       setSignals(data.signals || []);
+
+      // Also refresh live prices
+      if (data.signals && data.signals.length > 0) {
+        const pairs = data.signals.map((s: SignalData) => s.pair);
+        await fetchPricesForPairs(pairs);
+      }
     } catch (error) {
       console.error('Error refreshing signals:', error);
     } finally {
@@ -190,6 +232,34 @@ const SignalsFeed = () => {
                       <span className={`text-lg ${getSignalTypeStyles(signal.action)}`}>{signal.action}</span>
                       <span className="text-xs font-bold text-gray-900 dark:text-white">{signal.confidence}%</span>
                     </div>
+
+                    {/* Live Price & P/L Indicator */}
+                    {livePrices[signal.pair] && (
+                      <div className="mb-2 p-2 bg-white dark:bg-background-6 rounded-lg border-2 border-dashed border-primary-300 dark:border-primary-700">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Current Price</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold text-gray-900 dark:text-white">
+                              {formatPrice(livePrices[signal.pair].price, signal.pair)}
+                            </span>
+                            {(() => {
+                              const pnl = calculatePnL(livePrices[signal.pair].price, signal.entry, signal.action);
+                              return (
+                                <span className={`text-xs font-bold ${pnl.isProfit ? 'text-green-600' : 'text-red-600'}`}>
+                                  {pnl.isProfit ? '▲' : '▼'} {Math.abs(pnl.pnlPercent).toFixed(2)}%
+                                </span>
+                              );
+                            })()}
+                          </div>
+                        </div>
+                        {livePrices[signal.pair].changePercent24h !== undefined && (
+                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            24h: {livePrices[signal.pair].changePercent24h! > 0 ? '+' : ''}
+                            {livePrices[signal.pair].changePercent24h!.toFixed(2)}%
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     {/* Entry, SL, TP */}
                     <div className="space-y-1 text-xs">
