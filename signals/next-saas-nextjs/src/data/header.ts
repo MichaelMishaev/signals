@@ -19,44 +19,9 @@ export interface MegaMenuColumn {
 
 export const navigationItems: NavigationItem[] = [
   {
-    id: 'home',
-    label: 'Home',
-    href: '#',
-    hasDropdown: true,
-    megaMenuComponent: 'HomeMegaMenu',
-  },
-  {
-    id: 'pages',
-    label: 'Pages',
-    href: '#',
-    hasDropdown: true,
-    megaMenuComponent: 'PageMegaMenu',
-  },
-  {
-    id: 'about',
-    label: 'About',
-    href: '#',
-    hasDropdown: true,
-    megaMenuComponent: 'AboutMenu',
-  },
-  {
-    id: 'services',
-    label: 'Services',
-    href: '#',
-    hasDropdown: true,
-    megaMenuComponent: 'ServicesMenu',
-  },
-  {
-    id: 'blog',
-    label: 'Blog',
-    href: '#',
-    hasDropdown: true,
-    megaMenuComponent: 'BlogMenu',
-  },
-  {
-    id: 'contact',
-    label: 'Contact Us',
-    href: '/contact-us',
+    id: 'news',
+    label: 'News',
+    href: '/news',
     hasDropdown: false,
   },
 ];

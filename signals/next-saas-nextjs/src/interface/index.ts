@@ -85,3 +85,21 @@ export interface ITeamMember {
   [key: string]: any;
   slug: string;
 }
+
+export interface INewsArticle {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: 'Market Analysis' | 'SECP Updates' | 'Trading Education' | 'Platform News' | 'Crypto News' | 'Forex News';
+  author: string;
+  authorImage?: string;
+  publishDate: string;
+  readTime: string;
+  thumbnail: string;
+  slug: string;
+  featured?: boolean;
+  relatedSymbols?: string[]; // e.g., ['BTC/USD', 'EUR/USD']
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
