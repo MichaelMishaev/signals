@@ -140,15 +140,31 @@ export const sendMagicLinkEmail = async (email: string, baseUrl: string, returnU
     const { data, error } = await client.emails.send(emailData);
 
     if (error) {
-      console.error("Resend error:", error);
-      return { success: false, error };
+      console.error("Resend error details:", JSON.stringify(error, null, 2));
+      console.error("Email data attempted:", {
+        from: emailData.from,
+        to: emailData.to,
+        hasApiKey: !!process.env.RESEND_API_KEY
+      });
+      return {
+        success: false,
+        error: typeof error === 'string' ? error : JSON.stringify(error)
+      };
     }
 
     console.log("Magic link sent via Resend:", data?.id);
     return { success: true, token };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error sending magic link:", error);
-    return { success: false, error };
+    console.error("Error details:", {
+      message: error?.message,
+      name: error?.name,
+      stack: error?.stack
+    });
+    return {
+      success: false,
+      error: error?.message || String(error)
+    };
   }
 };
 
@@ -226,15 +242,31 @@ export const sendVerificationCodeEmail = async (email: string) => {
     const { data, error } = await client.emails.send(emailData);
 
     if (error) {
-      console.error("Resend error:", error);
-      return { success: false, error };
+      console.error("Resend error (verification code):", JSON.stringify(error, null, 2));
+      console.error("Email data attempted:", {
+        from: emailData.from,
+        to: emailData.to,
+        hasApiKey: !!process.env.RESEND_API_KEY
+      });
+      return {
+        success: false,
+        error: typeof error === 'string' ? error : JSON.stringify(error)
+      };
     }
 
     console.log("Verification code sent via Resend:", data?.id);
     return { success: true, code };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error sending verification code:", error);
-    return { success: false, error };
+    console.error("Error details:", {
+      message: error?.message,
+      name: error?.name,
+      stack: error?.stack
+    });
+    return {
+      success: false,
+      error: error?.message || String(error)
+    };
   }
 };
 

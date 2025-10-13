@@ -146,8 +146,25 @@ export async function POST(request: NextRequest) {
         const result = await sendMagicLinkEmail(normalizedEmail, baseUrl, returnUrl);
 
         if (!result.success) {
+          // Log detailed error for debugging
+          console.error("[drill-access] Email sending failed:", {
+            error: result.error,
+            email: normalizedEmail,
+            hasResendKey: !!process.env.RESEND_API_KEY,
+            emailFrom: process.env.EMAIL_FROM,
+            nodeEnv: process.env.NODE_ENV
+          });
+
           return NextResponse.json(
-            { error: "Failed to send verification email", details: result.error },
+            {
+              error: "Failed to send verification email",
+              details: result.error,
+              // In development, still provide the magic link for testing
+              ...(process.env.NODE_ENV === 'development' && result.magicLink ? {
+                developmentLink: result.magicLink,
+                message: "Email failed but here's your magic link for testing"
+              } : {})
+            },
             { status: 500 }
           );
         }
