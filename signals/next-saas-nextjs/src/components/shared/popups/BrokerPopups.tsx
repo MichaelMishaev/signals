@@ -9,6 +9,7 @@
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/utils/cn';
 import { POPUP_CONFIG, PopupType } from '@/config/popups';
+import { trackAffiliateClick } from '@/utils/affiliateTracking';
 
 interface BrokerPopupProps {
   type: PopupType;
@@ -46,9 +47,24 @@ export const BrokerPopup: React.FC<BrokerPopupProps> = ({ type, isOpen, onClose 
     }, 300);
   };
 
-  const handleAction = () => {
-    // Open broker URL in new tab
-    window.open(POPUP_CONFIG.brokerUrl, '_blank');
+  const handleAction = async () => {
+    // Track affiliate click based on popup type
+    const sourceMap: Record<PopupType, any> = {
+      idle: 'popup_idle',
+      contentAccess: 'popup_content_access',
+      fourthAction: 'popup_fourth_action',
+      exitIntent: 'popup_exit_intent',
+    };
+
+    const affiliateUrl = await trackAffiliateClick({
+      source: sourceMap[type],
+      metadata: {
+        popupType: type,
+      },
+    });
+
+    // Open affiliate link in new tab
+    window.open(affiliateUrl, '_blank');
     handleClose();
   };
 

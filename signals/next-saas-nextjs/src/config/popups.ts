@@ -5,7 +5,7 @@
 
 export const POPUP_CONFIG = {
   // Single URL that all popups link to - change in one place
-  brokerUrl: 'https://broker-signup-url.com', // TODO: Update with actual broker URL
+  brokerUrl: 'https://one.exnessonelink.com/a/c_8f0nxidtbt', // Exness OneLink affiliate URL
 
   // Popup messages (~15 words each)
   messages: {

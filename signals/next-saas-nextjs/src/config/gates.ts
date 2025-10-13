@@ -5,9 +5,9 @@
 
 export const GATE_CONFIG = {
   // ============================================================================
-  // BROKER URL
+  // BROKER URL - Exness Affiliate Link
   // ============================================================================
-  brokerUrl: 'https://broker-signup-url.com', // TODO: Update with actual broker URL
+  brokerUrl: 'https://one.exnessonelink.com/a/c_8f0nxidtbt', // Exness OneLink affiliate URL
 
   // ============================================================================
   // EMAIL GATE

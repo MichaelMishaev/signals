@@ -7,6 +7,7 @@ import RevealAnimation from '../animation/RevealAnimation';
 import { SignalData } from '@/utils/supabase';
 import { ActionButton } from '@/components/shared/sharedbuttons';
 import AdBanner from '@/components/shared/banners/AdBanner';
+import { trackAffiliateClick } from '@/utils/affiliateTracking';
 
 interface SignalUpdate {
   id: number;
@@ -460,10 +461,26 @@ const ChangelogContent = () => {
                             )}
 
                             {/* Action Button for Signal */}
-                            <div className="pt-3">
+                            <div className="pt-3" onClick={(e) => e.preventDefault()}>
                               <ActionButton
                                 variant={['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'][index % 4] as any}
-                                onClick={() => console.log(`Execute ${signal.action} for ${signal.pair}`)}
+                                onClick={async (e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  const buttonVariants = ['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'];
+                                  const variant = buttonVariants[index % 4];
+                                  const affiliateUrl = await trackAffiliateClick({
+                                    signalId: signal.id,
+                                    source: 'homepage_feed',
+                                    buttonVariant: variant,
+                                    metadata: {
+                                      signalAction: signal.action,
+                                      signalPair: signal.pair,
+                                      fromPage: 'timeline',
+                                    },
+                                  });
+                                  window.open(affiliateUrl, '_blank');
+                                }}
                                 fullWidth
                                 size="md"
                                 customText={signal.action === 'BUY' ? tCommon('actions.buyOrder') : tCommon('actions.sellOrder')}
@@ -518,7 +535,21 @@ const ChangelogContent = () => {
                           <div className="pt-3">
                             <ActionButton
                               variant={['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'][index % 4] as any}
-                              onClick={() => console.log(`Execute ${signal.action} for ${signal.pair}`)}
+                              onClick={async () => {
+                                const buttonVariants = ['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'];
+                                const variant = buttonVariants[index % 4];
+                                const affiliateUrl = await trackAffiliateClick({
+                                  signalId: signal.id,
+                                  source: 'homepage_feed',
+                                  buttonVariant: variant,
+                                  metadata: {
+                                    signalAction: signal.action,
+                                    signalPair: signal.pair,
+                                    fromPage: 'timeline_basic',
+                                  },
+                                });
+                                window.open(affiliateUrl, '_blank');
+                              }}
                               fullWidth
                               size="md"
                               customText={signal.action === 'BUY' ? 'BUY ORDER' : 'SELL ORDER'}

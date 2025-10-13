@@ -9,6 +9,15 @@ import { GateManager } from '@/components/shared/gates';
 import { useGateFlow } from '@/hooks/useGateFlow';
 import ExnessBanner from '@/components/shared/ExnessBanner';
 import ExnessFooterBanner from '@/components/shared/ExnessFooterBanner';
+import { trackAffiliateClick } from '@/utils/affiliateTracking';
+
+// Market data interface
+interface MarketData {
+  pair: string;
+  price: number;
+  change24h: number;
+  volume?: string;
+}
 
 interface Signal {
   id: number;
@@ -65,10 +74,73 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
   const [activeTab, setActiveTab] = useState<string>(drills.length > 0 ? drills[0].type : 'overview');
   const [buttonPressed, setButtonPressed] = useState<boolean>(false);
   const [shouldShowContent, setShouldShowContent] = useState<boolean>(true); // First drill is always free
+  const [marketData, setMarketData] = useState<MarketData[]>([]);
+  const [marketDataLoading, setMarketDataLoading] = useState<boolean>(true);
 
   // NEW Gate Flow Hook - single source of truth for gate state
   const gateFlow = useGateFlow({ confidence: signal.confidence, currentProfit: signal.pips });
   const { onDrillView, hasEmail, drillsViewed, activeGate } = gateFlow;
+
+  // Fetch real-time market data
+  useEffect(() => {
+    const fetchMarketData = async () => {
+      try {
+        setMarketDataLoading(true);
+
+        // Fetch crypto prices from CoinGecko (no API key needed)
+        const cryptoResponse = await fetch(
+          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,ripple&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true'
+        );
+        const cryptoData = await cryptoResponse.json();
+
+        // Fetch forex rates from ExchangeRate-API (no API key needed)
+        const forexResponse = await fetch('https://open.er-api.com/v6/latest/USD');
+        const forexData = await forexResponse.json();
+
+        // Format the data
+        const marketDataArray: MarketData[] = [
+          {
+            pair: 'BTC/USD',
+            price: cryptoData.bitcoin?.usd || 0,
+            change24h: cryptoData.bitcoin?.usd_24h_change || 0,
+            volume: cryptoData.bitcoin?.usd_24h_vol ? `$${(cryptoData.bitcoin.usd_24h_vol / 1000000000).toFixed(2)}B` : undefined,
+          },
+          {
+            pair: 'ETH/USD',
+            price: cryptoData.ethereum?.usd || 0,
+            change24h: cryptoData.ethereum?.usd_24h_change || 0,
+            volume: cryptoData.ethereum?.usd_24h_vol ? `$${(cryptoData.ethereum.usd_24h_vol / 1000000000).toFixed(2)}B` : undefined,
+          },
+          {
+            pair: 'EUR/USD',
+            price: forexData.rates?.EUR ? 1 / forexData.rates.EUR : 0,
+            change24h: 0, // Forex API doesn't provide 24h change
+          },
+          {
+            pair: 'GBP/USD',
+            price: forexData.rates?.GBP ? 1 / forexData.rates.GBP : 0,
+            change24h: 0,
+          },
+        ];
+
+        setMarketData(marketDataArray);
+      } catch (error) {
+        console.error('Error fetching market data:', error);
+        // Fallback data if API fails
+        setMarketData([
+          { pair: 'BTC/USD', price: 0, change24h: 0 },
+          { pair: 'EUR/USD', price: 0, change24h: 0 },
+        ]);
+      } finally {
+        setMarketDataLoading(false);
+      }
+    };
+
+    fetchMarketData();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchMarketData, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Handler to start the trading flow
   const handleStartTrading = () => {
@@ -118,21 +190,55 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center">
               <div className="hidden sm:block flex-1">
-                <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
-                  Educational content • Risk disclosure applies
-                </p>
+                {marketDataLoading ? (
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 animate-pulse">
+                    Loading market data...
+                  </p>
+                ) : (
+                  <div className="flex items-center gap-4 overflow-x-auto">
+                    {marketData.slice(0, 3).map((data, index) => (
+                      <div key={index} className="flex items-center gap-2 whitespace-nowrap">
+                        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                          {data.pair}
+                        </span>
+                        <span className="text-xs font-bold text-gray-900 dark:text-white">
+                          ${data.price.toFixed(data.pair.includes('BTC') ? 0 : data.pair.includes('ETH') ? 0 : 4)}
+                        </span>
+                        {data.change24h !== 0 && (
+                          <span className={`text-xs font-medium ${data.change24h > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                            {data.change24h > 0 ? '↑' : '↓'} {Math.abs(data.change24h).toFixed(2)}%
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                    <span className="text-xs text-gray-400 dark:text-gray-500">• Live Data</span>
+                  </div>
+                )}
               </div>
               <div className="w-full sm:w-auto sm:min-w-[280px] md:min-w-[320px]">
                 <ActionButton
                   variant={['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'][signal.id % 4] as any}
-                  onClick={() => {
+                  onClick={async () => {
                     // Start the trading flow if not already started
                     if (!buttonPressed) {
                       handleStartTrading();
                     }
-                    // Navigate to external trading platform
-                    window.open('https://platform.example.com/trade', '_blank');
-                    console.log(`Opening trade for ${signal.pair}`);
+                    // Track affiliate click and get tracking URL
+                    const buttonVariants = ['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'];
+                    const variant = buttonVariants[signal.id % 4];
+                    const affiliateUrl = await trackAffiliateClick({
+                      signalId: signal.id,
+                      source: 'signal_page_cta',
+                      buttonVariant: variant,
+                      metadata: {
+                        signalPair: signal.pair,
+                        signalAction: signal.action,
+                        signalConfidence: signal.confidence,
+                      },
+                    });
+                    // Open affiliate link
+                    window.open(affiliateUrl, '_blank');
+                    console.log(`Opening Exness affiliate link for ${signal.pair}`);
                   }}
                   fullWidth
                   size="md"
@@ -240,11 +346,20 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
             <div className="pt-4">
               <Link
                 href="/"
-                onClick={() => {
+                onClick={async (e) => {
                   // Start the trading flow when clicking home
                   if (!buttonPressed) {
                     handleStartTrading();
                   }
+                  // Track navigation from signal page
+                  await trackAffiliateClick({
+                    signalId: signal.id,
+                    source: 'signal_page_home_button',
+                    metadata: {
+                      action: 'navigation_home',
+                      fromSignal: signal.pair,
+                    },
+                  });
                 }}
                 className="inline-flex items-center gap-2 px-6 py-3 md:px-4 md:py-2 min-h-[44px] min-w-[44px] touch-manipulation bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
               >
@@ -364,21 +479,55 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center">
               <div className="hidden sm:block flex-1">
-                <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
-                  Educational content • Risk disclosure applies
-                </p>
+                {marketDataLoading ? (
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 animate-pulse">
+                    Loading market data...
+                  </p>
+                ) : (
+                  <div className="flex items-center gap-4 overflow-x-auto">
+                    {marketData.slice(0, 3).map((data, index) => (
+                      <div key={index} className="flex items-center gap-2 whitespace-nowrap">
+                        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                          {data.pair}
+                        </span>
+                        <span className="text-xs font-bold text-gray-900 dark:text-white">
+                          ${data.price.toFixed(data.pair.includes('BTC') ? 0 : data.pair.includes('ETH') ? 0 : 4)}
+                        </span>
+                        {data.change24h !== 0 && (
+                          <span className={`text-xs font-medium ${data.change24h > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                            {data.change24h > 0 ? '↑' : '↓'} {Math.abs(data.change24h).toFixed(2)}%
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                    <span className="text-xs text-gray-400 dark:text-gray-500">• Live Data</span>
+                  </div>
+                )}
               </div>
               <div className="w-full sm:w-auto sm:min-w-[280px] md:min-w-[320px]">
                 <ActionButton
                   variant={['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'][signal.id % 4] as any}
-                  onClick={() => {
+                  onClick={async () => {
                     // Start the trading flow if not already started
                     if (!buttonPressed) {
                       handleStartTrading();
                     }
-                    // Navigate to external trading platform
-                    window.open('https://platform.example.com/trade', '_blank');
-                    console.log(`Opening trade for ${signal.pair}`);
+                    // Track affiliate click and get tracking URL
+                    const buttonVariants = ['urgent-countdown', 'live-pulse', 'profit-alert', 'rocket-launch'];
+                    const variant = buttonVariants[signal.id % 4];
+                    const affiliateUrl = await trackAffiliateClick({
+                      signalId: signal.id,
+                      source: 'signal_page_cta',
+                      buttonVariant: variant,
+                      metadata: {
+                        signalPair: signal.pair,
+                        signalAction: signal.action,
+                        signalConfidence: signal.confidence,
+                      },
+                    });
+                    // Open affiliate link
+                    window.open(affiliateUrl, '_blank');
+                    console.log(`Opening Exness affiliate link for ${signal.pair}`);
                   }}
                   fullWidth
                   size="md"

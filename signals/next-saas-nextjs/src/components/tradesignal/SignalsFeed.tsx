@@ -6,6 +6,7 @@ import RevealAnimation from '../animation/RevealAnimation';
 import { SignalData } from '@/utils/supabase';
 import { ActionButton } from '@/components/shared/sharedbuttons';
 import AdBanner from '@/components/shared/banners/AdBanner';
+import { trackAffiliateClick } from '@/utils/affiliateTracking';
 
 const SignalsFeed = () => {
   const t = useTranslations('signals.sidebar');
@@ -80,10 +81,22 @@ const SignalsFeed = () => {
     return variants[variantIndex];
   };
 
-  const handleTradeAction = (signalId: string, action: string) => {
+  const handleTradeAction = async (signalId: string, action: string, buttonVariant: string) => {
     console.log(`Trade action initiated for signal ${signalId}: ${action}`);
-    // Navigate to signal detail page to view drills
-    window.location.href = `/${locale}/signal/${signalId}`;
+
+    // Track affiliate click
+    const affiliateUrl = await trackAffiliateClick({
+      signalId,
+      source: 'homepage_feed',
+      buttonVariant,
+      metadata: {
+        signalAction: action,
+        fromPage: 'homepage',
+      },
+    });
+
+    // Open affiliate link in new tab
+    window.open(affiliateUrl, '_blank');
   };
 
   return (
@@ -204,7 +217,7 @@ const SignalsFeed = () => {
                     <div className="mt-2">
                       <ActionButton
                         variant={getRandomButtonVariant(index)}
-                        onClick={() => handleTradeAction(String(signal.id), signal.action)}
+                        onClick={() => handleTradeAction(String(signal.id), signal.action, getRandomButtonVariant(index))}
                         fullWidth
                         size="sm"
                         customText={signal.action === 'BUY' ? t('actions.buyNow') : t('actions.sellNow')}

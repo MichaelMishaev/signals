@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/utils/cn';
 import { brokerGateConfig, GATE_CONFIG } from '@/config/gates';
+import { trackAffiliateClick } from '@/utils/affiliateTracking';
 
 interface BrokerGateModalProps {
   isOpen: boolean;
@@ -29,16 +30,22 @@ export const BrokerGateModal: React.FC<BrokerGateModalProps> = ({
   const [verificationCode, setVerificationCode] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleOpenBroker = () => {
-    // Generate unique click ID
-    const clickId = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const handleOpenBroker = async () => {
+    // Track affiliate click and get tracking URL
+    const affiliateUrl = await trackAffiliateClick({
+      source: 'gate_modal_broker',
+      metadata: {
+        gateType: 'broker_gate',
+        tierSelected: 'default',
+      },
+    });
 
-    // Track click
+    // Open affiliate link
+    window.open(affiliateUrl, '_blank');
+
+    // Notify parent component
+    const clickId = affiliateUrl.match(/cid=([^&]+)/)?.[1] || Date.now().toString();
     onBrokerClick(clickId);
-
-    // Open broker URL with tracking
-    const trackingUrl = `${GATE_CONFIG.brokerUrl}?ref=signals&clickid=${clickId}`;
-    window.open(trackingUrl, '_blank');
 
     // Show waiting message
     alert('Complete your broker signup. This page will update automatically once verified (5-30 minutes).');
