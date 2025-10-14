@@ -1,15 +1,12 @@
 'use client';
 import { cn } from '@/utils/cn';
 import Springer from '@/utils/springer';
-import { useGSAP } from '@gsap/react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import React, { ReactElement, Ref, cloneElement, useRef } from 'react';
+import { loadGSAP } from '@/utils/gsap-loader';
+import React, { ReactElement, Ref, cloneElement, useRef, useEffect, useState } from 'react';
 
-// Register GSAP plugins
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
+// Type imports for GSAP (no runtime cost)
+type GSAP = typeof import('gsap').gsap;
+type ScrollTriggerType = typeof import('gsap/ScrollTrigger').ScrollTrigger;
 
 interface RevealAnimationProps {
   children: ReactElement<{
@@ -45,8 +42,27 @@ const RevealAnimation = ({
   className = '',
 }: RevealAnimationProps) => {
   const elementRef = useRef<HTMLElement>(null);
+  const [gsapLoaded, setGsapLoaded] = useState(false);
+  const [gsapInstance, setGsapInstance] = useState<GSAP | null>(null);
+  const [scrollTriggerInstance, setScrollTriggerInstance] = useState<ScrollTriggerType | null>(null);
 
-  useGSAP(() => {
+  // Lazy load GSAP
+  useEffect(() => {
+    loadGSAP()
+      .then(({ gsap, ScrollTrigger }) => {
+        setGsapInstance(gsap);
+        setScrollTriggerInstance(ScrollTrigger);
+        setGsapLoaded(true);
+      })
+      .catch((err) => {
+        console.error('Failed to load GSAP for RevealAnimation:', err);
+      });
+  }, []);
+
+  // Run animation when GSAP is loaded
+  useEffect(() => {
+    if (!gsapLoaded || !gsapInstance || !scrollTriggerInstance) return;
+
     const element = elementRef.current;
     if (!element) return;
 
@@ -58,7 +74,7 @@ const RevealAnimation = ({
     element.style.filter = 'blur(0)';
 
     // Set animation properties based on animation type
-    let animationProps: gsap.TweenVars;
+    let animationProps: Parameters<GSAP['from']>[1];
 
     if (animationType === 'to') {
       // gsap.to() - animate TO the specified values
@@ -72,7 +88,7 @@ const RevealAnimation = ({
 
       // Add rotation if specified
       if (rotation !== 0) {
-        animationProps.rotation = rotation;
+        (animationProps as any).rotation = rotation;
       }
     } else {
       // gsap.from() - animate FROM the specified values to normal
@@ -86,13 +102,13 @@ const RevealAnimation = ({
 
       // Add rotation if specified
       if (rotation !== 0) {
-        animationProps.rotation = rotation;
+        (animationProps as any).rotation = rotation;
       }
     }
 
     // Add ScrollTrigger if not instant
     if (!instant) {
-      animationProps.scrollTrigger = {
+      (animationProps as any).scrollTrigger = {
         trigger: element,
         start: start,
         end: end,
@@ -103,39 +119,39 @@ const RevealAnimation = ({
     // Set animation direction based on direction prop
     switch (direction) {
       case 'left':
-        animationProps.x = animationType === 'from' ? -offset : 0;
+        (animationProps as any).x = animationType === 'from' ? -offset : 0;
         if (animationType === 'to') {
-          gsap.set(element, { x: -offset });
+          gsapInstance.set(element, { x: -offset });
         }
         break;
       case 'right':
-        animationProps.x = animationType === 'from' ? offset : 0;
+        (animationProps as any).x = animationType === 'from' ? offset : 0;
         if (animationType === 'to') {
-          gsap.set(element, { x: offset });
+          gsapInstance.set(element, { x: offset });
         }
         break;
       case 'down':
-        animationProps.y = animationType === 'from' ? offset : 0;
+        (animationProps as any).y = animationType === 'from' ? offset : 0;
         if (animationType === 'to') {
-          gsap.set(element, { y: offset });
+          gsapInstance.set(element, { y: offset });
         }
         break;
       case 'up':
       default:
-        animationProps.y = animationType === 'from' ? -offset : 0;
+        (animationProps as any).y = animationType === 'from' ? -offset : 0;
         if (animationType === 'to') {
-          gsap.set(element, { y: -offset });
+          gsapInstance.set(element, { y: -offset });
         }
         break;
     }
 
     // Use appropriate GSAP method based on animation type
     if (animationType === 'to') {
-      gsap.to(element, animationProps);
+      gsapInstance.to(element, animationProps);
     } else {
-      gsap.from(element, animationProps);
+      gsapInstance.from(element, animationProps);
     }
-  }, [duration, delay, offset, instant, start, end, direction, useSpring, rotation, animationType]);
+  }, [gsapLoaded, gsapInstance, scrollTriggerInstance, duration, delay, offset, instant, start, end, direction, useSpring, rotation, animationType]);
 
   // Early return if children is not valid (after all hooks)
   if (!children || !React.isValidElement(children)) {
