@@ -13,6 +13,7 @@ import { fetchLivePrices, calculatePnL, formatPrice } from '@/services/livePrice
 
 const Hero = () => {
   const t = useTranslations('hero');
+  const tSignals = useTranslations('signals.sidebar.labels');
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -432,19 +433,19 @@ const Hero = () => {
                           {/* Entry/SL/TP - Better mobile layout */}
                           <div className="grid grid-cols-3 gap-2 md:gap-3">
                             <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg md:rounded-xl p-2 md:p-3 border border-blue-200 dark:border-blue-800">
-                              <p className="text-[10px] md:text-xs text-blue-600 dark:text-blue-400 font-semibold mb-0.5 md:mb-1">Entry</p>
+                              <p className="text-[10px] md:text-xs text-blue-600 dark:text-blue-400 font-semibold mb-0.5 md:mb-1">{tSignals('entry')}</p>
                               <p className="text-sm md:text-lg font-bold text-gray-900 dark:text-white leading-tight">
                                 {liveSignal.entry.toFixed(liveSignal.pair.includes('JPY') ? 2 : 4)}
                               </p>
                             </div>
                             <div className="bg-red-50 dark:bg-red-900/30 rounded-lg md:rounded-xl p-2 md:p-3 border border-red-200 dark:border-red-800">
-                              <p className="text-[10px] md:text-xs text-red-600 dark:text-red-400 font-semibold mb-0.5 md:mb-1">Stop Loss</p>
+                              <p className="text-[10px] md:text-xs text-red-600 dark:text-red-400 font-semibold mb-0.5 md:mb-1">{tSignals('stopLoss')}</p>
                               <p className="text-sm md:text-lg font-bold text-gray-900 dark:text-white leading-tight">
                                 {liveSignal.stop_loss.toFixed(liveSignal.pair.includes('JPY') ? 2 : 4)}
                               </p>
                             </div>
                             <div className="bg-green-50 dark:bg-green-900/30 rounded-lg md:rounded-xl p-2 md:p-3 border border-green-200 dark:border-green-800">
-                              <p className="text-[10px] md:text-xs text-green-600 dark:text-green-400 font-semibold mb-0.5 md:mb-1">Take Profit</p>
+                              <p className="text-[10px] md:text-xs text-green-600 dark:text-green-400 font-semibold mb-0.5 md:mb-1">{tSignals('takeProfit')}</p>
                               <p className="text-sm md:text-lg font-bold text-gray-900 dark:text-white leading-tight">
                                 {liveSignal.take_profit.toFixed(liveSignal.pair.includes('JPY') ? 2 : 4)}
                               </p>
