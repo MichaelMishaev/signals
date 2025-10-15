@@ -26,8 +26,6 @@ const nextConfig: NextConfig = {
   },
   // Configure output file tracing for monorepo support
   outputFileTracingRoot: path.join(__dirname, '../../'),
-  // Optimize for production deployment
-  output: 'standalone',
   // Image optimization configuration
   images: {
     formats: ['image/avif', 'image/webp'],
