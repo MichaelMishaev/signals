@@ -5,9 +5,26 @@
 
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy-load OpenAI client only when needed
+let openai: OpenAI | null = null;
+
+function getOpenAIClient(): OpenAI | null {
+  // If already initialized, return it
+  if (openai) return openai;
+
+  // Check if API key is available
+  if (!process.env.OPENAI_API_KEY) {
+    console.warn('⚠️ OPENAI_API_KEY not set - translation will be disabled');
+    return null;
+  }
+
+  // Initialize OpenAI client
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+
+  return openai;
+}
 
 // In-memory cache for translations (expires after 6 hours)
 interface TranslationCache {
@@ -64,6 +81,13 @@ export async function translateToUrdu(
 ): Promise<string> {
   if (!text) return text;
 
+  // Get OpenAI client (returns null if API key not set)
+  const client = getOpenAIClient();
+  if (!client) {
+    // Translation disabled - return original text
+    return text;
+  }
+
   // Check cache first
   const cacheKey = getCacheKey(text, context);
   const cached = getCachedTranslation(cacheKey);
@@ -75,7 +99,7 @@ export async function translateToUrdu(
   try {
     const systemPrompt = getSystemPrompt(context);
 
-    const completion = await openai.chat.completions.create({
+    const completion = await client.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: systemPrompt },
