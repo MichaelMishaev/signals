@@ -1,9 +1,11 @@
 /**
  * News Translation Service using GPT-4o-mini
  * Translates English news articles to Urdu with intelligent caching
+ * Uses Redis for persistent caching, falls back to in-memory
  */
 
 import OpenAI from 'openai';
+import { getCachedTranslation as getRedisTranslation, setCachedTranslation as setRedisTranslation } from '@/lib/translationCache';
 
 // Lazy-load OpenAI client only when needed
 let openai: OpenAI | null = null;
@@ -88,12 +90,20 @@ export async function translateToUrdu(
     return text;
   }
 
-  // Check cache first
+  // Try Redis cache first (persistent)
+  const redisCached = await getRedisTranslation(text, context);
+  if (redisCached) {
+    return redisCached;
+  }
+
+  // Fall back to in-memory cache (for current session)
   const cacheKey = getCacheKey(text, context);
-  const cached = getCachedTranslation(cacheKey);
-  if (cached) {
-    console.log(`✅ Cache hit for ${context}: ${text.slice(0, 50)}...`);
-    return cached;
+  const memoryCached = getCachedTranslation(cacheKey);
+  if (memoryCached) {
+    console.log(`✅ Memory cache hit for ${context}: ${text.slice(0, 50)}...`);
+    // Store in Redis for future requests
+    await setRedisTranslation(text, memoryCached, context);
+    return memoryCached;
   }
 
   try {
@@ -111,7 +121,8 @@ export async function translateToUrdu(
 
     const translation = completion.choices[0]?.message?.content?.trim() || text;
 
-    // Cache the translation
+    // Cache in both Redis (persistent) and memory (fast access)
+    await setRedisTranslation(text, translation, context);
     setCachedTranslation(cacheKey, translation);
 
     console.log(`🌐 Translated ${context}: "${text.slice(0, 50)}..." → "${translation.slice(0, 50)}..."`);
