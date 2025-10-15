@@ -1,12 +1,14 @@
 'use client';
 import { cn } from '@/utils/cn';
-import Springer from '@/utils/springer';
-import { loadGSAP } from '@/utils/gsap-loader';
-import React, { ReactElement, Ref, cloneElement, useRef, useEffect, useState } from 'react';
+import React, { ReactElement, Ref, cloneElement, useRef, useState, useEffect } from 'react';
 
-// Type imports for GSAP (no runtime cost)
-type GSAP = typeof import('gsap').gsap;
-type ScrollTriggerType = typeof import('gsap/ScrollTrigger').ScrollTrigger;
+// TEMPORARY: GSAP disabled to fix initialization issues
+// Will re-enable after debugging
+const GSAP_ENABLED = false;
+
+// Only import GSAP types and modules when enabled
+type GSAP = any;
+type ScrollTriggerType = any;
 
 interface RevealAnimationProps {
   children: ReactElement<{
@@ -46,8 +48,25 @@ const RevealAnimation = ({
   const [gsapInstance, setGsapInstance] = useState<GSAP | null>(null);
   const [scrollTriggerInstance, setScrollTriggerInstance] = useState<ScrollTriggerType | null>(null);
 
+  // When GSAP is disabled, make elements visible immediately
+  useEffect(() => {
+    if (!GSAP_ENABLED && elementRef.current) {
+      // Force elements to be visible when animations are disabled
+      elementRef.current.style.opacity = '1';
+      elementRef.current.style.filter = 'none';
+      elementRef.current.style.transform = 'none';
+      return;
+    }
+  }, []);
+
   // Lazy load GSAP
   useEffect(() => {
+    // Skip GSAP entirely if disabled
+    if (!GSAP_ENABLED) return;
+
+    // Only load on client side
+    if (typeof window === 'undefined') return;
+
     loadGSAP()
       .then(({ gsap, ScrollTrigger }) => {
         setGsapInstance(gsap);
@@ -55,16 +74,36 @@ const RevealAnimation = ({
         setGsapLoaded(true);
       })
       .catch((err) => {
-        console.error('Failed to load GSAP for RevealAnimation:', err);
+        console.warn('Failed to load GSAP for RevealAnimation, animations disabled:', err);
+        // Set loaded to true anyway so component doesn't block rendering
+        setGsapLoaded(false);
       });
   }, []);
 
   // Run animation when GSAP is loaded
   useEffect(() => {
+    // Skip animation if GSAP is disabled
+    if (!GSAP_ENABLED) return;
+
     if (!gsapLoaded || !gsapInstance || !scrollTriggerInstance) return;
 
     const element = elementRef.current;
     if (!element) return;
+
+    // Check if ScrollTrigger is properly initialized
+    let scrollTriggerReady = false;
+    try {
+      scrollTriggerReady = !!(
+        scrollTriggerInstance &&
+        typeof scrollTriggerInstance.create === 'function' &&
+        scrollTriggerInstance.version
+      );
+    } catch (e) {
+      console.warn('ScrollTrigger check failed:', e);
+    }
+
+    // If ScrollTrigger is not ready and we need it, use instant animation instead
+    const useInstant = instant || !scrollTriggerReady;
 
     // Get spring easing if useSpring is true
     const spring = useSpring ? Springer.default(0.2, 0.8) : null;
@@ -106,14 +145,20 @@ const RevealAnimation = ({
       }
     }
 
-    // Add ScrollTrigger if not instant
-    if (!instant) {
-      (animationProps as any).scrollTrigger = {
-        trigger: element,
-        start: start,
-        end: end,
-        scrub: false,
-      };
+    // Add ScrollTrigger only if it's ready and not instant
+    if (!useInstant && scrollTriggerReady) {
+      try {
+        (animationProps as any).scrollTrigger = {
+          trigger: element,
+          start: start,
+          end: end,
+          scrub: false,
+        };
+      } catch (e) {
+        console.warn('Failed to add ScrollTrigger, using instant animation:', e);
+        // Remove scrollTrigger if it failed
+        delete (animationProps as any).scrollTrigger;
+      }
     }
 
     // Set animation direction based on direction prop
@@ -146,11 +191,28 @@ const RevealAnimation = ({
     }
 
     // Use appropriate GSAP method based on animation type
+    let animation;
     if (animationType === 'to') {
-      gsapInstance.to(element, animationProps);
+      animation = gsapInstance.to(element, animationProps);
     } else {
-      gsapInstance.from(element, animationProps);
+      animation = gsapInstance.from(element, animationProps);
     }
+
+    // Cleanup function
+    return () => {
+      if (animation) {
+        animation.kill();
+      }
+      // Kill all ScrollTriggers associated with this element
+      if (scrollTriggerInstance && typeof scrollTriggerInstance.getAll === 'function') {
+        const triggers = scrollTriggerInstance.getAll();
+        triggers.forEach((trigger: any) => {
+          if (trigger.trigger === element) {
+            trigger.kill();
+          }
+        });
+      }
+    };
   }, [gsapLoaded, gsapInstance, scrollTriggerInstance, duration, delay, offset, instant, start, end, direction, useSpring, rotation, animationType]);
 
   // Early return if children is not valid (after all hooks)

@@ -31,9 +31,18 @@ async function fetchCryptoPrices(symbols: string[]): Promise<PriceCache> {
     const binanceSymbols = symbols.map(symbol => {
       // Handle different formats: BTC/USDT, BTCUSDT, BTC
       const clean = symbol.replace('/', '').toUpperCase();
-      if (clean.endsWith('USDT') || clean.endsWith('USD')) {
-        return clean.replace('USD', 'USDT');
+
+      // If already ends with USDT, return as-is (avoid BTCUSDT -> BTCUSDTT bug)
+      if (clean.endsWith('USDT')) {
+        return clean;
       }
+
+      // If ends with USD (but not USDT), add T to make it USDT
+      if (clean.endsWith('USD')) {
+        return clean + 'T';
+      }
+
+      // Otherwise, add USDT suffix
       return `${clean}USDT`;
     });
 
