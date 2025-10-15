@@ -19,9 +19,9 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-const TradeSignalHomepage = async () => {
-  // Fetch aggregated news from multiple APIs
-  const newsArticles = await fetchAggregatedNews();
+const TradeSignalHomepage = async ({ params }: { params: { locale: string } }) => {
+  // Fetch aggregated news from multiple APIs with locale for translation
+  const newsArticles = await fetchAggregatedNews(undefined, undefined, params.locale);
 
   return (
     <Fragment>
