@@ -9,12 +9,8 @@ const TimelineSidebarLayout = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Mobile: Signals Feed First (Above Timeline) */}
           <div className="lg:hidden">
-            <div className="space-y-6">
-              {/* Banner at the top - Auto-detects platform */}
-              <AdBanner position="side" />
-              {/* Signals Feed below */}
-              <SignalsFeed />
-            </div>
+            {/* Mobile: Just show signals feed, NO sidebar banners on mobile */}
+            <SignalsFeed />
           </div>
 
           {/* Timeline - Main Content (Center) */}

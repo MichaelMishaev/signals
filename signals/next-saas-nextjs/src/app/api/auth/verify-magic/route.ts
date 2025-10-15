@@ -10,27 +10,28 @@ export async function GET(request: NextRequest) {
     const prisma = getPrisma();
     if (!prisma) {
       console.error("[verify-magic] Database not configured");
-      return NextResponse.redirect(
-        new URL("/auth/error?error=DatabaseError", request.url)
-      );
+      // Use the base URL to construct redirect (Next.js will add locale via middleware)
+      const errorUrl = new URL("/auth/error", request.url);
+      errorUrl.searchParams.set("error", "DatabaseError");
+      return NextResponse.redirect(errorUrl);
     }
 
     const searchParams = request.nextUrl.searchParams;
     const token = searchParams.get("token");
 
     if (!token) {
-      return NextResponse.redirect(
-        new URL("/auth/error?error=InvalidToken", request.url)
-      );
+      const errorUrl = new URL("/auth/error", request.url);
+      errorUrl.searchParams.set("error", "InvalidToken");
+      return NextResponse.redirect(errorUrl);
     }
 
     // Get token data from Redis
     const tokenDataStr = await magicLinkCache.get(token);
 
     if (!tokenDataStr) {
-      return NextResponse.redirect(
-        new URL("/auth/error?error=ExpiredToken", request.url)
-      );
+      const errorUrl = new URL("/auth/error", request.url);
+      errorUrl.searchParams.set("error", "ExpiredToken");
+      return NextResponse.redirect(errorUrl);
     }
 
     // Parse token data
@@ -90,8 +91,8 @@ export async function GET(request: NextRequest) {
     return response;
   } catch (error) {
     console.error("Magic link verification error:", error);
-    return NextResponse.redirect(
-      new URL("/auth/error?error=VerificationFailed", request.url)
-    );
+    const errorUrl = new URL("/auth/error", request.url);
+    errorUrl.searchParams.set("error", "VerificationFailed");
+    return NextResponse.redirect(errorUrl);
   }
 }

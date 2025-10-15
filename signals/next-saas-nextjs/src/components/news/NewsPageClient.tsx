@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { INewsArticle } from '@/interface';
 import NewsCard from './NewsCard';
 import RevealAnimation from '../animation/RevealAnimation';
+import AdBanner from '../shared/banners/AdBanner';
 
 const NEWS_CATEGORIES = [
   'All News',
@@ -156,9 +157,20 @@ const NewsPageClient = ({ newsArticles }: NewsPageClientProps) => {
         {filteredNews.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredNews.map((article, index) => (
-              <RevealAnimation key={article.id} delay={0.8 + index * 0.05}>
-                <NewsCard article={article} />
-              </RevealAnimation>
+              <>
+                <RevealAnimation key={article.id} delay={0.8 + index * 0.05}>
+                  <NewsCard article={article} />
+                </RevealAnimation>
+
+                {/* Insert banner every 4 news articles (after 4th, 8th, 12th, etc.) */}
+                {(index + 1) % 4 === 0 && (index + 1) < filteredNews.length && (
+                  <RevealAnimation key={`banner-${index}`} delay={0.85 + index * 0.05}>
+                    <div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center my-4">
+                      <AdBanner position="between-signals" />
+                    </div>
+                  </RevealAnimation>
+                )}
+              </>
             ))}
           </div>
         ) : (

@@ -146,19 +146,40 @@ export async function POST(request: NextRequest) {
         const result = await sendMagicLinkEmail(normalizedEmail, baseUrl, returnUrl);
 
         if (!result.success) {
-          // Log detailed error for debugging
-          console.error("[drill-access] Email sending failed:", {
-            error: result.error,
-            email: normalizedEmail,
-            hasResendKey: !!process.env.RESEND_API_KEY,
-            emailFrom: process.env.EMAIL_FROM,
-            nodeEnv: process.env.NODE_ENV
-          });
+          // Enhanced error logging for production debugging
+          console.error("========================================");
+          console.error("[DRILL-ACCESS] EMAIL SENDING FAILED");
+          console.error("========================================");
+          console.error("Timestamp:", new Date().toISOString());
+          console.error("Email Address:", normalizedEmail);
+          console.error("Error Message:", result.error);
+          console.error("Error Details:", JSON.stringify(result, null, 2));
+          console.error("");
+          console.error("Environment Configuration:");
+          console.error("  NODE_ENV:", process.env.NODE_ENV);
+          console.error("  RESEND_API_KEY exists:", !!process.env.RESEND_API_KEY);
+          console.error("  RESEND_API_KEY prefix:", process.env.RESEND_API_KEY?.substring(0, 10) + "...");
+          console.error("  RESEND_API_KEY length:", process.env.RESEND_API_KEY?.length);
+          console.error("  EMAIL_FROM:", process.env.EMAIL_FROM);
+          console.error("  NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+          console.error("");
+          console.error("Request Details:");
+          console.error("  Origin:", request.headers.get("origin"));
+          console.error("  User-Agent:", request.headers.get("user-agent"));
+          console.error("  X-Forwarded-For:", request.headers.get("x-forwarded-for"));
+          console.error("========================================");
 
           return NextResponse.json(
             {
               error: "Failed to send verification email",
               details: result.error,
+              // Include full error details for debugging (consider removing in production)
+              debugInfo: {
+                errorType: (result as any).exceptionType,
+                errorCode: (result as any).exceptionCode,
+                timestamp: new Date().toISOString(),
+                environment: process.env.NODE_ENV
+              },
               // In development, still provide the magic link for testing
               ...(process.env.NODE_ENV === 'development' && result.magicLink ? {
                 developmentLink: result.magicLink,

@@ -318,6 +318,14 @@ export default function AdBanner({
     }
 
     if (position === 'between-signals') {
+      // Don't show vertical banners (aspect ratio > 1.5) in between-signals on mobile
+      const isVerticalBanner = currentBanner.height / currentBanner.width > 1.5;
+
+      // Hide vertical banners on mobile for better UX
+      if (platform === 'mobile' && isVerticalBanner) {
+        return null;
+      }
+
       return (
         <div className={`${getContainerStyles()} ${className}`} suppressHydrationWarning>
           <div className="flex flex-col items-center gap-3">
@@ -326,7 +334,7 @@ export default function AdBanner({
               Sponsored
             </p>
 
-            {/* Banner Container - Responsive for mobile 1200x1500 banner */}
+            {/* Banner Container - Responsive for mobile, optimized for horizontal banners */}
             <div className="relative w-full flex items-center justify-center" style={{ minHeight: '250px' }}>
               {isLoading && <LoadingSkeleton height={250} />}
               {hasError && <ErrorState />}
@@ -345,10 +353,10 @@ export default function AdBanner({
                     width={currentBanner.width}
                     height={currentBanner.height}
                     alt={currentBanner.alt}
-                    // Special handling for mobile 1200x1500 portrait banner
-                    className={`rounded-lg shadow-lg w-full h-auto max-w-full ${
-                      currentBanner.width === 1200 && currentBanner.height === 1500
-                        ? 'max-h-[600px] object-contain'
+                    // Mobile: max 300px width, horizontal only. Desktop: larger banners allowed
+                    className={`rounded-lg shadow-lg w-full h-auto ${
+                      platform === 'mobile'
+                        ? 'max-w-[300px] max-h-[250px] object-contain mx-auto'
                         : 'max-w-[800px] mx-auto'
                     } ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
                     onLoad={handleImageLoad}

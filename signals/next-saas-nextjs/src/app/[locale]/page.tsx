@@ -3,7 +3,7 @@ import FooterOne from '@/components/shared/footer/FooterOne';
 import NavbarTwo from '@/components/shared/header/NavbarTwo';
 import ContentTabsSwitcher from '@/components/layout/ContentTabsSwitcher';
 import AdBanner from '@/components/shared/banners/AdBanner';
-import getMarkDownData from '@/utils/getMarkDownData';
+import { fetchAggregatedNews } from '@/utils/fetchNews';
 import { Metadata, Viewport } from 'next';
 import { Fragment } from 'react';
 
@@ -19,9 +19,9 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-const TradeSignalHomepage = () => {
-  // Fetch news data on the server
-  const newsArticles = getMarkDownData('src/data/news');
+const TradeSignalHomepage = async () => {
+  // Fetch aggregated news from multiple APIs
+  const newsArticles = await fetchAggregatedNews();
 
   return (
     <Fragment>

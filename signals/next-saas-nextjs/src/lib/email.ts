@@ -140,30 +140,56 @@ export const sendMagicLinkEmail = async (email: string, baseUrl: string, returnU
     const { data, error } = await client.emails.send(emailData);
 
     if (error) {
-      console.error("Resend error details:", JSON.stringify(error, null, 2));
-      console.error("Email data attempted:", {
-        from: emailData.from,
-        to: emailData.to,
-        hasApiKey: !!process.env.RESEND_API_KEY
-      });
+      // Enhanced error logging for production debugging
+      console.error("========================================");
+      console.error("RESEND API ERROR - MAGIC LINK");
+      console.error("========================================");
+      console.error("Error Type:", typeof error);
+      console.error("Error Object:", JSON.stringify(error, null, 2));
+      console.error("Error Properties:", Object.keys(error || {}));
+
+      // Log specific error properties that Resend might return
+      if (typeof error === 'object' && error !== null) {
+        console.error("Error Message:", (error as any).message);
+        console.error("Error Name:", (error as any).name);
+        console.error("Error Code:", (error as any).code);
+        console.error("Error Status:", (error as any).statusCode || (error as any).status);
+      }
+
+      console.error("Email Configuration:");
+      console.error("  From:", emailData.from);
+      console.error("  To:", emailData.to);
+      console.error("  API Key Exists:", !!process.env.RESEND_API_KEY);
+      console.error("  API Key Prefix:", process.env.RESEND_API_KEY?.substring(0, 10) + "...");
+      console.error("  Environment:", process.env.NODE_ENV);
+      console.error("========================================");
+
       return {
         success: false,
-        error: typeof error === 'string' ? error : JSON.stringify(error)
+        error: typeof error === 'string' ? error : JSON.stringify(error),
+        errorDetails: error
       };
     }
 
     console.log("Magic link sent via Resend:", data?.id);
     return { success: true, token };
   } catch (error: any) {
-    console.error("Error sending magic link:", error);
-    console.error("Error details:", {
-      message: error?.message,
-      name: error?.name,
-      stack: error?.stack
-    });
+    console.error("========================================");
+    console.error("EXCEPTION CAUGHT - MAGIC LINK EMAIL");
+    console.error("========================================");
+    console.error("Exception Type:", typeof error);
+    console.error("Exception Constructor:", error?.constructor?.name);
+    console.error("Exception Message:", error?.message);
+    console.error("Exception Name:", error?.name);
+    console.error("Exception Code:", error?.code);
+    console.error("Exception Stack:", error?.stack);
+    console.error("Full Exception Object:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+    console.error("========================================");
     return {
       success: false,
-      error: error?.message || String(error)
+      error: error?.message || String(error),
+      exceptionType: error?.constructor?.name,
+      exceptionCode: error?.code
     };
   }
 };

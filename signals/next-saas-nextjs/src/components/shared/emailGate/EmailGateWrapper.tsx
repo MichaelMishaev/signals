@@ -272,7 +272,7 @@ export default function EmailGateWrapper({
         </div>
       )}
 
-      <div className={process.env.NODE_ENV === 'development' ? 'pt-10' : ''}>
+      <div>
         {emailGate.hasSubmittedEmail ? (
           children
         ) : emailSubmitted || showVerificationNotice || recentSubmission ? (

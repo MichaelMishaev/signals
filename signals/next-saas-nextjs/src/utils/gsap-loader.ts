@@ -36,18 +36,29 @@ export async function loadGSAP(): Promise<{
   isLoading = true;
   loadPromise = (async () => {
     try {
+      // Only load on client side
+      if (typeof window === 'undefined') {
+        throw new Error('GSAP can only be loaded on the client side');
+      }
+
       // Dynamic import of GSAP core
       const gsapModule = await import('gsap');
       gsapInstance = gsapModule.gsap;
 
-      // Dynamic import of ScrollTrigger
+      // Dynamic import of ScrollTrigger - use default export to prevent auto-init
       const scrollTriggerModule = await import('gsap/ScrollTrigger');
-      scrollTriggerInstance = scrollTriggerModule.ScrollTrigger;
 
-      // Register plugin
-      if (typeof window !== 'undefined') {
-        gsapInstance.registerPlugin(scrollTriggerInstance);
-      }
+      // Get ScrollTrigger class (not instance)
+      const ScrollTriggerClass = scrollTriggerModule.ScrollTrigger || scrollTriggerModule.default;
+
+      // Register plugin - this properly initializes it
+      gsapInstance.registerPlugin(ScrollTriggerClass);
+
+      // Now get the initialized instance from gsap
+      scrollTriggerInstance = (gsapInstance as any).ScrollTrigger || ScrollTriggerClass;
+
+      // Wait a tick to ensure ScrollTrigger is fully initialized
+      await new Promise(resolve => setTimeout(resolve, 10));
     } catch (error) {
       console.error('Failed to load GSAP:', error);
       throw error;

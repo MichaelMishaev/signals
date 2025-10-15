@@ -67,8 +67,8 @@ export async function POST(request: NextRequest) {
     }));
 
     const prompt = locale === 'ur'
-      ? `آپ ایک پیشہ ور ٹریڈنگ تجزیہ کار ہیں۔ مندرجہ ذیل 3 تازہ ترین ٹریڈنگ سگنلز کا مختصر خلاصہ فراہم کریں (زیادہ سے زیادہ 150 الفاظ):\n\n${JSON.stringify(signalData, null, 2)}\n\nمارکیٹ کے رجحانات، رسک لیولز، اور ممکنہ منافع پر توجہ دیں۔ اردو میں جواب دیں۔`
-      : `You are a professional trading analyst. Provide a brief summary of the following 3 latest trading signals (maximum 150 words):\n\n${JSON.stringify(signalData, null, 2)}\n\nFocus on market trends, risk levels, and potential opportunities. Keep it concise and actionable.`;
+      ? `آپ ایک تجربہ کار ٹریڈنگ ماہر ہیں جو پاکستانی تاجروں کی مدد کرتے ہیں۔ مندرجہ ذیل 3 تازہ ترین سگنلز کا ایک واضح اور قابل عمل خلاصہ فراہم کریں:\n\n${JSON.stringify(signalData, null, 2)}\n\nبرائے مہربانی:\n1. ایک مختصر تعارف سے شروع کریں جو مجموعی مارکیٹ کی صورتحال بیان کرے\n2. ہر سگنل کے بارے میں بتائیں (جوڑا، ایکشن، اعتماد کی سطح)\n3. ممکنہ رسک اور فائدے کو واضح کریں\n4. انسانی انداز میں لکھیں - جیسے آپ کسی دوست کو مشورہ دے رہے ہیں\n\nزیادہ سے زیادہ 150 الفاظ میں۔ اردو میں جواب دیں۔`
+      : `You are an experienced trading expert helping retail traders understand market opportunities. Please provide a clear, actionable summary of these 3 latest trading signals:\n\n${JSON.stringify(signalData, null, 2)}\n\nPlease:\n1. Start with a brief intro describing the overall market sentiment\n2. Highlight each signal (pair, action, entry point, confidence level) in a conversational way\n3. Explain potential risks and rewards clearly\n4. Write in a professional yet approachable tone - like you're advising a friend\n5. Use numbered lists for the signals for clarity\n\nKeep it under 150 words and make it engaging and easy to understand.`;
 
     // Call OpenAI API with GPT-4o-mini
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -83,16 +83,16 @@ export async function POST(request: NextRequest) {
           {
             role: 'system',
             content: locale === 'ur'
-              ? 'آپ ایک پیشہ ور ٹریڈنگ تجزیہ کار ہیں جو مختصر اور واضح خلاصے فراہم کرتے ہیں۔'
-              : 'You are a professional trading analyst who provides concise and clear summaries.',
+              ? 'آپ ایک دوستانہ اور تجربہ کار ٹریڈنگ مشیر ہیں۔ آپ پیچیدہ معلومات کو آسان اور قابل فہم انداز میں بیان کرتے ہیں۔ آپ کا مقصد تاجروں کو واضح اور قابل عمل مشورہ دینا ہے۔'
+              : 'You are a friendly, experienced trading advisor. You explain complex information in a simple, conversational way that retail traders can easily understand. Your goal is to provide clear, actionable insights while maintaining a professional yet approachable tone.',
           },
           {
             role: 'user',
             content: prompt,
           },
         ],
-        max_tokens: 300,
-        temperature: 0.7,
+        max_tokens: 400,
+        temperature: 0.8,
       }),
     });
 

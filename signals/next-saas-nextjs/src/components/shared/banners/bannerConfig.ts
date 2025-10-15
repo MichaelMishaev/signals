@@ -75,7 +75,8 @@ export const bannerConfig: BannerConfig = {
   },
 
   mobile: {
-    // Side banner variants (sticky sidebar)
+    // Side banner variants (sticky sidebar) - ONLY for actual sidebars
+    // These should NEVER appear in content areas on mobile
     side: [
       {
         src: 'https://d3dpet1g0ty5ed.cloudfront.net/UR_The_best_pricing_on_gold_120x600_GOOGLE.png',
@@ -97,7 +98,7 @@ export const bannerConfig: BannerConfig = {
       },
     ],
 
-    // Footer banner variants (above risk disclaimer)
+    // Footer banner variants (above risk disclaimer) - Horizontal only
     footer: [
       {
         src: 'https://d3dpet1g0ty5ed.cloudfront.net/UR_The_best_pricing_on_gold_720x90_GOOGLE.png',
@@ -120,7 +121,8 @@ export const bannerConfig: BannerConfig = {
     ],
 
     // Between signals banner variants (inline in content)
-    // ONLY small horizontal banners for good mobile UX
+    // CRITICAL: ONLY compact horizontal banners (300x250 max) for good mobile UX
+    // NO vertical banners allowed here - they break mobile layout
     'between-signals': [
       {
         src: 'https://d3dpet1g0ty5ed.cloudfront.net/UR_The_best_pricing_on_gold_300x250_GOOGLE.png',

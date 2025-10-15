@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { UseGateFlowReturn } from '@/hooks/useGateFlow';
@@ -13,6 +13,13 @@ import EmailGateModal from './EmailGateModal';
 import BrokerGateModal from './BrokerGateModal';
 import EmailVerificationModal from './EmailVerificationModal';
 import Toast, { ToastType } from '../Toast';
+import {
+  PremiumGlassPopup,
+  MinimalElegantPopup,
+  BoldGradientPopup,
+  ProfessionalDashboardPopup,
+  ModernCardPopup,
+} from '@/components/popups/TradingPopups5';
 
 interface GateManagerProps {
   gateFlow: UseGateFlowReturn;
@@ -40,6 +47,19 @@ export const GateManager: React.FC<GateManagerProps> = ({ gateFlow }) => {
   const t = useTranslations();
   const pathname = usePathname();
   const [toast, setToast] = useState<ToastState>({ show: false, message: '', type: 'info' });
+
+  // Randomly select a popup design for broker/agent gate (stable for the session)
+  const selectedBrokerPopup = useMemo(() => {
+    const popups = [
+      PremiumGlassPopup,
+      MinimalElegantPopup,
+      BoldGradientPopup,
+      ProfessionalDashboardPopup,
+      ModernCardPopup,
+    ];
+    const randomIndex = Math.floor(Math.random() * popups.length);
+    return popups[randomIndex];
+  }, []);
 
   console.log('[GateManager] Rendering with activeGate:', activeGate);
 
@@ -99,9 +119,11 @@ export const GateManager: React.FC<GateManagerProps> = ({ gateFlow }) => {
     return () => window.removeEventListener('show-toast', handleToast);
   }, [t]);
 
+  const BrokerTradingPopup = selectedBrokerPopup;
+
   return (
     <>
-      {/* Email Gate - BLOCKING (cannot be dismissed when accessing drill content) */}
+      {/* Email Gate - BLOCKING (traditional email collection form) */}
       <EmailGateModal
         isOpen={activeGate === 'email'}
         onSubmit={onEmailSubmit}
@@ -109,13 +131,8 @@ export const GateManager: React.FC<GateManagerProps> = ({ gateFlow }) => {
         blocking={true}
       />
 
-      {/* Broker Gate */}
-      <BrokerGateModal
-        isOpen={activeGate === 'broker'}
-        onBrokerClick={onBrokerClick}
-        onAlreadyHaveAccount={onBrokerVerify}
-        onClose={closeGate}
-      />
+      {/* Broker/Agent Gate - Show one of 5 premium trading popups */}
+      {activeGate === 'broker' && <BrokerTradingPopup onClose={closeGate} />}
 
       {/* Email Verification Modal */}
       <EmailVerificationModal

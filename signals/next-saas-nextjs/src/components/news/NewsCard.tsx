@@ -28,16 +28,6 @@ const NewsCard = ({ article, className }: NewsCardProps) => {
           'bg-white dark:bg-background-6 relative scale-100 overflow-hidden rounded-[20px] transition-transform duration-500 hover:scale-[102%] hover:transition-transform hover:duration-500 h-full',
           className,
         )}>
-        <figure className="h-[220px] w-full overflow-hidden">
-          <Image
-            src={article?.thumbnail || '/images/blogs/blog-01.png'}
-            width={400}
-            height={220}
-            alt={article.title}
-            loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-        </figure>
         <div className="p-6 space-y-4">
           <div className="flex items-center gap-3 flex-wrap">
             <span className={`badge ${getCategoryColor(article.category)} text-xs font-medium`}>
@@ -76,9 +66,14 @@ const NewsCard = ({ article, className }: NewsCardProps) => {
           </div>
 
           <h3 className="text-heading-6 font-normal line-clamp-2 min-h-[3.5rem]">
-            <Link href={`/news/${article.slug}`} className="hover:text-primary-500 dark:hover:text-primary-400 transition-colors">
+            <a
+              href={article.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+            >
               {article.title}
-            </Link>
+            </a>
           </h3>
 
           <p className="text-tagline-1 text-secondary/60 dark:text-accent/60 line-clamp-3 font-normal min-h-[4.5rem]">
@@ -99,12 +94,17 @@ const NewsCard = ({ article, className }: NewsCardProps) => {
           )}
 
           <div className="pt-2">
-            <Link
-              href={`/news/${article.slug}`}
-              className="btn btn-sm btn-white hover:btn-primary dark:btn-transparent inline-block"
+            <a
+              href={article.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-sm btn-white hover:btn-primary dark:btn-transparent inline-flex items-center gap-2"
               aria-label={`Read full article: ${article.title}`}>
               <span>Read More</span>
-            </Link>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
           </div>
         </div>
       </div>

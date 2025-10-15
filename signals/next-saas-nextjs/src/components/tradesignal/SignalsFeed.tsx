@@ -19,6 +19,7 @@ const SignalsFeed = () => {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [livePrices, setLivePrices] = useState<PriceCache>({});
   const [pricesLoading, setPricesLoading] = useState(false);
+  const [showAllSignals, setShowAllSignals] = useState(false); // Mobile: show only 1 signal by default
 
   // Fetch signals from API
   useEffect(() => {
@@ -210,7 +211,8 @@ const SignalsFeed = () => {
           </div>
         ) : (
           <>
-            {filteredSignals.slice(0, 5).map((signal, index) => (
+            {/* Mobile: show only 1 signal, Desktop: show all 5 */}
+            {filteredSignals.slice(0, showAllSignals ? 5 : 1).map((signal, index) => (
               <div key={signal.id}>
                 <RevealAnimation delay={0.5 + index * 0.1}>
                   <div data-signal-card className="bg-gray-50 dark:bg-background-5 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
@@ -297,14 +299,42 @@ const SignalsFeed = () => {
                   </div>
                 </RevealAnimation>
 
-                {/* Insert banner after 3rd signal */}
-                {index === 2 && filteredSignals.length > 3 && (
+                {/* Insert banner every 2 signals (after 2nd and 4th) */}
+                {(index === 1 || index === 3) && (index + 1) < filteredSignals.slice(0, showAllSignals ? 5 : 1).length && (
                   <RevealAnimation delay={0.85}>
                     <AdBanner position="between-signals" />
                   </RevealAnimation>
                 )}
               </div>
             ))}
+
+            {/* Show More Button - Only on mobile when collapsed */}
+            {!showAllSignals && filteredSignals.length > 1 && (
+              <RevealAnimation delay={0.6}>
+                <button
+                  onClick={() => setShowAllSignals(true)}
+                  className="w-full mt-4 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+                  <span>Show {Math.min(filteredSignals.length - 1, 4)} More Signals</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </RevealAnimation>
+            )}
+
+            {/* Collapse Button - Show when expanded */}
+            {showAllSignals && filteredSignals.length > 1 && (
+              <RevealAnimation delay={0.6}>
+                <button
+                  onClick={() => setShowAllSignals(false)}
+                  className="w-full mt-4 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-2">
+                  <span>Show Less</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                  </svg>
+                </button>
+              </RevealAnimation>
+            )}
           </>
         )}
       </div>

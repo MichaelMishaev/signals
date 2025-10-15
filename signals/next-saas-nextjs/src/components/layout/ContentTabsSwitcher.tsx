@@ -15,14 +15,14 @@ const ContentTabsSwitcher = ({ newsArticles }: ContentTabsSwitcherProps) => {
   return (
     <div>
       {/* Tabs Navigation */}
-      <div className="bg-background-2 dark:bg-background-6 sticky top-0 z-40 border-b border-stroke-2 dark:border-stroke-6">
+      <div className="sticky top-0 z-40 bg-background-2 dark:bg-background-6">
         <div className="main-container">
           <div className="flex items-center justify-center gap-2 py-4">
             <button
               onClick={() => setActiveTab('signals')}
               className={`px-8 py-3 rounded-full font-bold text-base transition-all duration-200 ${
                 activeTab === 'signals'
-                  ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/30 scale-105'
+                  ? 'bg-primary-600 text-white scale-105'
                   : 'bg-white dark:bg-background-7 text-secondary dark:text-accent hover:bg-primary-50 dark:hover:bg-primary-900/20 border-2 border-stroke-2 dark:border-stroke-6'
               }`}
             >
@@ -32,7 +32,7 @@ const ContentTabsSwitcher = ({ newsArticles }: ContentTabsSwitcherProps) => {
               onClick={() => setActiveTab('news')}
               className={`px-8 py-3 rounded-full font-bold text-base transition-all duration-200 ${
                 activeTab === 'news'
-                  ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/30 scale-105'
+                  ? 'bg-primary-600 text-white scale-105'
                   : 'bg-white dark:bg-background-7 text-secondary dark:text-accent hover:bg-primary-50 dark:hover:bg-primary-900/20 border-2 border-stroke-2 dark:border-stroke-6'
               }`}
             >
