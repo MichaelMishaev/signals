@@ -4,10 +4,16 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
-// Bundle analyzer - only enabled when ANALYZE=true
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
+// Bundle analyzer - only enabled when ANALYZE=true and module is available
+let withBundleAnalyzer: (config: NextConfig) => NextConfig;
+try {
+  withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+  });
+} catch {
+  // Bundle analyzer not available (production build), use identity function
+  withBundleAnalyzer = (config: NextConfig) => config;
+}
 
 const nextConfig: NextConfig = {
   turbopack: {
