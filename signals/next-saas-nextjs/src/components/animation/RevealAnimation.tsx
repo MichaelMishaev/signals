@@ -6,7 +6,17 @@ import React, { ReactElement, Ref, cloneElement, useRef, useState, useEffect } f
 // Will re-enable after debugging
 const GSAP_ENABLED = false;
 
-// Only import GSAP types and modules when enabled
+// Conditional imports - only load if GSAP is enabled
+let loadGSAP: any = null;
+let Springer: any = null;
+
+if (GSAP_ENABLED) {
+  // These imports will only be included in the bundle if GSAP_ENABLED is true
+  loadGSAP = require('@/utils/gsap-loader').loadGSAP;
+  Springer = require('@/utils/springer').default;
+}
+
+// Type definitions
 type GSAP = any;
 type ScrollTriggerType = any;
 
