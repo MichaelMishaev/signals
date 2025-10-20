@@ -5,8 +5,17 @@ Common Styles all over the sites
   @apply box-border;
 }
 
+/* Animation elements - ensure they become visible even if animation doesn't trigger */
 [data-ns-animate] {
   opacity: 0;
+  animation: fadeInFallback 0.5s ease-in forwards 1s; /* Fallback animation after 1s */
+}
+
+/* Fallback animation to ensure visibility */
+@keyframes fadeInFallback {
+  to {
+    opacity: 1;
+  }
 }
 
 /* ==========Container========== */
@@ -296,7 +305,8 @@ Common Styles all over the sites
   -webkit-text-fill-color: transparent;
   display: inline-block;
   background-repeat: no-repeat;
-  color: transparent;
+  /* Keep a fallback color for very old browsers */
+  color: #fbbf24;
 }
 
 .hero-text-color-1 {

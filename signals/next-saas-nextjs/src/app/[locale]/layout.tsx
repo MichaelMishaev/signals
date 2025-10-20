@@ -1,3 +1,4 @@
+import '@/app/globals.css';
 import SmoothScrollProvider from '@/components/shared/SmoothScroll';
 import { ThemeProvider } from '@/components/shared/ThemeProvider';
 import { ModalProvider } from '@/context/ModalContext';
@@ -10,7 +11,7 @@ import { interTight, notoNastaliqUrdu } from '@/utils/font';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { ReactNode, Suspense } from 'react';
+import { ReactNode } from 'react';
 
 const locales = ['en', 'ur'];
 
@@ -40,13 +41,28 @@ export default async function LocaleLayout({
   const dir = locale === 'ur' ? 'rtl' : 'ltr';
 
   return (
-    <html lang={locale} dir={dir} suppressHydrationWarning>
+    <html
+      lang={locale}
+      dir={dir}
+      suppressHydrationWarning
+      style={{
+        ['--font-interTight' as any]: interTight.style.fontFamily,
+        ['--font-urdu' as any]: notoNastaliqUrdu.style.fontFamily,
+      }}
+    >
       <head>
+        {/* Preconnect to Google Fonts for faster font loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
         {/* Preconnect to banner CDN for faster loading (Pakistan slow internet optimization) */}
         <link rel="preconnect" href="https://d3dpet1g0ty5ed.cloudfront.net" />
         <link rel="dns-prefetch" href="https://d3dpet1g0ty5ed.cloudfront.net" />
       </head>
-      <body className={`${interTight.variable} ${notoNastaliqUrdu.variable} antialiased`} suppressHydrationWarning>
+      <body
+        className={dir === 'rtl' ? `${notoNastaliqUrdu.className} antialiased` : `${interTight.className} antialiased`}
+        suppressHydrationWarning
+      >
         {/* STEP 3: Skip to main content - for keyboard users */}
         <a
           href="#main-content"
@@ -59,9 +75,7 @@ export default async function LocaleLayout({
             <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
               <FeatureFlagProvider>
                 <ModalProvider>
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <SmoothScrollProvider>{children}</SmoothScrollProvider>
-                  </Suspense>
+                  {children}
                   <VerificationToast />
                   <DevProductionToggle />
                   <PopupManager />

@@ -1,6 +1,40 @@
 @import 'tailwindcss';
 /* vendors css will be added here */
 
+/* System font fallbacks for when Google Fonts fail to load */
+/* Removed !important to allow proper font cascade and prevent conflicts */
+* {
+  font-family: var(--font-interTight), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+  font-family: var(--font-interTight), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Ensure text is always visible during font load */
+  text-rendering: optimizeSpeed;
+}
+
+/* Critical font loading optimization - ensure text is visible immediately */
+html {
+  font-display: optional;
+}
+
+/* CRITICAL FIX: Ensure gradient text is always visible */
+/* Ensure background-clip is applied properly for gradient text */
+.text-transparent.bg-clip-text {
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  /* Minimum contrast fallback for webkit browsers */
+  -webkit-text-fill-color: transparent;
+}
+
+/* Emergency fallback: Show text if gradient fails to load */
+.text-transparent:is(:not([class*="bg-gradient"]):not(.bg-clip-text)) {
+  color: rgb(251 191 36) !important; /* yellow-400 fallback */
+  -webkit-text-fill-color: rgb(251 191 36) !important;
+}
+
 /* STEP 2: Focus indicators for keyboard navigation - Nielsen Norman Group Accessibility */
 *:focus-visible {
   outline: 3px solid #3b82f6;
@@ -45,35 +79,67 @@ select:focus-visible {
 @custom-variant rtl (&:where([dir="rtl"], [dir="rtl"] *));
 @custom-variant ltr (&:where([dir="ltr"], [dir="ltr"] *));
 
-/* Phase 1: Urdu Font for RTL */
+/* Phase 1: Urdu Font for RTL - Optimized based on major Urdu news sites */
 [dir="rtl"] {
   font-family: var(--font-urdu), 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Mehr Nastaliq', 'Alvi Nastaleeq', serif;
-  font-weight: 600;
-  line-height: 2.2;
-  letter-spacing: 0.02em;
+  font-weight: 500; /* Lighter weight for better readability */
+  line-height: 2; /* Balanced line height */
+  letter-spacing: 0.01em;
   font-feature-settings: 'kern' 1, 'liga' 1;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-[dir="rtl"] h1,
-[dir="rtl"] h2,
-[dir="rtl"] h3,
-[dir="rtl"] h4,
-[dir="rtl"] h5,
-[dir="rtl"] h6 {
+/* Urdu Headings - Larger and bolder for better hierarchy */
+[dir="rtl"] h1 {
   font-weight: 700;
-  line-height: 2.5;
+  line-height: 1.8;
+  font-size: 2.5rem; /* 40px - Hero headlines */
 }
 
-[dir="rtl"] p {
+[dir="rtl"] h2 {
+  font-weight: 700;
+  line-height: 1.9;
+  font-size: 2rem; /* 32px - Section titles */
+}
+
+[dir="rtl"] h3 {
+  font-weight: 700;
+  line-height: 2;
+  font-size: 1.75rem; /* 28px - Card titles */
+}
+
+[dir="rtl"] h4 {
   font-weight: 600;
-  line-height: 2.5;
+  line-height: 2;
+  font-size: 1.5rem; /* 24px */
+}
+
+[dir="rtl"] h5,
+[dir="rtl"] h6 {
+  font-weight: 600;
+  line-height: 2;
+}
+
+/* Urdu Body Text - Optimized for readability */
+[dir="rtl"] p {
+  font-weight: 500;
+  line-height: 2.2; /* More breathing room for paragraph text */
+  font-size: 1.125rem; /* 18px - Better readability on all screens */
 }
 
 [dir="rtl"] li {
-  line-height: 2.5;
+  line-height: 2.2;
+  font-size: 1.125rem;
+}
+
+/* Urdu Button and UI Text - Slightly smaller */
+[dir="rtl"] button,
+[dir="rtl"] .btn {
+  font-weight: 600;
+  font-size: 1rem; /* 16px */
+  line-height: 1.8;
 }
 
 [dir="ltr"] {
