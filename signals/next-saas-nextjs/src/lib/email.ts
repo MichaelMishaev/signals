@@ -30,6 +30,37 @@ export const generateMagicLinkToken = (): string => {
   return token;
 };
 
+// Validate and sanitize EMAIL_FROM environment variable
+const validateEmailFrom = (emailFrom: string | undefined): string => {
+  if (!emailFrom) {
+    console.warn('[email.ts] EMAIL_FROM not set, using default');
+    return "Signals <onboarding@resend.dev>";
+  }
+
+  // Remove extra quotes that might be added by hosting platforms
+  let sanitized = emailFrom.trim();
+
+  // Remove leading/trailing double quotes
+  if (sanitized.startsWith('"') && sanitized.endsWith('"')) {
+    sanitized = sanitized.slice(1, -1);
+  }
+
+  // Remove escaped characters
+  sanitized = sanitized.replace(/\\</g, '<').replace(/\\>/g, '>');
+
+  // Validate format: "Name <email@domain.com>" or "email@domain.com"
+  const validFormat = /^(?:"?[^"<>]*"?\s*<[^<>@]+@[^<>@]+\.[^<>@]+>|[^<>@]+@[^<>@]+\.[^<>@]+)$/;
+
+  if (!validFormat.test(sanitized)) {
+    console.error('[email.ts] Invalid EMAIL_FROM format:', emailFrom);
+    console.error('[email.ts] After sanitization:', sanitized);
+    console.error('[email.ts] Using fallback email address');
+    return "Signals <onboarding@resend.dev>";
+  }
+
+  return sanitized;
+};
+
 // Send magic link email
 export const sendMagicLinkEmail = async (email: string, baseUrl: string, returnUrl?: string) => {
   const token = generateMagicLinkToken();
@@ -100,8 +131,11 @@ export const sendMagicLinkEmail = async (email: string, baseUrl: string, returnU
     console.log(`\n🔥 WHITELISTED EMAIL - Sending real email to: ${email}`);
   }
 
+  const validatedEmailFrom = validateEmailFrom(process.env.EMAIL_FROM);
+  console.log('[email.ts] Using EMAIL_FROM:', validatedEmailFrom);
+
   const emailData = {
-    from: process.env.EMAIL_FROM || "Signals <onboarding@resend.dev>", // Use resend.dev domain initially
+    from: validatedEmailFrom,
     to: email,
     subject: "Sign in to Signals - Verify Your Email",
     html: `
@@ -267,8 +301,10 @@ export const sendVerificationCodeEmail = async (email: string) => {
     console.log(`\n🔥 WHITELISTED EMAIL - Sending real verification code to: ${email}`);
   }
 
+  const validatedEmailFrom = validateEmailFrom(process.env.EMAIL_FROM);
+
   const emailData = {
-    from: process.env.EMAIL_FROM || "Signals <onboarding@resend.dev>",
+    from: validatedEmailFrom,
     to: email,
     subject: "Your Signals Verification Code",
     html: `
@@ -361,8 +397,10 @@ export const sendWelcomeEmail = async (email: string, name?: string) => {
     return { success: true, message: "Welcome email skipped (not configured)" };
   }
 
+  const validatedEmailFrom = validateEmailFrom(process.env.EMAIL_FROM);
+
   const emailData = {
-    from: process.env.EMAIL_FROM || "Signals <onboarding@resend.dev>",
+    from: validatedEmailFrom,
     to: email,
     subject: "Welcome to Signals!",
     html: `
