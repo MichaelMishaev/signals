@@ -66,6 +66,12 @@ export const sendMagicLinkEmail = async (email: string, baseUrl: string, returnU
   const token = generateMagicLinkToken();
   const magicLink = `${baseUrl}/api/auth/verify-magic?token=${token}`;
 
+  // Log magic link generation for debugging
+  console.log(`[email.ts] Generating magic link for: ${email}`);
+  console.log(`[email.ts] Base URL: ${baseUrl}`);
+  console.log(`[email.ts] Return URL: ${returnUrl || baseUrl}`);
+  console.log(`[email.ts] Magic Link: ${magicLink}`);
+
   // Store token with email and return URL in Redis with 10-minute expiry
   const tokenData = {
     email,

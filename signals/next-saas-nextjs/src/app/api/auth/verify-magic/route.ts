@@ -26,11 +26,27 @@ export async function GET(request: NextRequest) {
     }
 
     // Get token data from Redis
-    const tokenDataStr = await magicLinkCache.get(token);
+    let tokenDataStr;
+    try {
+      tokenDataStr = await magicLinkCache.get(token);
+    } catch (redisError) {
+      console.error("[verify-magic] Redis connection failed:", redisError);
+      const errorUrl = new URL("/auth/error", request.url);
+      errorUrl.searchParams.set("error", "RedisError");
+      errorUrl.searchParams.set("message", "Unable to verify token - cache service unavailable");
+      return NextResponse.redirect(errorUrl);
+    }
 
     if (!tokenDataStr) {
+      console.log("[verify-magic] Token not found in Redis:", token.substring(0, 8) + "...");
+      console.log("[verify-magic] This token may have:");
+      console.log("  - Expired (10 minute limit)");
+      console.log("  - Already been used");
+      console.log("  - Redis not configured properly");
+
       const errorUrl = new URL("/auth/error", request.url);
       errorUrl.searchParams.set("error", "ExpiredToken");
+      errorUrl.searchParams.set("message", "This verification link has expired or was already used. Please request a new one.");
       return NextResponse.redirect(errorUrl);
     }
 

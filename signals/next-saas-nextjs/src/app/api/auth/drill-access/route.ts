@@ -142,7 +142,21 @@ export async function POST(request: NextRequest) {
       case "send-magic-link":
       case "resend-verification": {
         // Send magic link for drill access (use normalized email)
-        const baseUrl = request.headers.get("origin") || process.env.NEXTAUTH_URL || "";
+        const origin = request.headers.get("origin");
+        const baseUrl = origin || process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || "";
+
+        // Log baseUrl for debugging production issues
+        console.log("[drill-access] Magic link baseUrl:", baseUrl);
+        console.log("[drill-access] Origin header:", origin);
+        console.log("[drill-access] NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+        console.log("[drill-access] Return URL:", returnUrl);
+
+        if (baseUrl.includes("localhost") && process.env.NODE_ENV === "production") {
+          console.error("⚠️  WARNING: Using localhost URL in production!");
+          console.error("   NEXTAUTH_URL should be: https://www.pipguru.club");
+          console.error("   Current value:", baseUrl);
+        }
+
         const result = await sendMagicLinkEmail(normalizedEmail, baseUrl, returnUrl);
 
         if (!result.success) {
