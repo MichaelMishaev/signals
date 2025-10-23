@@ -73,13 +73,17 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
   const tCommon = useTranslations('common');
   const [activeTab, setActiveTab] = useState<string>(drills.length > 0 ? drills[0].type : 'overview');
   const [buttonPressed, setButtonPressed] = useState<boolean>(false);
-  const [shouldShowContent, setShouldShowContent] = useState<boolean>(true); // First drill is always free
+  const [shouldShowContent, setShouldShowContent] = useState<boolean>(false); // Require email for all drills
   const [marketData, setMarketData] = useState<MarketData[]>([]);
   const [marketDataLoading, setMarketDataLoading] = useState<boolean>(true);
 
+  // Resend email cooldown state
+  const [resendCooldown, setResendCooldown] = useState<number>(0);
+  const [isResending, setIsResending] = useState<boolean>(false);
+
   // NEW Gate Flow Hook - single source of truth for gate state
   const gateFlow = useGateFlow({ confidence: signal.confidence, currentProfit: signal.pips });
-  const { onDrillView, hasEmail, drillsViewed, activeGate } = gateFlow;
+  const { onDrillView, hasEmail, drillsViewed, activeGate, pendingVerification, pendingEmail, resendVerification } = gateFlow;
 
   // Fetch real-time market data
   useEffect(() => {
@@ -142,6 +146,40 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
     return () => clearInterval(interval);
   }, []);
 
+  // Countdown timer for resend button
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+
+    const timer = setInterval(() => {
+      setResendCooldown((prev) => {
+        const newValue = prev - 1;
+        return newValue <= 0 ? 0 : newValue;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
+
+  // Handle resend verification email
+  const handleResendEmail = async () => {
+    if (resendCooldown > 0 || isResending || !pendingEmail) return;
+
+    try {
+      setIsResending(true);
+      await resendVerification();
+
+      // Set 60-second cooldown
+      setResendCooldown(60);
+
+      console.log('[SignalPageClient] Verification email resent successfully');
+    } catch (error: any) {
+      console.error('[SignalPageClient] Failed to resend verification:', error);
+      // Error handling is done in useGateFlow hook
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   // Handler to start the trading flow
   const handleStartTrading = () => {
     const now = Date.now();
@@ -149,12 +187,18 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
     setButtonPressed(true);
   };
 
-  // REMOVED: Don't auto-record first drill on page load
-  // Users should get the first drill for free, gate appears on 2nd drill
-  // The onDrillView is only called when user clicks drill tabs (line 265)
+  // NEW: Show email gate immediately if user doesn't have email
+  // Since all drills now require email, show gate on page load
+  useEffect(() => {
+    if (!hasEmail && drills.length > 0) {
+      // Trigger drill view to show email gate
+      console.log('[SignalPageClient] No email detected - triggering gate on page load');
+      onDrillView(drills[0].id);
+    }
+  }, [hasEmail, drills, onDrillView]);
 
   // Update content visibility based on gate state
-  // First drill is always free, subsequent drills require email
+  // ALL drills require email verification - no free preview
   useEffect(() => {
     console.log('[SignalPageClient] Updating shouldShowContent:', {
       hasEmail,
@@ -162,19 +206,15 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
       currentValue: shouldShowContent,
     });
 
-    // If user has email, always show content
+    // ONLY show content if user has verified email
+    // No free drills - all content requires verification
     if (hasEmail) {
       console.log('[SignalPageClient] User has email - showing content');
       setShouldShowContent(true);
-      return;
+    } else {
+      console.log('[SignalPageClient] No email - hiding all drill content');
+      setShouldShowContent(false);
     }
-
-    // If no email: first drill is free (drillsViewed === 0), hide after first drill click
-    // drillsViewed === 0: First drill is free, show content
-    // drillsViewed >= 1: Already viewed a drill, need email for more
-    const newValue = drillsViewed === 0;
-    console.log('[SignalPageClient] No email - setting shouldShowContent to:', newValue);
-    setShouldShowContent(newValue);
   }, [hasEmail, drillsViewed]);
 
   // If no drills available, show the legacy analytics view
@@ -452,12 +492,45 @@ export default function SignalPageClient({ signal, drills, signalId }: SignalPag
                   <p className="text-gray-600 dark:text-gray-400 mb-6">
                     You've viewed your free drill. Verify your email to unlock all detailed analysis, case studies, and premium trading insights.
                   </p>
-                  <div className="inline-flex items-center gap-2 px-6 py-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-800 dark:text-blue-200 text-sm">
+                  <div className="inline-flex items-center gap-2 px-6 py-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-800 dark:text-blue-200 text-sm mb-4">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span>Check your email for the magic link</span>
                   </div>
+
+                  {/* Resend Button with Countdown */}
+                  {pendingVerification && pendingEmail && (
+                    <div className="mt-6 space-y-3">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Didn't receive it? Check spam folder or resend below
+                      </p>
+                      <button
+                        onClick={handleResendEmail}
+                        disabled={resendCooldown > 0 || isResending}
+                        className={`
+                          px-6 py-3 rounded-lg font-semibold text-sm
+                          transition-all duration-200
+                          ${resendCooldown > 0 || isResending
+                            ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 hover:shadow-lg transform hover:scale-105'
+                          }
+                        `}
+                      >
+                        {isResending
+                          ? 'Sending...'
+                          : resendCooldown > 0
+                          ? `Resend in ${resendCooldown}s`
+                          : 'Resend Verification Email'
+                        }
+                      </button>
+                      {pendingEmail && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Sending to: <span className="font-semibold">{pendingEmail}</span>
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

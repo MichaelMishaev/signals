@@ -21,6 +21,7 @@ import {
   recordBannerShown,
   recordBannerDismissed,
   recordBrokerClick,
+  recordBrokerGateShown,
 } from '@/utils/gateState';
 
 export interface UseGateFlowReturn {
@@ -71,6 +72,32 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
   useEffect(() => {
     refreshState();
 
+    // Restore pending verification from localStorage on mount
+    const restorePendingVerification = () => {
+      try {
+        const pendingData = localStorage.getItem('pending_email_verification');
+        if (pendingData) {
+          const { email, timestamp } = JSON.parse(pendingData);
+
+          // Check if pending verification is still valid (within 24 hours)
+          const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+          if (Date.now() - timestamp < TWENTY_FOUR_HOURS) {
+            console.log('[useGateFlow] Restored pending verification:', email);
+            setPendingVerification(true);
+            setPendingEmail(email);
+          } else {
+            // Expired - clean up
+            console.log('[useGateFlow] Pending verification expired, clearing');
+            localStorage.removeItem('pending_email_verification');
+          }
+        }
+      } catch (error) {
+        console.error('[useGateFlow] Failed to restore pending verification:', error);
+      }
+    };
+
+    restorePendingVerification();
+
     // Check for email verification cookie
     const checkVerificationCookie = () => {
       const getCookie = (name: string): string | null => {
@@ -118,6 +145,14 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
     setShowBanner(bannerShouldShow);
   }, [state, currentSignal]);
 
+  // Record when broker gate is shown
+  useEffect(() => {
+    if (activeGate === 'broker') {
+      console.log('[useGateFlow] Broker gate is now active - recording timestamp');
+      recordBrokerGateShown();
+    }
+  }, [activeGate]);
+
   // ============================================================================
   // ACTIONS
   // ============================================================================
@@ -153,9 +188,39 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
 
   /**
    * Handle email submission
+   * CRITICAL: Includes client-side throttling to prevent spam
+   * CRITICAL: Includes timeout protection to prevent stuck state
    */
   const onEmailSubmit = useCallback(async (email: string) => {
+    console.log('[useGateFlow] onEmailSubmit called with email:', email);
+
     try {
+      // CRITICAL: Client-side throttling - prevent sending multiple emails too quickly
+      const lastEmailSentKey = `last_email_sent_${email}`;
+      const lastEmailSent = localStorage.getItem(lastEmailSentKey);
+
+      if (lastEmailSent) {
+        const timeSince = Date.now() - parseInt(lastEmailSent);
+        const minIntervalMs = 60 * 1000; // 1 minute minimum between sends
+
+        if (timeSince < minIntervalMs) {
+          const secondsRemaining = Math.ceil((minIntervalMs - timeSince) / 1000);
+          console.warn(`[useGateFlow] Email send throttled - ${secondsRemaining}s remaining`);
+
+          // Show throttle message
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('show-toast', {
+              detail: {
+                message: `Please wait ${secondsRemaining} seconds before requesting another email`,
+                type: 'warning'
+              }
+            }));
+          }
+
+          return; // Block duplicate send
+        }
+      }
+
       // FIRST: Check if email is already verified in database (cross-browser verification)
       const dbCheckResponse = await fetch('/api/auth/check-email-status', {
         method: 'POST',
@@ -198,19 +263,58 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
       // Email not verified - proceed with sending magic link
       const currentUrl = typeof window !== 'undefined' ? window.location.href : '/';
 
-      const response = await fetch('/api/auth/drill-access', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          name: '',
-          source: 'gate_flow',
-          action: 'send-magic-link',
-          returnUrl: currentUrl
-        }),
-      });
+      // Record timestamp BEFORE sending to prevent duplicate rapid clicks
+      localStorage.setItem(lastEmailSentKey, Date.now().toString());
+
+      console.log('[useGateFlow] Sending magic link to:', email);
+
+      // Add timeout protection (30 seconds)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        console.error('[useGateFlow] Request timeout - aborting');
+        controller.abort();
+      }, 30000); // 30 second timeout
+
+      let response;
+      try {
+        response = await fetch('/api/auth/drill-access', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            name: '',
+            source: 'gate_flow',
+            action: 'send-magic-link',
+            returnUrl: currentUrl
+          }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+      } catch (fetchError: any) {
+        clearTimeout(timeoutId);
+
+        if (fetchError.name === 'AbortError') {
+          console.error('[useGateFlow] Request timed out after 30 seconds');
+
+          // Remove throttle timestamp since request failed
+          localStorage.removeItem(lastEmailSentKey);
+
+          // Show timeout error
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('show-toast', {
+              detail: {
+                message: 'Request timed out. Please check your connection and try again.',
+                type: 'error'
+              }
+            }));
+          }
+          throw new Error('Request timeout');
+        }
+        throw fetchError;
+      }
 
       const data = await response.json();
+      console.log('[useGateFlow] API response:', data);
 
       if (data.success) {
         console.log('[useGateFlow] Magic link sent to:', email);
@@ -228,43 +332,81 @@ export const useGateFlow = (currentSignal?: { confidence: number; currentProfit:
         // Close gate
         setActiveGate(null);
 
-        // Trigger toast notification
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('show-toast', {
-            detail: {
-              message: 'gate.emailSent',
-              type: 'success',
-              translate: true
-            }
-          }));
+        // DEVELOPMENT MODE: If magic link is provided, show it to user
+        if (data.developmentLink) {
+          console.log('[useGateFlow] 🔗 DEVELOPMENT MAGIC LINK:', data.developmentLink);
+
+          // Show development link in toast
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('show-toast', {
+              detail: {
+                message: `Development Mode: Magic link ready! Check console for link.`,
+                type: 'success',
+                translate: false
+              }
+            }));
+
+            // Optionally auto-open the link after a short delay
+            setTimeout(() => {
+              const shouldAutoOpen = confirm('Development Mode: Open magic link now?');
+              if (shouldAutoOpen) {
+                window.location.href = data.developmentLink;
+              }
+            }, 500);
+          }
+        } else {
+          // Trigger normal toast notification for production
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('show-toast', {
+              detail: {
+                message: 'gate.emailSent',
+                type: 'success',
+                translate: true
+              }
+            }));
+          }
         }
       } else {
         console.error('[useGateFlow] Failed to send magic link:', data.error);
+
+        // Remove throttle timestamp since send failed
+        const lastEmailSentKey = `last_email_sent_${email}`;
+        localStorage.removeItem(lastEmailSentKey);
 
         // Show error toast
         if (typeof window !== 'undefined') {
           window.dispatchEvent(new CustomEvent('show-toast', {
             detail: {
-              message: data.message || 'gate.emailFailed',
+              message: data.message || 'Failed to send email. Please try again.',
               type: 'error',
-              translate: !data.message // Only translate if using default message
+              translate: false
             }
           }));
         }
+
+        // Re-throw to let modal handle it
+        throw new Error(data.error || 'Failed to send email');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('[useGateFlow] Error sending magic link:', error);
+
+      // Remove throttle timestamp since send failed
+      const lastEmailSentKey = `last_email_sent_${email}`;
+      localStorage.removeItem(lastEmailSentKey);
 
       // Show error toast
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('show-toast', {
           detail: {
-            message: 'gate.emailError',
+            message: error.message || 'Failed to send email. Please try again.',
             type: 'error',
-            translate: true
+            translate: false
           }
         }));
       }
+
+      // Re-throw to let modal reset its state
+      throw error;
     }
   }, []);
 

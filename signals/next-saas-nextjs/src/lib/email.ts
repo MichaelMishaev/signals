@@ -52,15 +52,38 @@ export const sendMagicLinkEmail = async (email: string, baseUrl: string, returnU
   // Check if Resend API key is configured
   const isEmailConfigured = process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== "re_YOUR_API_KEY";
 
-  if (!isEmailConfigured) {
+  // Whitelist for production email testing (always send real emails to these addresses)
+  const WHITELISTED_EMAILS = ['345287@gmail.com'];
+  const isWhitelisted = WHITELISTED_EMAILS.includes(email.toLowerCase());
+
+  // In development mode OR using test domain (onboarding@resend.dev), bypass email sending
+  // EXCEPTION: Always send real emails to whitelisted addresses (for testing)
+  const isUsingTestDomain = process.env.EMAIL_FROM?.includes("resend.dev");
+  const isDevelopment = process.env.NODE_ENV === "development";
+
+  // Bypass email sending if:
+  // 1. Not configured, OR
+  // 2. Using test domain AND not whitelisted, OR
+  // 3. Development mode AND not whitelisted
+  const shouldBypassEmail = !isEmailConfigured ||
+                           (isUsingTestDomain && !isWhitelisted) ||
+                           (isDevelopment && !isWhitelisted);
+
+  if (shouldBypassEmail) {
     // Development mode: Log the magic link instead of sending email
     console.log("\n======================================");
-    console.log("MAGIC LINK GENERATED (Email not configured)");
+    console.log("MAGIC LINK GENERATED (Development Mode)");
     console.log("======================================");
     console.log(`Email: ${email}`);
     console.log(`Magic Link: ${magicLink}`);
     console.log(`Token: ${token}`);
     console.log("Token stored in cache for 10 minutes");
+    if (isUsingTestDomain) {
+      console.log("\n⚠️  Using Resend test domain (onboarding@resend.dev)");
+      console.log("To send real emails:");
+      console.log("1. Verify a domain at https://resend.com/domains");
+      console.log("2. Update EMAIL_FROM in .env to use your domain");
+    }
     console.log("======================================\n");
 
     // Still return success so the flow continues
@@ -70,6 +93,11 @@ export const sendMagicLinkEmail = async (email: string, baseUrl: string, returnU
       message: "Magic link generated (check server console)",
       magicLink // Include link for testing
     };
+  }
+
+  // If whitelisted, log that we're sending a real email
+  if (isWhitelisted) {
+    console.log(`\n🔥 WHITELISTED EMAIL - Sending real email to: ${email}`);
   }
 
   const emailData = {
@@ -207,15 +235,36 @@ export const sendVerificationCodeEmail = async (email: string) => {
   }
 
   // Check if Resend is configured
-  if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY === "re_YOUR_API_KEY") {
+  const isEmailConfigured = process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== "re_YOUR_API_KEY";
+
+  // Whitelist for production email testing
+  const WHITELISTED_EMAILS = ['345287@gmail.com'];
+  const isWhitelisted = WHITELISTED_EMAILS.includes(email.toLowerCase());
+
+  const isUsingTestDomain = process.env.EMAIL_FROM?.includes("resend.dev");
+  const isDevelopment = process.env.NODE_ENV === "development";
+
+  const shouldBypassEmail = !isEmailConfigured ||
+                           (isUsingTestDomain && !isWhitelisted) ||
+                           (isDevelopment && !isWhitelisted);
+
+  if (shouldBypassEmail) {
     console.log("\n======================================");
-    console.log("VERIFICATION CODE (Email not configured)");
+    console.log("VERIFICATION CODE (Development Mode)");
     console.log("======================================");
     console.log(`Email: ${email}`);
     console.log(`Code: ${code}`);
     console.log("Code stored in cache for 10 minutes");
+    if (isUsingTestDomain) {
+      console.log("\n⚠️  Using Resend test domain - real emails disabled");
+    }
     console.log("======================================\n");
     return { success: true, code };
+  }
+
+  // If whitelisted, log that we're sending a real email
+  if (isWhitelisted) {
+    console.log(`\n🔥 WHITELISTED EMAIL - Sending real verification code to: ${email}`);
   }
 
   const emailData = {
